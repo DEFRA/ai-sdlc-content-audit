@@ -1,0 +1,23 @@
+@use 'variables/colours' as *;
+
+.defra-hero {
+  background-color: $defra-green;
+  color: #ffffff;
+  padding: 40px 15px;
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+
+  .govuk-heading-xl,
+  .govuk-body-l {
+    color: #ffffff;
+  }
+}
+
+.defra-hero__whats-new {
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  padding: 16px 20px;
+  color: #ffffff;
+  background-color: transparent;
+}

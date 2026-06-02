@@ -1,0 +1,39 @@
+@use 'variables/colours' as *;
+
+.defra-subnav__link {
+  color: #1d70b8;
+  display: block;
+  padding: 8px 10px;
+  text-decoration: none;
+
+  &:hover {
+    color: #003078;
+    text-decoration: underline;
+    text-decoration-thickness: 3px;
+  }
+
+  &:focus {
+    background-color: #ffdd00;
+    box-shadow:
+      0 -2px #ffdd00,
+      0 4px #0b0c0c;
+    color: #0b0c0c;
+    outline: 3px solid transparent;
+    text-decoration: none;
+  }
+}
+
+.defra-subnav__link--current {
+  background-color: #f3f2f1;
+  border-left: 4px solid $defra-green;
+  color: #0b0c0c;
+  display: block;
+  font-weight: 700;
+  margin-left: -14px;
+  padding: 8px 10px;
+  text-decoration: none;
+
+  &:hover {
+    color: #0b0c0c;
+  }
+}

@@ -1,2 +1,15 @@
-// import custom component styles
-@use "heading/heading";
+// Server-side component styles
+@use 'heading/heading';
+
+// Defra custom component styles
+@use 'defra-header';
+@use 'defra-service-navigation';
+@use 'defra-hero';
+@use 'defra-version-banner';
+@use 'defra-section';
+@use 'defra-footer';
+@use 'defra-breadcrumbs';
+@use 'defra-subnav';
+@use 'audit-status-tile';
+@use 'audit-filter-bar';
+@use 'sortable-table';

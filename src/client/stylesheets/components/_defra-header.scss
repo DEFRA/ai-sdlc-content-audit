@@ -1,0 +1,61 @@
+@use 'variables/colours' as *;
+
+.defra-header {
+  background-color: #ffffff;
+  border-bottom: 1px solid #b1b4b6;
+}
+
+.defra-header__inner {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 24px;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 12px 15px;
+  align-items: center;
+}
+
+.defra-header__logo {
+  height: 60px;
+  width: auto;
+}
+
+.defra-header__service-name {
+  color: #00a33b;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  text-decoration: none;
+  line-height: 1.2;
+
+  &:link,
+  &:visited {
+    color: #00a33b;
+  }
+
+  &:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 3px;
+    text-underline-offset: 0.15em;
+  }
+
+  &:focus {
+    background-color: #ffdd00;
+    box-shadow:
+      0 -2px #ffdd00,
+      0 4px #0b0c0c;
+    outline: 3px solid transparent;
+    color: #0b0c0c;
+    text-decoration: none;
+  }
+}
+
+@media (max-width: 48em) {
+  .defra-header__logo {
+    height: 45px;
+  }
+
+  .defra-header__service-name {
+    font-size: 18px;
+  }
+}

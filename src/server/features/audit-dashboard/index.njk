@@ -1,0 +1,60 @@
+{% extends "layouts/page.njk" %}
+
+{% block beforeContent %}
+  {{ govukBreadcrumbs({
+    items: [
+      { text: "Home", href: "/" },
+      { text: "Content improvement dashboard" }
+    ]
+  }) }}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-width-container">
+    <h1 class="govuk-heading-xl">{{ heading }}</h1>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-quarter">
+        <p class="govuk-body-s govuk-!-margin-bottom-1" style="color:#505a5f;">Pages needing attention</p>
+        <p class="govuk-heading-xl">{{ flaggedCount }}</p>
+      </div>
+    </div>
+
+    {% if hasResults %}
+      <h2 class="govuk-heading-l govuk-!-margin-top-4">Prioritised pages</h2>
+      <p class="govuk-hint">Select a column heading to sort.</p>
+      <table class="govuk-table">
+        <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">Page</th>
+            <th scope="col" class="govuk-table__header govuk-table__header--numeric">Correctness</th>
+            <th scope="col" class="govuk-table__header govuk-table__header--numeric">Completeness</th>
+            <th scope="col" class="govuk-table__header govuk-table__header--numeric">Conflicts</th>
+            <th scope="col" class="govuk-table__header">Last updated</th>
+            <th scope="col" class="govuk-table__header govuk-table__header--numeric">Views</th>
+            <th scope="col" class="govuk-table__header">Suggested action</th>
+          </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+          {% for row in tableRows %}
+            <tr class="govuk-table__row">
+              <td class="govuk-table__cell">
+                <a class="govuk-link" href="{{ row.detailHref }}">{{ row.title }}</a>
+                <br>
+                <span class="govuk-body-s" style="color:#505a5f;">{{ row.url }}</span>
+              </td>
+              <td class="govuk-table__cell govuk-table__cell--numeric">{{ row.correctness }}</td>
+              <td class="govuk-table__cell govuk-table__cell--numeric">{{ row.completeness }}</td>
+              <td class="govuk-table__cell govuk-table__cell--numeric">{{ row.conflicts }}</td>
+              <td class="govuk-table__cell">{{ row.lastUpdated }}</td>
+              <td class="govuk-table__cell govuk-table__cell--numeric">{{ row.views }}</td>
+              <td class="govuk-table__cell"><strong>{{ row.suggestedAction }}</strong></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="govuk-body">No pages currently need attention.</p>
+    {% endif %}
+  </div>
+{% endblock %}

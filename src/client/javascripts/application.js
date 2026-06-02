@@ -8,6 +8,8 @@ import {
   SkipLink
 } from 'govuk-frontend'
 
+import './sortable-table.js'
+
 createAll(Button)
 createAll(Checkboxes)
 createAll(ErrorSummary)

@@ -1,0 +1,79 @@
+{% extends "layouts/page.njk" %}
+
+{% block beforeContent %}
+  {{ govukBreadcrumbs({
+    items: [
+      { text: "Home", href: "/" },
+      { text: "Choose a subject", href: "/audit" },
+      { text: category.title, href: "/audit/subjects/" + category.id },
+      { text: "Pages" }
+    ]
+  }) }}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-width-container">
+    <h1 class="govuk-heading-xl">{{ heading }}</h1>
+
+    <nav class="audit-filter-bar" aria-label="Filter pages by group">
+      <p class="govuk-body govuk-!-margin-bottom-2">Filter by group</p>
+      <ul class="audit-filter-bar__list">
+        {% for option in filterOptions %}
+          <li class="audit-filter-bar__item">
+            <a class="audit-filter-bar__link" href="{{ option.href }}">
+              <strong class="govuk-tag {% if option.tone %}govuk-tag--{{ option.tone }}{% endif %} audit-filter-bar__tag">{{ option.label }}</strong>
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+      {% if activeOption %}
+        <p class="govuk-body govuk-!-margin-top-3 govuk-!-margin-bottom-0">
+          <a class="govuk-link" href="{{ clearFilterHref }}">Clear filter</a>
+        </p>
+      {% endif %}
+    </nav>
+
+    <h2 class="govuk-heading-s govuk-!-margin-top-6">Laws with no guidance</h2>
+    <p class="govuk-body">
+      Some laws about this subject have no guidance written about them at all. These do not appear in the list of pages below.
+      <a class="govuk-link" href="{{ missingGuidanceHref }}">See which laws are missing guidance</a>.
+    </p>
+
+    {% if activeOption %}
+      <p class="audit-filter-bar__selected govuk-body govuk-!-margin-top-6 govuk-!-margin-bottom-2">
+        Selected:
+        <strong class="govuk-tag {% if activeOption.tone %}govuk-tag--{{ activeOption.tone }}{% endif %} audit-filter-bar__tag" aria-current="page">{{ activeOption.label }}</strong>
+      </p>
+    {% endif %}
+
+    {% if hasResults %}
+      <p class="govuk-hint">Select a column heading to sort.</p>
+      <table class="govuk-table app-sortable-table" data-module="app-sortable-table">
+        <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header" data-sortable data-sort-type="string" aria-sort="none">Page</th>
+            <th scope="col" class="govuk-table__header govuk-table__header--numeric" data-sortable data-sort-type="number" aria-sort="none">Correctness</th>
+            <th scope="col" class="govuk-table__header govuk-table__header--numeric" data-sortable data-sort-type="number" aria-sort="none">Completeness</th>
+            <th scope="col" class="govuk-table__header govuk-table__header--numeric" data-sortable data-sort-type="number" aria-sort="none">Conflicts</th>
+          </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+          {% for row in tableRows %}
+            <tr class="govuk-table__row">
+              <td class="govuk-table__cell" data-sort-value="{{ row.page.title }}">
+                <a class="govuk-link" href="{{ row.detailHref }}">{{ row.page.title }}</a>
+                <br>
+                <span class="govuk-body-s" style="color:#505a5f;">{{ row.page.url }}</span>
+              </td>
+              <td class="govuk-table__cell govuk-table__cell--numeric" data-sort-value="{{ row.correctnessRaw }}">{{ row.correctness }}</td>
+              <td class="govuk-table__cell govuk-table__cell--numeric" data-sort-value="{{ row.completenessRaw }}">{{ row.completeness }}</td>
+              <td class="govuk-table__cell govuk-table__cell--numeric" data-sort-value="{{ row.conflicts }}">{{ row.conflicts }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="govuk-body">No pages about this subject fall into this group.</p>
+    {% endif %}
+  </div>
+{% endblock %}

@@ -1,40 +1,42 @@
 {% extends "govuk/template.njk" %}
 
-{# Import GOVUK components globally #}
 {% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
-{% from "govuk/components/service-navigation/macro.njk" import govukServiceNavigation %}
 
 {# Import custom components globally #}
 {% from "heading/macro.njk" import appHeading %}
 
+{% set htmlClasses = "govuk-template govuk-template--rebranded" %}
 {% set mainClasses = "app-main-wrapper" %}
 
-{% block headIcons %}
-  <link rel="icon" sizes="48x48" href="{{ getAssetPath("node_modules/govuk-frontend/dist/govuk/assets/images/favicon.ico") }}">
-  <link rel="icon" sizes="any" href="{{ getAssetPath("node_modules/govuk-frontend/dist/govuk/assets/images/favicon.svg") }}" type="image/svg+xml" >
-  <link rel="mask-icon" href="{{ getAssetPath("node_modules/govuk-frontend/dist/govuk/assets/images/govuk-icon-mask.svg") }}" color="{{ themeColor }}">
-  <link rel="apple-touch-icon" href="{{ getAssetPath("node_modules/govuk-frontend/dist/govuk/assets/images/govuk-icon-180.png") }}">
-  <link rel="manifest" href="{{ getAssetPath("node_modules/govuk-frontend/dist/govuk/assets/manifest.json") }}">
-{% endblock %}
-
 {% block head %}
-  <link href="{{ getAssetPath('src/client/stylesheets/application.scss') }}" rel="stylesheet">
+  <link href="{{ getAssetPath('stylesheets/application.scss') }}" rel="stylesheet">
 {% endblock %}
 
 {% block header %}
-  {# serviceName being used in govukHeader will be @deprecated in v6. It has moved to govukServiceNavigation - https://github.com/alphagov/govuk-frontend/blob/main/CHANGELOG.md#move-service-name-and-navigation-links-from-the-govuk-header-to-service-navigation-component #}
-  {{ govukHeader({
-    homepageUrl: "https://www.gov.uk/",
-    classes: "app-header",
-    containerClasses: "govuk-width-container",
-    serviceName: serviceName,
-    serviceUrl: serviceUrl,
-    useTudorCrown: true
-  }) }}
+  <header class="defra-header" role="banner">
+    <div class="defra-header__inner">
+      <a href="/">
+        <img class="defra-header__logo" src="/public/assets/images/defra-logo.svg" alt="Department for Environment, Food &amp; Rural Affairs">
+      </a>
+      <a href="/" class="defra-header__service-name">AI Capabilities and Enablement</a>
+    </div>
+  </header>
 
-  {{ govukServiceNavigation({
-    navigation: navigation
-  }) }}
+  <nav class="defra-service-navigation" aria-label="Service navigation">
+    <div class="defra-service-navigation__inner">
+      <ul class="defra-service-navigation__list">
+        {% for item in navigation %}
+          <li>
+            <a class="defra-service-navigation__link"
+               href="{{ item.href }}"
+               {% if item.current %}aria-current="page"{% endif %}>
+              {{ item.text }}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </nav>
 {% endblock %}
 
 {% block pageTitle %}
@@ -52,26 +54,20 @@
 {% block content %}{% endblock %}
 
 {% block footer %}
-  {{ govukFooter({
-    meta: {
-      items: [
-        {
-          href: "https://www.gov.uk/help/privacy-notice",
-          text: "Privacy"
-        },
-        {
-          href: "https://www.gov.uk/help/cookies",
-          text: "Cookies"
-        },
-        {
-          href: "https://www.gov.uk/help/accessibility-statement",
-          text: "Accessibility statement"
-        }
-      ]
-    }
-  }) }}
+  <footer class="defra-footer" role="contentinfo">
+    <div class="govuk-width-container">
+      <ul class="govuk-list" style="display:flex;gap:24px;margin:0;flex-wrap:wrap;">
+        <li><a class="defra-footer__link" href="https://www.gov.uk/help/privacy-notice">Privacy</a></li>
+        <li><a class="defra-footer__link" href="https://www.gov.uk/help/cookies">Cookies</a></li>
+        <li><a class="defra-footer__link" href="https://www.gov.uk/help/accessibility-statement">Accessibility statement</a></li>
+      </ul>
+      <p class="govuk-body-s govuk-!-margin-top-3 govuk-!-margin-bottom-0" style="color:#505a5f;">
+        &copy; Crown copyright
+      </p>
+    </div>
+  </footer>
 {% endblock %}
 
 {% block bodyEnd %}
-  <script type="module" src="{{ getAssetPath('src/client/javascripts/application.js') }}"></script>
+  <script type="module" src="{{ getAssetPath('application.js') }}"></script>
 {% endblock %}

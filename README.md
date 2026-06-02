@@ -31,7 +31,8 @@ Core delivery platform Node.js Frontend Template.
 
 ### Node.js
 
-Please install Node Version Manager [nvm](https://github.com/creationix/nvm)
+Please install [Node.js](http://nodejs.org/) `>= v24` and [npm](https://nodejs.org/) `>= v9`. You will find it
+easier to use the Node Version Manager [nvm](https://github.com/creationix/nvm)
 
 To use the correct version of Node.js for this application, via nvm:
 
@@ -57,29 +58,11 @@ to how services might have a database (or MongoDB). All frontend services are gi
 matches the service name. e.g. `my-service` will have access to everything in Redis that is prefixed with `my-service`.
 
 If your service does not require a session cache to be shared between instances or if you don't require Redis, you can
-disable setting `SESSION_CACHE_ENGINE=false` or changing the default value in `src/config/index.js`.
+disable setting `SESSION_CACHE_ENGINE=false` or changing the default value in `src/config/config.js`.
 
 ## Proxy
 
-We are using forward-proxy which is set up by default. To make use of this: `import { fetch } from 'undici'` then
-because of the `setGlobalDispatcher(new ProxyAgent(proxyUrl))` calls will use the ProxyAgent Dispatcher
-
-If you are not using Wreck, Axios or Undici or a similar http that uses `Request`. Then you may have to provide the
-proxy dispatcher:
-
-To add the dispatcher to your own client:
-
-```javascript
-import { ProxyAgent } from 'undici'
-
-return await fetch(url, {
-  dispatcher: new ProxyAgent({
-    uri: proxyUrl,
-    keepAliveTimeout: 10,
-    keepAliveMaxTimeout: 10
-  })
-})
-```
+A forward proxy is configured at startup via `undici`'s `setGlobalDispatcher(new ProxyAgent(proxyUrl))`. Once the proxy is active, use the native global `fetch` — it will route through the proxy automatically. Do not import `fetch` from `undici` directly.
 
 ## Local Development
 
@@ -89,14 +72,6 @@ Install application dependencies:
 
 ```bash
 npm install
-```
-
-### Git hooks
-
-Install git hooks (optional)
-
-```bash
-npm run git:hooks
 ```
 
 ### Development
@@ -183,7 +158,7 @@ docker run -p 3000:3000 ai-sdlc-content-audit
 
 A local environment with:
 
-- Floci (replacing Localstack) for AWS services (S3, SQS)
+- Localstack for AWS services (S3, SQS)
 - Redis
 - MongoDB
 - This service.

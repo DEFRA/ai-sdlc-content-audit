@@ -1,0 +1,117 @@
+[
+  {
+    "id": 1,
+    "legislation_id": 1,
+    "text": "Every equine animal must be identified by a single lifetime identification document (equine passport) issued before the animal is six months old or by 31 December in its year of birth, whichever is later."
+  },
+  {
+    "id": 2,
+    "legislation_id": 1,
+    "text": "A keeper must apply for a duplicate identification document where the original is lost, and the animal must be signed out of the human food chain when issued a duplicate."
+  },
+  {
+    "id": 3,
+    "legislation_id": 1,
+    "text": "The keeper must notify the relevant passport issuing organisation of the death of an equine animal within 30 days."
+  },
+  {
+    "id": 4,
+    "legislation_id": 1,
+    "text": "An equine animal moved into Great Britain must be registered on the Central Equine Database within 30 days of import."
+  },
+  {
+    "id": 5,
+    "legislation_id": 1,
+    "text": "A microchip (transponder) implanted by a veterinary surgeon must be recorded in the identification document."
+  },
+  {
+    "id": 6,
+    "legislation_id": 2,
+    "text": "Imported animals must be accompanied by an animal health certificate signed by an official veterinarian of the exporting country."
+  },
+  {
+    "id": 7,
+    "legislation_id": 2,
+    "text": "Importers must give the competent authority at least 24 hours advance notice of the arrival of a consignment of animals."
+  },
+  {
+    "id": 8,
+    "legislation_id": 2,
+    "text": "Animals must enter Great Britain through a designated border control post appropriate to the species."
+  },
+  {
+    "id": 9,
+    "legislation_id": 3,
+    "text": "Operators must ensure that kept terrestrial animals are accompanied by an animal health certificate when moved between territories."
+  },
+  {
+    "id": 10,
+    "legislation_id": 3,
+    "text": "Equidae must come from an establishment that is not subject to movement restrictions for equine diseases."
+  },
+  {
+    "id": 11,
+    "legislation_id": 3,
+    "text": "Equidae must be examined by an official veterinarian within 48 hours before loading for export."
+  },
+  {
+    "id": 12,
+    "legislation_id": 4,
+    "text": "The appropriate authority may grant derogations from import conditions for the temporary admission of registered horses."
+  },
+  {
+    "id": 13,
+    "legislation_id": 5,
+    "text": "No person shall transport animals in a way likely to cause injury or unnecessary suffering to them."
+  },
+  {
+    "id": 14,
+    "legislation_id": 5,
+    "text": "Animals must be fit for the intended journey and transported under conditions guaranteeing their welfare."
+  },
+  {
+    "id": 15,
+    "legislation_id": 5,
+    "text": "Long journeys of more than eight hours require an approved transporter authorisation and a journey log."
+  },
+  {
+    "id": 16,
+    "legislation_id": 6,
+    "text": "Registered horses for temporary admission must return within 90 days of entry into the territory."
+  },
+  {
+    "id": 17,
+    "legislation_id": 6,
+    "text": "Equidae for import must undergo a test for equine infectious anaemia (Coggins test) with a negative result."
+  },
+  {
+    "id": 18,
+    "legislation_id": 6,
+    "text": "Equidae must have resided for at least 40 days in the exporting country before export, or since birth if younger."
+  },
+  {
+    "id": 19,
+    "legislation_id": 6,
+    "text": "A residence in an equine-disease-free zone must be certified for animals coming from listed third countries."
+  },
+  {
+    "id": 20,
+    "legislation_id": 7,
+    "text": "The Minister may make orders to prevent the introduction or spreading of disease through imported animals."
+  },
+  {
+    "id": 21,
+    "legislation_id": 7,
+    "text": "An inspector may seize and detain an animal reasonably suspected of being affected with a notifiable disease."
+  },
+  {
+    "id": 22,
+    "legislation_id": 8,
+    "text": "Purebred breeding equidae must be accompanied by a zootechnical certificate when entering Great Britain."
+  },
+  {
+    "id": 23,
+    "legislation_id": 8,
+    "text": "Breed societies must maintain a breeding book recognised by the competent authority."
+  }
+]

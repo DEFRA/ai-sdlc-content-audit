@@ -1,0 +1,10 @@
+[
+  { "legislation_id": 1, "coverage_score": { "completeness": 0.0 } },
+  { "legislation_id": 2, "coverage_score": { "completeness": 0.0 } },
+  { "legislation_id": 3, "coverage_score": { "completeness": 0.0 } },
+  { "legislation_id": 4, "coverage_score": { "completeness": 0.0 } },
+  { "legislation_id": 5, "coverage_score": { "completeness": 0.0 } },
+  { "legislation_id": 6, "coverage_score": { "completeness": 0.0 } },
+  { "legislation_id": 7, "coverage_score": { "completeness": 0.0 } },
+  { "legislation_id": 8, "coverage_score": { "completeness": 0.0 } }
+]

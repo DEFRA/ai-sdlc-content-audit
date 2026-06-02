@@ -1,0 +1,566 @@
+[
+  {
+    "id": 1,
+    "legislation_proposition_id": 19,
+    "guidance_proposition_id": 1,
+    "match_status": "GUIDANCE_INCOMPLETE"
+  },
+  {
+    "id": 2,
+    "legislation_proposition_id": 15,
+    "guidance_proposition_id": null,
+    "match_status": "GUIDANCE_MISSING"
+  },
+  {
+    "id": 3,
+    "legislation_proposition_id": 12,
+    "guidance_proposition_id": 3,
+    "match_status": "GUIDANCE_INCOMPLETE"
+  },
+  {
+    "id": 4,
+    "legislation_proposition_id": 20,
+    "guidance_proposition_id": 4,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 5,
+    "legislation_proposition_id": 23,
+    "guidance_proposition_id": null,
+    "match_status": "GUIDANCE_MISSING"
+  },
+  {
+    "id": 6,
+    "legislation_proposition_id": 6,
+    "guidance_proposition_id": 6,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 7,
+    "legislation_proposition_id": 4,
+    "guidance_proposition_id": null,
+    "match_status": "GUIDANCE_MISSING"
+  },
+  {
+    "id": 8,
+    "legislation_proposition_id": null,
+    "guidance_proposition_id": 8,
+    "match_status": "UNGROUNDED"
+  },
+  {
+    "id": 9,
+    "legislation_proposition_id": 19,
+    "guidance_proposition_id": null,
+    "match_status": "GUIDANCE_MISSING"
+  },
+  {
+    "id": 10,
+    "legislation_proposition_id": 13,
+    "guidance_proposition_id": 10,
+    "match_status": "GUIDANCE_INCOMPLETE"
+  },
+  {
+    "id": 11,
+    "legislation_proposition_id": 23,
+    "guidance_proposition_id": 11,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 12,
+    "legislation_proposition_id": 19,
+    "guidance_proposition_id": 12,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 13,
+    "legislation_proposition_id": 21,
+    "guidance_proposition_id": 13,
+    "match_status": "GUIDANCE_INCOMPLETE"
+  },
+  {
+    "id": 14,
+    "legislation_proposition_id": 23,
+    "guidance_proposition_id": 14,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 15,
+    "legislation_proposition_id": 16,
+    "guidance_proposition_id": 15,
+    "match_status": "GUIDANCE_BROADER"
+  },
+  {
+    "id": 16,
+    "legislation_proposition_id": 12,
+    "guidance_proposition_id": 16,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 17,
+    "legislation_proposition_id": null,
+    "guidance_proposition_id": 17,
+    "match_status": "UNGROUNDED"
+  },
+  {
+    "id": 18,
+    "legislation_proposition_id": 23,
+    "guidance_proposition_id": 18,
+    "match_status": "GUIDANCE_BROADER"
+  },
+  {
+    "id": 19,
+    "legislation_proposition_id": 6,
+    "guidance_proposition_id": 19,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 20,
+    "legislation_proposition_id": 21,
+    "guidance_proposition_id": 20,
+    "match_status": "GUIDANCE_INCOMPLETE"
+  },
+  {
+    "id": 21,
+    "legislation_proposition_id": 18,
+    "guidance_proposition_id": 21,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 22,
+    "legislation_proposition_id": 15,
+    "guidance_proposition_id": 22,
+    "match_status": "GUIDANCE_INCOMPLETE"
+  },
+  {
+    "id": 23,
+    "legislation_proposition_id": 19,
+    "guidance_proposition_id": 23,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 24,
+    "legislation_proposition_id": 8,
+    "guidance_proposition_id": 24,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 25,
+    "legislation_proposition_id": 11,
+    "guidance_proposition_id": 25,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 26,
+    "legislation_proposition_id": 7,
+    "guidance_proposition_id": 26,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 27,
+    "legislation_proposition_id": 9,
+    "guidance_proposition_id": 27,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 28,
+    "legislation_proposition_id": 20,
+    "guidance_proposition_id": 28,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 29,
+    "legislation_proposition_id": 9,
+    "guidance_proposition_id": 29,
+    "match_status": "GUIDANCE_INCOMPLETE"
+  },
+  {
+    "id": 30,
+    "legislation_proposition_id": 17,
+    "guidance_proposition_id": 30,
+    "match_status": "CONFLICTS"
+  },
+  {
+    "id": 31,
+    "legislation_proposition_id": 3,
+    "guidance_proposition_id": null,
+    "match_status": "GUIDANCE_MISSING"
+  },
+  {
+    "id": 32,
+    "legislation_proposition_id": 23,
+    "guidance_proposition_id": 32,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 33,
+    "legislation_proposition_id": 22,
+    "guidance_proposition_id": 33,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 34,
+    "legislation_proposition_id": null,
+    "guidance_proposition_id": 34,
+    "match_status": "UNGROUNDED"
+  },
+  {
+    "id": 35,
+    "legislation_proposition_id": 17,
+    "guidance_proposition_id": 35,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 36,
+    "legislation_proposition_id": 18,
+    "guidance_proposition_id": 36,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 37,
+    "legislation_proposition_id": 23,
+    "guidance_proposition_id": 37,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 38,
+    "legislation_proposition_id": 10,
+    "guidance_proposition_id": 38,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 39,
+    "legislation_proposition_id": 4,
+    "guidance_proposition_id": 39,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 40,
+    "legislation_proposition_id": 11,
+    "guidance_proposition_id": 40,
+    "match_status": "GUIDANCE_INCOMPLETE"
+  },
+  {
+    "id": 41,
+    "legislation_proposition_id": 7,
+    "guidance_proposition_id": null,
+    "match_status": "GUIDANCE_MISSING"
+  },
+  {
+    "id": 42,
+    "legislation_proposition_id": 12,
+    "guidance_proposition_id": 42,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 43,
+    "legislation_proposition_id": 1,
+    "guidance_proposition_id": 43,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 44,
+    "legislation_proposition_id": 5,
+    "guidance_proposition_id": 44,
+    "match_status": "GUIDANCE_INCOMPLETE"
+  },
+  {
+    "id": 45,
+    "legislation_proposition_id": 2,
+    "guidance_proposition_id": 45,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 46,
+    "legislation_proposition_id": 23,
+    "guidance_proposition_id": 46,
+    "match_status": "CONFLICTS"
+  },
+  {
+    "id": 47,
+    "legislation_proposition_id": 21,
+    "guidance_proposition_id": null,
+    "match_status": "GUIDANCE_MISSING"
+  },
+  {
+    "id": 48,
+    "legislation_proposition_id": 3,
+    "guidance_proposition_id": 48,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 49,
+    "legislation_proposition_id": 3,
+    "guidance_proposition_id": 49,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 50,
+    "legislation_proposition_id": null,
+    "guidance_proposition_id": 50,
+    "match_status": "UNGROUNDED"
+  },
+  {
+    "id": 51,
+    "legislation_proposition_id": 5,
+    "guidance_proposition_id": 51,
+    "match_status": "GUIDANCE_INCOMPLETE"
+  },
+  {
+    "id": 52,
+    "legislation_proposition_id": 19,
+    "guidance_proposition_id": 52,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 53,
+    "legislation_proposition_id": 3,
+    "guidance_proposition_id": null,
+    "match_status": "GUIDANCE_MISSING"
+  },
+  {
+    "id": 54,
+    "legislation_proposition_id": 4,
+    "guidance_proposition_id": null,
+    "match_status": "GUIDANCE_MISSING"
+  },
+  {
+    "id": 55,
+    "legislation_proposition_id": 14,
+    "guidance_proposition_id": 55,
+    "match_status": "CONFLICTS"
+  },
+  {
+    "id": 56,
+    "legislation_proposition_id": null,
+    "guidance_proposition_id": 56,
+    "match_status": "UNGROUNDED"
+  },
+  {
+    "id": 57,
+    "legislation_proposition_id": 8,
+    "guidance_proposition_id": 57,
+    "match_status": "GUIDANCE_BROADER"
+  },
+  {
+    "id": 58,
+    "legislation_proposition_id": 13,
+    "guidance_proposition_id": 58,
+    "match_status": "GUIDANCE_INCOMPLETE"
+  },
+  {
+    "id": 59,
+    "legislation_proposition_id": 15,
+    "guidance_proposition_id": 59,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 60,
+    "legislation_proposition_id": 19,
+    "guidance_proposition_id": 60,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 61,
+    "legislation_proposition_id": 14,
+    "guidance_proposition_id": 61,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 62,
+    "legislation_proposition_id": 20,
+    "guidance_proposition_id": 62,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 63,
+    "legislation_proposition_id": 2,
+    "guidance_proposition_id": 63,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 64,
+    "legislation_proposition_id": 23,
+    "guidance_proposition_id": 64,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 65,
+    "legislation_proposition_id": 15,
+    "guidance_proposition_id": 65,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 66,
+    "legislation_proposition_id": 8,
+    "guidance_proposition_id": 66,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 67,
+    "legislation_proposition_id": 21,
+    "guidance_proposition_id": null,
+    "match_status": "GUIDANCE_MISSING"
+  },
+  {
+    "id": 68,
+    "legislation_proposition_id": null,
+    "guidance_proposition_id": 68,
+    "match_status": "UNGROUNDED"
+  },
+  {
+    "id": 69,
+    "legislation_proposition_id": 7,
+    "guidance_proposition_id": 69,
+    "match_status": "GUIDANCE_BROADER"
+  },
+  {
+    "id": 70,
+    "legislation_proposition_id": 18,
+    "guidance_proposition_id": 70,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 71,
+    "legislation_proposition_id": 5,
+    "guidance_proposition_id": 71,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 72,
+    "legislation_proposition_id": 5,
+    "guidance_proposition_id": null,
+    "match_status": "GUIDANCE_MISSING"
+  },
+  {
+    "id": 73,
+    "legislation_proposition_id": 23,
+    "guidance_proposition_id": 73,
+    "match_status": "GUIDANCE_INCOMPLETE"
+  },
+  {
+    "id": 74,
+    "legislation_proposition_id": 9,
+    "guidance_proposition_id": 74,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 75,
+    "legislation_proposition_id": 16,
+    "guidance_proposition_id": 75,
+    "match_status": "CONFLICTS"
+  },
+  {
+    "id": 76,
+    "legislation_proposition_id": 20,
+    "guidance_proposition_id": 76,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 77,
+    "legislation_proposition_id": 14,
+    "guidance_proposition_id": 77,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 78,
+    "legislation_proposition_id": 20,
+    "guidance_proposition_id": 78,
+    "match_status": "GUIDANCE_INCOMPLETE"
+  },
+  {
+    "id": 79,
+    "legislation_proposition_id": 3,
+    "guidance_proposition_id": 79,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 80,
+    "legislation_proposition_id": 14,
+    "guidance_proposition_id": null,
+    "match_status": "GUIDANCE_MISSING"
+  },
+  {
+    "id": 81,
+    "legislation_proposition_id": null,
+    "guidance_proposition_id": 81,
+    "match_status": "UNGROUNDED"
+  },
+  {
+    "id": 82,
+    "legislation_proposition_id": 3,
+    "guidance_proposition_id": 82,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 83,
+    "legislation_proposition_id": 14,
+    "guidance_proposition_id": 83,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 84,
+    "legislation_proposition_id": 22,
+    "guidance_proposition_id": 84,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 85,
+    "legislation_proposition_id": 6,
+    "guidance_proposition_id": 85,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 86,
+    "legislation_proposition_id": 23,
+    "guidance_proposition_id": 86,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 87,
+    "legislation_proposition_id": 22,
+    "guidance_proposition_id": 87,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 88,
+    "legislation_proposition_id": 18,
+    "guidance_proposition_id": null,
+    "match_status": "GUIDANCE_MISSING"
+  },
+  {
+    "id": 89,
+    "legislation_proposition_id": 13,
+    "guidance_proposition_id": null,
+    "match_status": "GUIDANCE_MISSING"
+  },
+  {
+    "id": 90,
+    "legislation_proposition_id": 1,
+    "guidance_proposition_id": 90,
+    "match_status": "GUIDANCE_BROADER"
+  },
+  {
+    "id": 91,
+    "legislation_proposition_id": 18,
+    "guidance_proposition_id": 91,
+    "match_status": "GUIDANCE_INCOMPLETE"
+  },
+  {
+    "id": 92,
+    "legislation_proposition_id": 2,
+    "guidance_proposition_id": 92,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 93,
+    "legislation_proposition_id": 12,
+    "guidance_proposition_id": 93,
+    "match_status": "GROUNDED"
+  },
+  {
+    "id": 94,
+    "legislation_proposition_id": null,
+    "guidance_proposition_id": 94,
+    "match_status": "UNGROUNDED"
+  }
+]

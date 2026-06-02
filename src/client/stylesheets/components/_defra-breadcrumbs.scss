@@ -1,0 +1,22 @@
+.defra-breadcrumbs--inverse {
+  .govuk-breadcrumbs__link {
+    color: #ffffff;
+    text-decoration: none;
+
+    &:hover {
+      color: #ffffff;
+      text-decoration: underline;
+      text-decoration-thickness: 3px;
+    }
+
+    &:focus {
+      background-color: #ffdd00;
+      color: #0b0c0c;
+      text-decoration: none;
+    }
+  }
+
+  .govuk-breadcrumbs__list-item + .govuk-breadcrumbs__list-item::before {
+    border-color: rgba(255, 255, 255, 0.6);
+  }
+}

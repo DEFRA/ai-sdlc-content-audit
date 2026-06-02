@@ -1,0 +1,35 @@
+---
+description: Project rules and AI agent system reference
+alwaysApply: true
+---
+
+> **Do not add rules or agent definitions directly to this file.**
+> This is a platform-specific wrapper for Cursor. All rules live in `.agents/rules/` and all skills live in `.agents/skills/`. See `AGENTS.md` for the full AI system reference.
+
+## Project
+
+A Hapi.js server-rendered web application using Nunjucks templates and the GOV.UK Design System.
+
+## Key Rules
+
+Full rules are in `.agents/rules/`. Summaries:
+
+**Server architecture** (`.agents/rules/server-architecture.md`)
+- Features: `src/server/features/<name>/` — `index.js`, `index.njk`, `controller.js`, `view-model.js`
+- Services: `src/server/services/<name>/` — `service.js`, optional `repository.js`
+- Flow: `controller → view-model → service → repository`. No layer skips another.
+
+**Testing** (`.agents/rules/testing.md`)
+- Tests live in `test/unit/` (mirrors `src/`) and `test/integration/` — never adjacent to source
+- Unit tests mock all dependencies; integration tests start the server and mock only external services
+- Test names read as natural-language sentences confirming intended behaviour
+- Consolidate happy-path assertions into one test per flow
+- Assert only on dynamic values, never on static content
+- Test data as named constants at the top of the file; factories for complex/shared shapes
+
+**Directory philosophy**
+- Intention-revealing names, similar things grouped together, flat over nested
+
+## AI System
+
+See `AGENTS.md`.
