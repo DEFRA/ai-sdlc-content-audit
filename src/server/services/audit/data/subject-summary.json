@@ -1,15 +1,36 @@
-{
-  "category_id": 1,
-  "total_pages_audited": 851429,
-  "laws_found": 8,
-  "pages_relevant": 221,
-  "relevance_threshold": { "llm_score_gte": 0.6 },
-  "proposition_status_counts": {
-    "GROUNDED": 1100,
-    "CONFLICTS": 120,
-    "UNGROUNDED": 174,
-    "GUIDANCE_INCOMPLETE": 298,
-    "GUIDANCE_BROADER": 190,
-    "GUIDANCE_MISSING": 279
+[
+  {
+    "category_id": 1,
+    "total_pages_audited": 851429,
+    "laws_found": 8,
+    "pages_relevant": 221,
+    "relevance_threshold": {
+      "llm_score_gte": 0.6
+    },
+    "proposition_status_counts": {
+      "GROUNDED": 1100,
+      "CONFLICTS": 120,
+      "UNGROUNDED": 174,
+      "GUIDANCE_INCOMPLETE": 298,
+      "GUIDANCE_BROADER": 190,
+      "GUIDANCE_MISSING": 279
+    }
+  },
+  {
+    "category_id": 2,
+    "total_pages_audited": 2669,
+    "laws_found": 8,
+    "pages_relevant": 40,
+    "relevance_threshold": {
+      "llm_score_gte": 0.6
+    },
+    "proposition_status_counts": {
+      "GROUNDED": 169,
+      "CONFLICTS": 30,
+      "UNGROUNDED": 34,
+      "GUIDANCE_INCOMPLETE": 101,
+      "GUIDANCE_BROADER": 57,
+      "GUIDANCE_MISSING": 53
+    }
   }
-}
+]

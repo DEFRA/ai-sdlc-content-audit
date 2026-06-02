@@ -113,5 +113,105 @@
     "id": 23,
     "legislation_id": 8,
     "text": "Breed societies must maintain a breeding book recognised by the competent authority."
+  },
+  {
+    "id": 1001,
+    "legislation_id": 101,
+    "text": "A slurry storage system must have a minimum storage capacity of four months for pig or poultry slurry and five months for other livestock."
+  },
+  {
+    "id": 1002,
+    "legislation_id": 101,
+    "text": "A slurry storage tank must be designed and constructed so that no part of it is within 10 metres of inland or coastal waters."
+  },
+  {
+    "id": 1003,
+    "legislation_id": 101,
+    "text": "The base and walls of a slurry storage system must be impermeable and protected against corrosion for at least 20 years with maintenance."
+  },
+  {
+    "id": 1004,
+    "legislation_id": 101,
+    "text": "Earth-banked slurry lagoons must have a minimum freeboard of 750 millimetres at all times."
+  },
+  {
+    "id": 1005,
+    "legislation_id": 102,
+    "text": "Organic manures must not be applied to agricultural land where the soil is waterlogged, flooded, snow-covered, or frozen for more than 12 hours in the previous 24."
+  },
+  {
+    "id": 1006,
+    "legislation_id": 102,
+    "text": "Organic manures must not be stored on land within 10 metres of inland or coastal waters or within 50 metres of a spring, well, or borehole."
+  },
+  {
+    "id": 1007,
+    "legislation_id": 102,
+    "text": "Applications of organic manure must be planned to meet soil and crop nutrient need, taking account of soil nutrient supply and other applications."
+  },
+  {
+    "id": 1008,
+    "legislation_id": 103,
+    "text": "The total nitrogen from livestock manure applied on the holding in any 12-month period must not exceed 170 kilograms per hectare of the holding area."
+  },
+  {
+    "id": 1009,
+    "legislation_id": 103,
+    "text": "High readily-available nitrogen organic manures must not be spread on grassland in a Nitrate Vulnerable Zone during the closed period from 15 September to 31 December."
+  },
+  {
+    "id": 1010,
+    "legislation_id": 103,
+    "text": "High readily-available nitrogen organic manures must not be spread on tillage land in a Nitrate Vulnerable Zone during the closed period from 1 August to 31 December."
+  },
+  {
+    "id": 1011,
+    "legislation_id": 103,
+    "text": "A farmer must keep a record of livestock numbers, manure produced, manure imported and exported, and nitrogen applications for at least five years."
+  },
+  {
+    "id": 1012,
+    "legislation_id": 104,
+    "text": "An intensive pig or poultry installation above specified thresholds must hold an environmental permit before operating."
+  },
+  {
+    "id": 1013,
+    "legislation_id": 104,
+    "text": "The operator of a permitted installation must apply Best Available Techniques to prevent or minimise emissions of ammonia from housing, storage and spreading."
+  },
+  {
+    "id": 1014,
+    "legislation_id": 104,
+    "text": "A permit holder must monitor and report ammonia emissions in accordance with the conditions set by the regulator."
+  },
+  {
+    "id": 1015,
+    "legislation_id": 105,
+    "text": "Digestate and compost derived from category 3 animal by-products must meet the microbiological standards set out in the retained EU Animal By-Products Regulation before being placed on the market."
+  },
+  {
+    "id": 1016,
+    "legislation_id": 105,
+    "text": "Animal by-products and derived products must be collected, transported, stored and disposed of so as to avoid risks to public and animal health."
+  },
+  {
+    "id": 1017,
+    "legislation_id": 106,
+    "text": "A local authority may serve an abatement notice on the operator of an agricultural premises where ammonia or odour emissions constitute a statutory nuisance."
+  },
+  {
+    "id": 1018,
+    "legislation_id": 107,
+    "text": "Any smell, fumes or gases emitted from livestock or slurry premises so as to be prejudicial to health or a nuisance is a statutory nuisance that the local authority must take steps to abate."
+  },
+  {
+    "id": 1019,
+    "legislation_id": 108,
+    "text": "Sewage sludge must not be applied to agricultural land unless the soil has been tested and the concentration of regulated heavy metals does not exceed the prescribed limits."
+  },
+  {
+    "id": 1020,
+    "legislation_id": 108,
+    "text": "A producer or user of sewage sludge must keep records of the quantity, composition and the land on which it has been applied for at least 10 years."
   }
 ]

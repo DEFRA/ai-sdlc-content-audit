@@ -19,7 +19,15 @@ const propositionMatches = load('proposition-matches.json')
 const semanticSimilarity = load('semantic-similarity.json')
 const pageAggregations = load('page-aggregations.json')
 const pageAnalytics = load('page-analytics.json')
-const subjectSummary = load('subject-summary.json')
+const subjectSummaries = load('subject-summary.json')
+const pageRelevance = load('page-relevance.json')
+
+const subjectSummaryByCategory = new Map(
+  subjectSummaries.map((s) => [s.category_id, s])
+)
+const relevanceByCategoryPage = new Map(
+  pageRelevance.map((r) => [`${r.category_id}:${r.page_id}`, r.relevance_score])
+)
 
 const legislationById = new Map(legislation.map((l) => [l.id, l]))
 const legislationPropositionById = new Map(
@@ -94,10 +102,7 @@ const COVERAGE_WEIGHTS = {
   UNGROUNDED: 0
 }
 
-function getLawsForSubject() {
-  // We have only one category, so propositions for every law in the dataset are
-  // in-scope for the subject. Group matches by the law a legislation_proposition
-  // belongs to and compute a coverage score from match statuses.
+function getLawsForSubject(categoryId) {
   const propositionsByLaw = new Map()
   for (const lp of legislationPropositions) {
     if (!propositionsByLaw.has(lp.legislation_id)) {
@@ -115,7 +120,12 @@ function getLawsForSubject() {
     matchesByLawPropositionId.get(m.legislation_proposition_id).push(m)
   }
 
-  return legislation.map((law) => {
+  const lawsForCategory =
+    categoryId == null
+      ? legislation
+      : legislation.filter((l) => l.category_id === categoryId)
+
+  return lawsForCategory.map((law) => {
     const props = propositionsByLaw.get(law.id) ?? []
     let scoreSum = 0
     let propsWithGuidance = 0
@@ -161,6 +171,9 @@ function getSubjectOverview(categoryId) {
   const category = getCategory(categoryId)
   if (!category) return null
 
+  const summary = subjectSummaryByCategory.get(categoryId)
+  if (!summary) return null
+
   const pageIds = relevantPageIdsForCategory(categoryId)
   const pagesByStatus = {}
   for (const status of STATUS_ORDER) pagesByStatus[status] = 0
@@ -174,16 +187,19 @@ function getSubjectOverview(categoryId) {
   for (const m of missingMatches) {
     if (m.legislation_proposition_id == null) continue
     const lp = legislationPropositionById.get(m.legislation_proposition_id)
-    if (lp) missingLawIds.add(lp.legislation_id)
+    if (!lp) continue
+    const law = legislationById.get(lp.legislation_id)
+    if (law && law.category_id !== categoryId) continue
+    missingLawIds.add(lp.legislation_id)
   }
 
   return {
     category,
-    lawsFound: subjectSummary.laws_found,
-    totalPagesAudited: subjectSummary.total_pages_audited,
-    pagesRelevant: subjectSummary.pages_relevant,
-    relevanceThreshold: subjectSummary.relevance_threshold,
-    statusCounts: subjectSummary.proposition_status_counts,
+    lawsFound: summary.laws_found,
+    totalPagesAudited: summary.total_pages_audited,
+    pagesRelevant: summary.pages_relevant,
+    relevanceThreshold: summary.relevance_threshold,
+    statusCounts: summary.proposition_status_counts,
     pagesByStatus,
     lawsMissingGuidance: missingLawIds.size
   }
@@ -265,13 +281,21 @@ function getPageDetail(pageId) {
     .sort((a, b) => a.severity - b.severity)
 
   // Laws-with-no-guidance: GUIDANCE_MISSING entries — context-level only (no per-page link),
-  // so show the union for the subject under the page detail.
+  // so show the union for the subject under the page detail. Scoped to the
+  // page's own category so equine pages don't show slurry's missing laws.
   const missingLaws = missingMatches
     .map((m) => {
       if (m.legislation_proposition_id == null) return null
       const lp = legislationPropositionById.get(m.legislation_proposition_id)
       if (!lp) return null
       const law = legislationById.get(lp.legislation_id)
+      if (
+        law &&
+        page.category_id != null &&
+        law.category_id !== page.category_id
+      ) {
+        return null
+      }
       return {
         lawName: law?.name ?? null,
         lawUrl: law?.url ?? null,
@@ -306,15 +330,20 @@ function getDashboardPages() {
       const correctness = agg?.quality_score?.correctness ?? null
       const completeness = agg?.quality_score?.completeness ?? null
       const conflictsCount = conflictsCountForPage(p.id)
+      const relevanceScore = relevanceByCategoryPage.get(
+        `${p.category_id}:${p.id}`
+      )
       return {
         id: p.id,
+        categoryId: p.category_id,
         title: p.title,
         url: p.url,
         correctness,
         completeness,
         conflictsCount,
         lastUpdated: analytics?.last_updated_date ?? null,
-        views: analytics?.view_count_period ?? null
+        views: analytics?.view_count_period ?? null,
+        relevanceScore: relevanceScore ?? null
       }
     })
     .filter(
