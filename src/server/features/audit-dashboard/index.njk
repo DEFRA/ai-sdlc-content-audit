@@ -23,36 +23,38 @@
     {% if hasResults %}
       <h2 class="govuk-heading-l govuk-!-margin-top-4">Prioritised pages</h2>
       <p class="govuk-hint">Select a column heading to sort.</p>
-      <table class="govuk-table">
-        <thead class="govuk-table__head">
-          <tr class="govuk-table__row">
-            <th scope="col" class="govuk-table__header">Page</th>
-            <th scope="col" class="govuk-table__header govuk-table__header--numeric">Correctness</th>
-            <th scope="col" class="govuk-table__header govuk-table__header--numeric">Completeness</th>
-            <th scope="col" class="govuk-table__header govuk-table__header--numeric">Conflicts</th>
-            <th scope="col" class="govuk-table__header">Last updated</th>
-            <th scope="col" class="govuk-table__header govuk-table__header--numeric">Views</th>
-            <th scope="col" class="govuk-table__header">Suggested action</th>
-          </tr>
-        </thead>
-        <tbody class="govuk-table__body">
-          {% for row in tableRows %}
+      <div class="app-table-scroll">
+        <table class="govuk-table app-sortable-table" data-module="app-sortable-table">
+          <thead class="govuk-table__head">
             <tr class="govuk-table__row">
-              <td class="govuk-table__cell">
-                <a class="govuk-link" href="{{ row.detailHref }}">{{ row.title }}</a>
-                <br>
-                <span class="govuk-body-s" style="color:#505a5f;">{{ row.url }}</span>
-              </td>
-              <td class="govuk-table__cell govuk-table__cell--numeric">{{ row.correctness }}</td>
-              <td class="govuk-table__cell govuk-table__cell--numeric">{{ row.completeness }}</td>
-              <td class="govuk-table__cell govuk-table__cell--numeric">{{ row.conflicts }}</td>
-              <td class="govuk-table__cell">{{ row.lastUpdated }}</td>
-              <td class="govuk-table__cell govuk-table__cell--numeric">{{ row.views }}</td>
-              <td class="govuk-table__cell"><strong>{{ row.suggestedAction }}</strong></td>
+              <th scope="col" class="govuk-table__header app-sortable-table__header--wrap" data-sortable data-sort-type="string" aria-sort="none">Page</th>
+              <th scope="col" class="govuk-table__header govuk-table__header--numeric" data-sortable data-sort-type="number" aria-sort="none">Relevance</th>
+              <th scope="col" class="govuk-table__header govuk-table__header--numeric" data-sortable data-sort-type="number" aria-sort="none">Correctness</th>
+              <th scope="col" class="govuk-table__header govuk-table__header--numeric" data-sortable data-sort-type="number" aria-sort="none">Conflicts</th>
+              <th scope="col" class="govuk-table__header" data-sortable data-sort-type="string" aria-sort="none">Last updated</th>
+              <th scope="col" class="govuk-table__header govuk-table__header--numeric" data-sortable data-sort-type="number" aria-sort="none">Views</th>
+              <th scope="col" class="govuk-table__header" data-sortable data-sort-type="string" aria-sort="none">Suggested action</th>
             </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+          </thead>
+          <tbody class="govuk-table__body">
+            {% for row in tableRows %}
+              <tr class="govuk-table__row">
+                <td class="govuk-table__cell app-sortable-table__cell--wrap" data-sort-value="{{ row.title }}">
+                  <a class="govuk-link" href="{{ row.detailHref }}">{{ row.title }}</a>
+                  <br>
+                  <span class="govuk-body-s" style="color:#505a5f;">{{ row.url }}</span>
+                </td>
+                <td class="govuk-table__cell govuk-table__cell--numeric" data-sort-value="{{ row.relevanceRaw }}">{{ row.relevance }}</td>
+                <td class="govuk-table__cell govuk-table__cell--numeric" data-sort-value="{{ row.correctnessRaw }}">{{ row.correctness }}</td>
+                <td class="govuk-table__cell govuk-table__cell--numeric" data-sort-value="{{ row.conflicts }}">{{ row.conflicts }}</td>
+                <td class="govuk-table__cell" data-sort-value="{{ row.lastUpdatedRaw }}">{{ row.lastUpdated }}</td>
+                <td class="govuk-table__cell govuk-table__cell--numeric" data-sort-value="{{ row.viewsRaw }}">{{ row.views }}</td>
+                <td class="govuk-table__cell" data-sort-value="{{ row.suggestedAction }}"><strong>{{ row.suggestedAction }}</strong></td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
     {% else %}
       <p class="govuk-body">No pages currently need attention.</p>
     {% endif %}
