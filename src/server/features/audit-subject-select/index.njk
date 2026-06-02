@@ -4,7 +4,7 @@
   {{ govukBreadcrumbs({
     items: [
       { text: "Home", href: "/" },
-      { text: "Choose a subject" }
+      { text: "Choose a category" }
     ]
   }) }}
 {% endblock %}
@@ -16,31 +16,20 @@
         <h1 class="govuk-heading-xl">{{ heading }}</h1>
         <p class="govuk-body-l">{{ intro }}</p>
 
-        {% if hasSubjects %}
-          <form method="get" action="/audit" novalidate>
-            <div class="govuk-form-group">
-              <label class="govuk-label govuk-label--m" for="subject">{{ inputLabel }}</label>
-              <div class="govuk-hint" id="subject-hint">{{ inputHint }}</div>
-              <select class="govuk-select" id="subject" name="subject" aria-describedby="subject-hint">
-                {% for option in options %}
-                  <option value="{{ option.value }}"{% if option.selected %} selected{% endif %}>{{ option.text }}</option>
-                {% endfor %}
-              </select>
-            </div>
-            <button type="submit" class="govuk-button govuk-button--secondary" data-module="govuk-button">{{ buttonText }}</button>
-          </form>
-
-          {% if selected %}
-            <div class="govuk-inset-text govuk-!-margin-top-6">
-              <h2 class="govuk-heading-m govuk-!-margin-bottom-2">{{ selected.title }}</h2>
-              <p class="govuk-body">{{ selected.description }}</p>
-              <a href="/audit/subjects/{{ selected.id }}" role="button" draggable="false" class="govuk-button govuk-!-margin-top-2" data-module="govuk-button">
-                Find related guidance
-              </a>
-            </div>
-          {% endif %}
+        {% if hasCategories %}
+          <ul class="govuk-list">
+            {% for category in categories %}
+              <li class="govuk-!-margin-bottom-6">
+                <h2 class="govuk-heading-m govuk-!-margin-bottom-2">{{ category.title }}</h2>
+                <p class="govuk-body">{{ category.description }}</p>
+                <a href="{{ category.href }}" role="button" draggable="false" class="govuk-button" data-module="govuk-button">
+                  View results
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
         {% else %}
-          <p class="govuk-body">We have not finished checking any subjects yet. Please check back later.</p>
+          <p class="govuk-body">We have not finished checking any categories yet. Please check back later.</p>
         {% endif %}
       </div>
     </div>

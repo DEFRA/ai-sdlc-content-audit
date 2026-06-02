@@ -15,21 +15,39 @@ function compareRows(a, b, columnIndex, type, direction) {
   return 0
 }
 
+function buildIcon() {
+  const icon = document.createElement('span')
+  icon.className = 'app-sortable-table__sort-icon'
+  icon.setAttribute('aria-hidden', 'true')
+  const up = document.createElement('span')
+  up.className = 'app-sortable-table__sort-icon-up'
+  const down = document.createElement('span')
+  down.className = 'app-sortable-table__sort-icon-down'
+  icon.append(up, down)
+  return icon
+}
+
 function initSortableTable(table) {
   const headers = table.querySelectorAll('th[data-sortable]')
   const tbody = table.querySelector('tbody')
   if (!tbody) return
 
-  headers.forEach((header, index) => {
+  headers.forEach((header) => {
     const columnIndex = Array.from(header.parentNode.children).indexOf(header)
     const type = header.getAttribute('data-sort-type') || 'string'
 
     const label = header.textContent.trim()
     header.textContent = ''
+
     const button = document.createElement('button')
     button.type = 'button'
     button.className = 'app-sortable-table__button'
-    button.textContent = label
+
+    const labelEl = document.createElement('span')
+    labelEl.className = 'app-sortable-table__label'
+    labelEl.textContent = label
+
+    button.append(labelEl, buildIcon())
     header.appendChild(button)
     header.setAttribute('aria-sort', 'none')
 
@@ -49,6 +67,8 @@ function initSortableTable(table) {
   })
 }
 
-document
-  .querySelectorAll('[data-module="app-sortable-table"]')
-  .forEach(initSortableTable)
+export function initSortableTables() {
+  document
+    .querySelectorAll('[data-module="app-sortable-table"]')
+    .forEach(initSortableTable)
+}

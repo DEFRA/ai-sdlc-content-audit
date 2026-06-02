@@ -9,7 +9,7 @@ import {
   SkipLink
 } from 'govuk-frontend'
 
-import './sortable-table.js'
+import { initSortableTables } from './sortable-table.js'
 
 createAll(Button)
 createAll(CharacterCount)
@@ -18,3 +18,4 @@ createAll(ErrorSummary)
 createAll(Header)
 createAll(Radios)
 createAll(SkipLink)
+initSortableTables()
