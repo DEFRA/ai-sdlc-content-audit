@@ -8,7 +8,11 @@ export const auditPageDetailController = {
       const categoryId = Number(request.params.categoryId)
       const pageId = Number(request.params.pageId)
 
-      const viewModel = auditPageDetailViewModel.get(categoryId, pageId)
+      const viewModel = auditPageDetailViewModel.get(
+        categoryId,
+        pageId,
+        request.query
+      )
       if (!viewModel) return Boom.notFound()
 
       return h.view('features/audit-page-detail/index', viewModel)

@@ -231,6 +231,8 @@ function buildStatement(guidanceProp, match) {
   }
 
   return {
+    id: match.id,
+    status: match.match_status,
     guidanceText: guidanceProp.text,
     statusLabel: meta.label,
     statusMeaning: meta.meaning,
@@ -240,6 +242,11 @@ function buildStatement(guidanceProp, match) {
     lawUrl,
     lawText
   }
+}
+
+function getMatchStatus(propositionMatchId) {
+  const match = propositionMatches.find((m) => m.id === propositionMatchId)
+  return match ? match.match_status : null
 }
 
 function getPageDetail(pageId) {
@@ -353,5 +360,6 @@ export const auditService = {
   getRelevantPages,
   getPageDetail,
   getDashboardPages,
-  getLawsForSubject
+  getLawsForSubject,
+  getMatchStatus
 }

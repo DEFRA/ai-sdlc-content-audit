@@ -78,6 +78,10 @@
                     </div>
                   {% endif %}
                 </dl>
+                {% set matchId = s.id %}
+                {% set widget = feedbackWidget %}
+                {% set justSubmitted = submittedMatchId == s.id %}
+                {% include "features/proposition-feedback/index.njk" %}
               </div>
             </div>
           {% endfor %}

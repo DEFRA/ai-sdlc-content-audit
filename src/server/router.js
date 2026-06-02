@@ -8,6 +8,8 @@ import { auditPagesList } from './features/audit-pages-list/index.js'
 import { auditLawsList } from './features/audit-laws-list/index.js'
 import { auditPageDetail } from './features/audit-page-detail/index.js'
 import { auditDashboard } from './features/audit-dashboard/index.js'
+import { propositionFeedback } from './features/proposition-feedback/index.js'
+import { adminFeedback } from './features/admin-feedback/index.js'
 import { serveStaticFiles } from './common/helpers/serve-static-files.js'
 
 export const router = {
@@ -29,6 +31,10 @@ export const router = {
       await server.register([auditLawsList])
       await server.register([auditPageDetail])
       await server.register([auditDashboard])
+
+      // Proposition feedback widget + admin review screen
+      await server.register([propositionFeedback])
+      await server.register([adminFeedback])
 
       // Static assets
       await server.register([serveStaticFiles])

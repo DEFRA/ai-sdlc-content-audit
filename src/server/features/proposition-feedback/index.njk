@@ -1,0 +1,64 @@
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{#
+  Renders the per-proposition feedback widget.
+  Required context: categoryId, pageId, matchId, widget, justSubmitted (bool).
+#}
+
+{% set actionUrl = "/audit/subjects/" + categoryId + "/pages/" + pageId + "/propositions/" + matchId + "/feedback" %}
+
+{% set revealHtml %}
+  {{ govukSelect({
+    id: "suggested-status-" + matchId,
+    name: "suggested_status",
+    label: { text: "Suggested status (optional)" },
+    items: [
+      { value: "", text: "— Select —", selected: true }
+    ].concat(widget.statusOptions)
+  }) }}
+
+  {{ govukCharacterCount({
+    id: "comment-" + matchId,
+    name: "comment",
+    label: { text: "Comment (optional)" },
+    maxlength: widget.commentMaxLength,
+    threshold: 80,
+    rows: 4
+  }) }}
+
+  {{ govukButton({
+    text: "Submit review",
+    preventDoubleClick: true
+  }) }}
+{% endset %}
+
+<form id="proposition-{{ matchId }}" method="post" action="{{ actionUrl }}" class="app-proposition-feedback govuk-!-margin-top-3" novalidate>
+  {% if justSubmitted %}
+    <div class="govuk-notification-banner govuk-notification-banner--success" role="alert"
+         aria-labelledby="feedback-banner-title-{{ matchId }}" data-module="govuk-notification-banner">
+      <div class="govuk-notification-banner__header">
+        <h2 class="govuk-notification-banner__title" id="feedback-banner-title-{{ matchId }}">Success</h2>
+      </div>
+      <div class="govuk-notification-banner__content">
+        <p class="govuk-notification-banner__heading">Thank you. Your review has been recorded.</p>
+      </div>
+    </div>
+  {% endif %}
+
+  {{ govukCheckboxes({
+    name: "flag",
+    idPrefix: "flag-" + matchId,
+    classes: "govuk-checkboxes--small",
+    items: [
+      {
+        value: "yes",
+        text: "Flag this match for review",
+        hint: { text: "Tell us if you think the status above is wrong." },
+        conditional: { html: revealHtml }
+      }
+    ]
+  }) }}
+</form>

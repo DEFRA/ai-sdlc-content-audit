@@ -1,6 +1,7 @@
 import {
   createAll,
   Button,
+  CharacterCount,
   Checkboxes,
   ErrorSummary,
   Header,
@@ -11,6 +12,7 @@ import {
 import './sortable-table.js'
 
 createAll(Button)
+createAll(CharacterCount)
 createAll(Checkboxes)
 createAll(ErrorSummary)
 createAll(Header)
