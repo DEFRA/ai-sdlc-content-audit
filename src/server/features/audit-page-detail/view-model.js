@@ -26,7 +26,6 @@ export const auditPageDetailViewModel = {
       categoryId,
       pageId,
       correctness: pct(detail.correctness),
-      completeness: pct(detail.completeness),
       statements: detail.statements,
       missingLaws: detail.missingLaws,
       hasStatements: detail.statements.length > 0,

@@ -3,8 +3,7 @@
 {% block beforeContent %}
   {{ govukBreadcrumbs({
     items: [
-      { text: "Home", href: "/" },
-      { text: "Choose a subject", href: "/audit" },
+      { text: "Choose a category", href: "/" },
       { text: category.title, href: "/audit/subjects/" + category.id },
       { text: "Pages" }
     ]
@@ -53,7 +52,6 @@
           <tr class="govuk-table__row">
             <th scope="col" class="govuk-table__header" data-sortable data-sort-type="string" aria-sort="none">Page</th>
             <th scope="col" class="govuk-table__header govuk-table__header--numeric" data-sortable data-sort-type="number" aria-sort="none">Correctness</th>
-            <th scope="col" class="govuk-table__header govuk-table__header--numeric" data-sortable data-sort-type="number" aria-sort="none">Completeness</th>
             <th scope="col" class="govuk-table__header govuk-table__header--numeric" data-sortable data-sort-type="number" aria-sort="none">Conflicts</th>
           </tr>
         </thead>
@@ -66,7 +64,6 @@
                 <span class="govuk-body-s" style="color:#505a5f;">{{ row.page.url }}</span>
               </td>
               <td class="govuk-table__cell govuk-table__cell--numeric" data-sort-value="{{ row.correctnessRaw }}">{{ row.correctness }}</td>
-              <td class="govuk-table__cell govuk-table__cell--numeric" data-sort-value="{{ row.completenessRaw }}">{{ row.completeness }}</td>
               <td class="govuk-table__cell govuk-table__cell--numeric" data-sort-value="{{ row.conflicts }}">{{ row.conflicts }}</td>
             </tr>
           {% endfor %}

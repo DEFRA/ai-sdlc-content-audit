@@ -2,97 +2,31 @@
   {
     "legislation_id": 1,
     "coverage_score": {
-      "completeness": 0
+      "proposition_coverage": 0.22018348623853212
     }
   },
   {
     "legislation_id": 2,
     "coverage_score": {
-      "completeness": 0
+      "proposition_coverage": 0.5263157894736842
     }
   },
   {
     "legislation_id": 3,
     "coverage_score": {
-      "completeness": 0
+      "proposition_coverage": 0.18333333333333332
     }
   },
   {
     "legislation_id": 4,
     "coverage_score": {
-      "completeness": 0
+      "proposition_coverage": 0.16483516483516483
     }
   },
   {
     "legislation_id": 5,
     "coverage_score": {
-      "completeness": 0
-    }
-  },
-  {
-    "legislation_id": 6,
-    "coverage_score": {
-      "completeness": 0
-    }
-  },
-  {
-    "legislation_id": 7,
-    "coverage_score": {
-      "completeness": 0
-    }
-  },
-  {
-    "legislation_id": 8,
-    "coverage_score": {
-      "completeness": 0
-    }
-  },
-  {
-    "legislation_id": 101,
-    "coverage_score": {
-      "completeness": 0
-    }
-  },
-  {
-    "legislation_id": 102,
-    "coverage_score": {
-      "completeness": 0
-    }
-  },
-  {
-    "legislation_id": 103,
-    "coverage_score": {
-      "completeness": 0
-    }
-  },
-  {
-    "legislation_id": 104,
-    "coverage_score": {
-      "completeness": 0
-    }
-  },
-  {
-    "legislation_id": 105,
-    "coverage_score": {
-      "completeness": 0
-    }
-  },
-  {
-    "legislation_id": 106,
-    "coverage_score": {
-      "completeness": 0
-    }
-  },
-  {
-    "legislation_id": 107,
-    "coverage_score": {
-      "completeness": 0
-    }
-  },
-  {
-    "legislation_id": 108,
-    "coverage_score": {
-      "completeness": 0
+      "proposition_coverage": 0.2
     }
   }
 ]

@@ -11,38 +11,30 @@ describe('#buildNavigation', () => {
     ).toEqual([
       {
         current: false,
-        text: 'Home',
-        href: '/'
-      },
-      {
-        current: false,
         text: 'Guidance audit',
-        href: '/audit'
-      },
-      {
-        current: false,
-        text: 'Improvement dashboard',
-        href: '/audit/dashboard'
+        href: '/'
       }
     ])
   })
 
-  test('Should provide expected highlighted navigation details', () => {
+  test('Should highlight Guidance audit at root', () => {
     expect(buildNavigation(mockRequest({ path: '/' }))).toEqual([
       {
         current: true,
-        text: 'Home',
-        href: '/'
-      },
-      {
-        current: false,
         text: 'Guidance audit',
-        href: '/audit'
-      },
+        href: '/'
+      }
+    ])
+  })
+
+  test('Should highlight Guidance audit on /audit/* subpages', () => {
+    expect(
+      buildNavigation(mockRequest({ path: '/audit/subjects/equine' }))
+    ).toEqual([
       {
-        current: false,
-        text: 'Improvement dashboard',
-        href: '/audit/dashboard'
+        current: true,
+        text: 'Guidance audit',
+        href: '/'
       }
     ])
   })

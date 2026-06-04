@@ -6,7 +6,7 @@ export const auditSubjectSelect = {
     register(server) {
       server.route({
         method: 'GET',
-        path: '/audit',
+        path: '/',
         ...auditSubjectSelectController
       })
     }

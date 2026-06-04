@@ -2,97 +2,36 @@
   {
     "id": 1,
     "category_id": 1,
-    "name": "The Equine (Records, Identification and Movement) Regulations 2021",
-    "url": "https://www.legislation.gov.uk/uksi/2021/0453/contents/made"
+    "name": "The Nitrate Pollution Prevention Regulations 2015",
+    "url": "https://www.legislation.gov.uk/uksi/2015/668/contents/made",
+    "source_record_id": "lex-120b4f9c395b3f94"
   },
   {
     "id": 2,
     "category_id": 1,
-    "name": "The Trade in Animals and Related Products Regulations 2011",
-    "url": "https://www.legislation.gov.uk/uksi/2011/1197/contents/made"
+    "name": "The Reduction and Prevention of Agricultural Diffuse Pollution (England) Regulations 2018",
+    "url": "https://www.legislation.gov.uk/uksi/2018/151/contents/made",
+    "source_record_id": "lex-2459c955ee13be52"
   },
   {
     "id": 3,
     "category_id": 1,
-    "name": "Regulation (EU) 2016/429 on transmissible animal diseases (Animal Health Law)",
-    "url": "https://www.legislation.gov.uk/eur/2016/429/contents"
+    "name": "The Water Resources (Control of Agricultural Pollution) (Wales) Regulations 2021",
+    "url": "https://www.legislation.gov.uk/wsi/2021/77/contents/made",
+    "source_record_id": "lex-805b03f284dcf364"
   },
   {
     "id": 4,
     "category_id": 1,
-    "name": "The Animals (Legislative Functions) (EU Exit) Regulations 2019",
-    "url": "https://www.legislation.gov.uk/uksi/2019/1225/contents/made"
+    "name": "The Control of Pollution (Silage, Slurry and Agricultural Fuel Oil) (Scotland) Regulations 2003",
+    "url": "https://www.legislation.gov.uk/ssi/2003/531/contents/made",
+    "source_record_id": "lex-96613ffe71589e1e"
   },
   {
     "id": 5,
     "category_id": 1,
-    "name": "The Welfare of Animals (Transport) (England) Order 2006",
-    "url": "https://www.legislation.gov.uk/uksi/2006/3260/contents/made"
-  },
-  {
-    "id": 6,
-    "category_id": 1,
-    "name": "Commission Implementing Regulation (EU) 2018/659 on equidae entry",
-    "url": "https://www.legislation.gov.uk/eur/2018/659/contents"
-  },
-  {
-    "id": 7,
-    "category_id": 1,
-    "name": "The Animal Health Act 1981",
-    "url": "https://www.legislation.gov.uk/ukpga/1981/22/contents"
-  },
-  {
-    "id": 8,
-    "category_id": 1,
-    "name": "The Zootechnical Standards (EU Exit) Regulations 2020",
-    "url": "https://www.legislation.gov.uk/uksi/2020/1504/contents/made"
-  },
-  {
-    "id": 101,
-    "category_id": 2,
     "name": "The Water Resources (Control of Pollution) (Silage, Slurry and Agricultural Fuel Oil) (England) Regulations 2010",
-    "url": "https://www.legislation.gov.uk/uksi/2010/639/contents/made"
-  },
-  {
-    "id": 102,
-    "category_id": 2,
-    "name": "The Reduction and Prevention of Agricultural Diffuse Pollution (England) Regulations 2018",
-    "url": "https://www.legislation.gov.uk/uksi/2018/151/contents/made"
-  },
-  {
-    "id": 103,
-    "category_id": 2,
-    "name": "The Nitrate Pollution Prevention Regulations 2015",
-    "url": "https://www.legislation.gov.uk/uksi/2015/668/contents/made"
-  },
-  {
-    "id": 104,
-    "category_id": 2,
-    "name": "The Environmental Permitting (England and Wales) Regulations 2016",
-    "url": "https://www.legislation.gov.uk/uksi/2016/1154/contents/made"
-  },
-  {
-    "id": 105,
-    "category_id": 2,
-    "name": "The Animal By-Products (Enforcement) (England) Regulations 2013",
-    "url": "https://www.legislation.gov.uk/uksi/2013/2952/contents/made"
-  },
-  {
-    "id": 106,
-    "category_id": 2,
-    "name": "The Clean Air Act 1993",
-    "url": "https://www.legislation.gov.uk/ukpga/1993/11/contents"
-  },
-  {
-    "id": 107,
-    "category_id": 2,
-    "name": "The Environmental Protection Act 1990 (Part III)",
-    "url": "https://www.legislation.gov.uk/ukpga/1990/43/part/III"
-  },
-  {
-    "id": 108,
-    "category_id": 2,
-    "name": "The Sludge (Use in Agriculture) Regulations 1989",
-    "url": "https://www.legislation.gov.uk/uksi/1989/1263/contents/made"
+    "url": "https://www.legislation.gov.uk/uksi/2010/639/contents/made",
+    "source_record_id": "lex-e71fbbe3342ac0be"
   }
 ]

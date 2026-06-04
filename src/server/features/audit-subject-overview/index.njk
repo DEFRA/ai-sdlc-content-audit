@@ -3,8 +3,7 @@
 {% block beforeContent %}
   {{ govukBreadcrumbs({
     items: [
-      { text: "Home", href: "/" },
-      { text: "Choose a subject", href: "/audit" },
+      { text: "Choose a category", href: "/" },
       { text: category.title }
     ]
   }) }}
@@ -63,53 +62,26 @@
           <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">Pages about this subject</dt>
             <dd class="govuk-summary-list__value">
-              <a class="govuk-link govuk-!-font-size-24" href="{{ pagesHref }}">{{ pagesRelevant }}</a>
+              <a class="govuk-link govuk-!-font-size-24" href="{{ pagesHref }}">{{ pagesInCategory }}</a>
             </dd>
           </div>
         </dl>
 
-        {% if hasRelevantPages %}
-          <h2 class="govuk-heading-l govuk-!-margin-top-6">How the guidance is doing</h2>
-
-          <div class="audit-score-panel govuk-!-margin-bottom-4" style="border-left:10px solid {% if guidanceScoreBand.colour == 'green' %}#00703c{% elif guidanceScoreBand.colour == 'yellow' %}#ffdd00{% elif guidanceScoreBand.colour == 'orange' %}#f47738{% elif guidanceScoreBand.colour == 'red' %}#d4351c{% else %}#b1b4b6{% endif %};padding:16px 20px;background:#f3f2f1;">
-            <p class="govuk-body-s govuk-!-margin-bottom-1" style="color:#505a5f;">Overall guidance score</p>
-            <p class="govuk-heading-xl govuk-!-margin-bottom-1">{{ guidanceScoreDisplay }}</p>
-            <p class="govuk-body govuk-!-margin-bottom-0">
-              <strong class="govuk-tag govuk-tag--{{ guidanceScoreBand.colour }}">{{ guidanceScoreBand.label }}</strong>
-              — based on every statement we checked across all pages about this subject.
-            </p>
-          </div>
-
-          <p class="govuk-body">
-            We broke each page down into individual statements (called <em>propositions</em>) and checked each one against the law.
-            The numbers below show the total number of statements we found in each group.
-          </p>
-
-          <ul class="audit-status-grid">
-            {% for box in breakdownBoxes %}
-              <li>
-                <div class="audit-status-tile{% if not box.href %} audit-status-tile--empty{% endif %}">
-                  <strong class="govuk-tag govuk-tag--{{ box.tone }} audit-status-tile__tag">{{ box.title }}</strong>
-                  <p class="audit-status-tile__count">{{ box.count }}</p>
-                  <p class="audit-status-tile__spread">{{ box.spread }}</p>
-                  <p class="audit-status-tile__meaning">{{ box.meaning }}</p>
-                  {% if box.href %}
-                    <p class="audit-status-tile__cta">
-                      <a class="govuk-link audit-status-tile__link" href="{{ box.href }}">{{ box.cta }}</a>
-                    </p>
-                  {% endif %}
-                </div>
-              </li>
-            {% endfor %}
-          </ul>
-
-          <a href="{{ pagesHref }}" role="button" draggable="false" class="govuk-button govuk-!-margin-top-4" data-module="govuk-button">
-            See all pages about this subject
-          </a>
-        {% else %}
+        {% if not hasPagesInCategory %}
           <p class="govuk-body">We could not find any guidance pages about this subject.</p>
         {% endif %}
       </div>
     </div>
   </div>
+
+  {% if hasPagesInCategory %}
+    <div class="app-full-bleed">
+      <h2 class="govuk-heading-l govuk-!-margin-top-6">Content improvement dashboard</h2>
+      {% include "partials/improvement-dashboard.njk" %}
+
+      <p class="govuk-body govuk-!-margin-top-6">
+        <a class="govuk-link govuk-link--no-visited-state" href="{{ propositionsHref }}">View all propositions for {{ category.title }}</a>
+      </p>
+    </div>
+  {% endif %}
 {% endblock %}

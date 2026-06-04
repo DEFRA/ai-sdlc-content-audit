@@ -1,5 +1,3 @@
-export const RELEVANCE_THRESHOLD = 0.6
-
 export const STATUS_META = {
   CONFLICTS: {
     severity: 1,

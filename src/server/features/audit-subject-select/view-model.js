@@ -10,10 +10,10 @@ export const auditSubjectSelectViewModel = {
     }))
 
     return {
-      pageTitle: 'Choose a category to audit',
-      heading: 'Choose a category to audit',
+      pageTitle: 'DEFRA guidance audit',
+      heading: 'DEFRA guidance audit',
       intro:
-        'Pick one of the categories we have already checked. We will show you the laws we found and how well our guidance pages explain them.',
+        'We have checked GOV.UK guidance against the underlying legislation for the categories below. Pick a category to see what we found.',
       categories,
       hasCategories: categories.length > 0
     }

@@ -3,8 +3,7 @@
 {% block beforeContent %}
   {{ govukBreadcrumbs({
     items: [
-      { text: "Home", href: "/" },
-      { text: "Choose a subject", href: "/audit" },
+      { text: "Choose a category", href: "/" },
       { text: category.title, href: "/audit/subjects/" + category.id },
       { text: "Pages", href: backHref },
       { text: page.title }
@@ -27,11 +26,6 @@
             <p class="govuk-body-s govuk-!-margin-bottom-1" style="color:#505a5f;">Correctness</p>
             <p class="govuk-heading-xl govuk-!-margin-bottom-2">{{ correctness }}</p>
             <p class="govuk-body-s">How well this guidance agrees with the law.</p>
-          </div>
-          <div class="govuk-grid-column-one-half">
-            <p class="govuk-body-s govuk-!-margin-bottom-1" style="color:#505a5f;">Completeness</p>
-            <p class="govuk-heading-xl govuk-!-margin-bottom-2">{{ completeness }}</p>
-            <p class="govuk-body-s">How much of the relevant law this guidance covers.</p>
           </div>
         </div>
 
@@ -61,7 +55,7 @@
                   </div>
                   <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">Our finding</dt>
-                    <dd class="govuk-summary-list__value">{{ s.statusMeaning }}</dd>
+                    <dd class="govuk-summary-list__value">{{ s.explanation if s.explanation else s.statusMeaning }}</dd>
                   </div>
                   {% if s.lawName %}
                     <div class="govuk-summary-list__row">

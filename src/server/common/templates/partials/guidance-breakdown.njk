@@ -1,0 +1,22 @@
+<p class="govuk-body">
+  We broke each page down into individual statements (called <em>propositions</em>) and checked each one against the law.
+  The numbers below show the total number of statements we found in each group.
+</p>
+
+<ul class="audit-status-grid">
+  {% for box in breakdownBoxes %}
+    <li>
+      <div class="audit-status-tile{% if not box.href %} audit-status-tile--empty{% endif %}">
+        <strong class="govuk-tag govuk-tag--{{ box.tone }} audit-status-tile__tag">{{ box.title }}</strong>
+        <p class="audit-status-tile__count">{{ box.count }}</p>
+        <p class="audit-status-tile__spread">{{ box.spread }}</p>
+        <p class="audit-status-tile__meaning">{{ box.meaning }}</p>
+        {% if box.href %}
+          <p class="audit-status-tile__cta">
+            <a class="govuk-link audit-status-tile__link" href="{{ box.href }}">{{ box.cta }}</a>
+          </p>
+        {% endif %}
+      </div>
+    </li>
+  {% endfor %}
+</ul>

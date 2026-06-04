@@ -110,6 +110,17 @@ th[data-sortable]:last-child .app-sortable-table__button {
   opacity: 1;
 }
 
+.app-full-bleed {
+  padding-left: 30px;
+  padding-right: 30px;
+  box-sizing: border-box;
+
+  @media (max-width: 40.0625em) {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+}
+
 .app-table-scroll {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;

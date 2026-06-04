@@ -1,11 +1,6 @@
 [
   {
     "id": 1,
-    "title": "Equine imports and exports",
-    "description": "Bringing horses, ponies, donkeys and other equidae into Great Britain, and exporting them abroad. Covers identification documents (equine passports), health certification, blood testing, approved border control posts, quarantine and residency requirements, and the rules for temporary movement, competition, breeding and slaughter."
-  },
-  {
-    "id": 2,
     "title": "Slurry, manure and agricultural effluent management",
     "description": "Slurry, manure, and agricultural effluent management covering storage, spreading, and disposal of livestock waste including pig slurry, poultry manure, farmyard manure (FYM), liquid manure, silage effluent, and digestate. Covers storage infrastructure requirements such as slurry tanks, lagoons, slurry stores, reception pits, lined lagoons, freeboard, structural integrity, and secondary containment. Includes land application controls covering application rates, buffer zones, closed periods, and muck spreading. Covers environmental protection requirements including ammonia emissions, runoff prevention."
   }

@@ -1,0 +1,32 @@
+{% extends "layouts/page.njk" %}
+
+{% block beforeContent %}
+  {{ govukBreadcrumbs({
+    items: [
+      { text: "Choose a category", href: "/" },
+      { text: category.title, href: "/audit/subjects/" + category.id },
+      { text: "All propositions" }
+    ]
+  }) }}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-width-container">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-three-quarters">
+        <h1 class="govuk-heading-xl">How the guidance is doing</h1>
+        <p class="govuk-body-l">{{ category.title }}</p>
+
+        {% if hasPagesInCategory %}
+          {% include "partials/guidance-breakdown.njk" %}
+
+          <a href="{{ pagesHref }}" role="button" draggable="false" class="govuk-button govuk-!-margin-top-4" data-module="govuk-button">
+            See all pages about this subject
+          </a>
+        {% else %}
+          <p class="govuk-body">We could not find any guidance pages about this subject.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endblock %}

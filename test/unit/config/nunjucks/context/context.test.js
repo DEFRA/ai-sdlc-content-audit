@@ -52,18 +52,8 @@ describe('context and cache', () => {
           navigation: [
             {
               current: true,
-              text: 'Home',
-              href: '/'
-            },
-            {
-              current: false,
               text: 'Guidance audit',
-              href: '/audit'
-            },
-            {
-              current: false,
-              text: 'Improvement dashboard',
-              href: '/audit/dashboard'
+              href: '/'
             }
           ],
           serviceName: 'ai-sdlc-content-audit',
@@ -148,18 +138,8 @@ describe('context and cache', () => {
           navigation: [
             {
               current: true,
-              text: 'Home',
-              href: '/'
-            },
-            {
-              current: false,
               text: 'Guidance audit',
-              href: '/audit'
-            },
-            {
-              current: false,
-              text: 'Improvement dashboard',
-              href: '/audit/dashboard'
+              href: '/'
             }
           ],
           serviceName: 'ai-sdlc-content-audit',

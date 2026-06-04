@@ -18,8 +18,6 @@ export const auditPagesListViewModel = {
       detailHref: `/audit/subjects/${categoryId}/pages/${r.id}`,
       correctness: pct(r.correctness),
       correctnessRaw: r.correctness ?? -1,
-      completeness: pct(r.completeness),
-      completenessRaw: r.completeness ?? -1,
       conflicts: r.conflictsCount
     }))
 

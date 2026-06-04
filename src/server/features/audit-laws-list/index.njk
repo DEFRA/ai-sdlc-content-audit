@@ -3,8 +3,7 @@
 {% block beforeContent %}
   {{ govukBreadcrumbs({
     items: [
-      { text: "Home", href: "/" },
-      { text: "Choose a subject", href: "/audit" },
+      { text: "Choose a category", href: "/" },
       { text: category.title, href: "/audit/subjects/" + category.id },
       { text: "Laws" }
     ]
@@ -16,18 +15,17 @@
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-three-quarters">
         <h1 class="govuk-heading-xl">{{ heading }}</h1>
-        <p class="govuk-body">These are the laws we found that apply to this subject. The coverage shows how much of each law our guidance pages explain.</p>
+        <p class="govuk-body">These are the laws we found that apply to this subject.</p>
 
         {% if hasResults %}
           <table class="govuk-table">
-            <caption class="govuk-table__caption govuk-visually-hidden">Laws and how well they are covered</caption>
+            <caption class="govuk-table__caption govuk-visually-hidden">Laws found for this subject</caption>
             <thead class="govuk-table__head">
               <tr class="govuk-table__row">
                 <th scope="col" class="govuk-table__header">Law</th>
                 <th scope="col" class="govuk-table__header govuk-table__header--numeric">Rules in the law</th>
                 <th scope="col" class="govuk-table__header govuk-table__header--numeric">Rules with guidance</th>
-                <th scope="col" class="govuk-table__header govuk-table__header--numeric">Coverage</th>
-                <th scope="col" class="govuk-table__header">How well covered</th>
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric">Conflicts</th>
               </tr>
             </thead>
             <tbody class="govuk-table__body">
@@ -40,10 +38,7 @@
                   </td>
                   <td class="govuk-table__cell govuk-table__cell--numeric">{{ row.propositionCount }}</td>
                   <td class="govuk-table__cell govuk-table__cell--numeric">{{ row.propositionsWithGuidance }}</td>
-                  <td class="govuk-table__cell govuk-table__cell--numeric">{{ row.coverage }}</td>
-                  <td class="govuk-table__cell">
-                    <strong class="govuk-tag govuk-tag--{{ row.coverageTag.colour }}">{{ row.coverageTag.text }}</strong>
-                  </td>
+                  <td class="govuk-table__cell govuk-table__cell--numeric">{{ row.conflictsCount }}</td>
                 </tr>
               {% endfor %}
             </tbody>

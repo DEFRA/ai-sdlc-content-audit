@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-import { RELEVANCE_THRESHOLD, STATUS_META, STATUS_ORDER } from './constants.js'
+import { STATUS_META, STATUS_ORDER } from './constants.js'
 
 const dataDir = join(dirname(fileURLToPath(import.meta.url)), 'data')
 
@@ -16,11 +16,11 @@ const legislationPropositions = load('legislation-propositions.json')
 const pages = load('pages.json')
 const guidancePropositions = load('guidance-propositions.json')
 const propositionMatches = load('proposition-matches.json')
-const semanticSimilarity = load('semantic-similarity.json')
 const pageAggregations = load('page-aggregations.json')
 const pageAnalytics = load('page-analytics.json')
 const subjectSummaries = load('subject-summary.json')
 const pageRelevance = load('page-relevance.json')
+const pageReadingAge = load('pages-reading-age.json')
 
 const subjectSummaryByCategory = new Map(
   subjectSummaries.map((s) => [s.category_id, s])
@@ -36,6 +36,7 @@ const legislationPropositionById = new Map(
 const pageById = new Map(pages.map((p) => [p.id, p]))
 const pageAggregationById = new Map(pageAggregations.map((a) => [a.page_id, a]))
 const pageAnalyticsById = new Map(pageAnalytics.map((a) => [a.page_id, a]))
+const readingAgeByPageId = new Map(pageReadingAge.map((r) => [r.page_id, r]))
 
 const guidancePropositionsByPage = new Map()
 for (const gp of guidancePropositions) {
@@ -56,12 +57,8 @@ const missingMatches = propositionMatches.filter(
   (m) => m.match_status === 'GUIDANCE_MISSING'
 )
 
-function relevantPageIdsForCategory(categoryId) {
-  return semanticSimilarity
-    .filter(
-      (s) => s.category_id === categoryId && s.llm_score >= RELEVANCE_THRESHOLD
-    )
-    .map((s) => s.page_id)
+function pageIdsForCategory(categoryId) {
+  return pages.filter((p) => p.category_id === categoryId).map((p) => p.id)
 }
 
 function conflictsCountForPage(pageId) {
@@ -75,7 +72,6 @@ function conflictsCountForPage(pageId) {
 }
 
 function statusForPage(pageId) {
-  // returns a set of all match_status values present on this page's guidance propositions
   const gps = guidancePropositionsByPage.get(pageId) ?? []
   const set = new Set()
   for (const gp of gps) {
@@ -91,15 +87,6 @@ function getCategory(categoryId) {
 
 function getAllCategories() {
   return categories
-}
-
-const COVERAGE_WEIGHTS = {
-  GROUNDED: 1,
-  GUIDANCE_BROADER: 1,
-  GUIDANCE_INCOMPLETE: 0.5,
-  GUIDANCE_MISSING: 0,
-  CONFLICTS: 0,
-  UNGROUNDED: 0
 }
 
 function getLawsForSubject(categoryId) {
@@ -127,42 +114,26 @@ function getLawsForSubject(categoryId) {
 
   return lawsForCategory.map((law) => {
     const props = propositionsByLaw.get(law.id) ?? []
-    let scoreSum = 0
     let propsWithGuidance = 0
     let conflictsCount = 0
 
     for (const prop of props) {
       const matches = matchesByLawPropositionId.get(prop.id) ?? []
-      if (matches.length === 0) {
-        // proposition with no matches at all — counts as missing
-        scoreSum += 0
-        continue
-      }
-
-      // best status for this proposition wins (any GROUNDED beats incomplete)
-      let bestWeight = 0
       let hasGuidance = false
       for (const m of matches) {
-        const w = COVERAGE_WEIGHTS[m.match_status] ?? 0
-        if (w > bestWeight) bestWeight = w
         if (m.match_status !== 'GUIDANCE_MISSING') hasGuidance = true
         if (m.match_status === 'CONFLICTS') conflictsCount++
       }
-      scoreSum += bestWeight
       if (hasGuidance) propsWithGuidance++
     }
-
-    const propositionCount = props.length
-    const coverage = propositionCount > 0 ? scoreSum / propositionCount : 0
 
     return {
       id: law.id,
       name: law.name,
       url: law.url,
-      propositionCount,
+      propositionCount: props.length,
       propositionsWithGuidance: propsWithGuidance,
-      conflictsCount,
-      coverage
+      conflictsCount
     }
   })
 }
@@ -174,7 +145,7 @@ function getSubjectOverview(categoryId) {
   const summary = subjectSummaryByCategory.get(categoryId)
   if (!summary) return null
 
-  const pageIds = relevantPageIdsForCategory(categoryId)
+  const pageIds = pageIdsForCategory(categoryId)
   const pagesByStatus = {}
   for (const status of STATUS_ORDER) pagesByStatus[status] = 0
   for (const pid of pageIds) {
@@ -197,8 +168,7 @@ function getSubjectOverview(categoryId) {
     category,
     lawsFound: summary.laws_found,
     totalPagesAudited: summary.total_pages_audited,
-    pagesRelevant: summary.pages_relevant,
-    relevanceThreshold: summary.relevance_threshold,
+    pagesInCategory: pageIds.length,
     statusCounts: summary.proposition_status_counts,
     pagesByStatus,
     lawsMissingGuidance: missingLawIds.size
@@ -214,13 +184,12 @@ function decoratePage(pageId) {
     url: page.url,
     title: page.title,
     correctness: agg?.quality_score?.correctness ?? null,
-    completeness: agg?.quality_score?.completeness ?? null,
     conflictsCount: conflictsCountForPage(pageId)
   }
 }
 
 function getRelevantPages(categoryId, statusFilter = null) {
-  const pageIds = relevantPageIdsForCategory(categoryId)
+  const pageIds = pageIdsForCategory(categoryId)
   let rows = pageIds.map(decoratePage).filter(Boolean)
 
   if (statusFilter) {
@@ -256,7 +225,10 @@ function buildStatement(guidanceProp, match) {
     severity: meta.severity,
     lawName,
     lawUrl,
-    lawText
+    lawText,
+    explanation: match.explanation ?? null,
+    confidence: match.confidence ?? null,
+    correctnessScore: match.correctness_score ?? null
   }
 }
 
@@ -280,9 +252,9 @@ function getPageDetail(pageId) {
     .filter(Boolean)
     .sort((a, b) => a.severity - b.severity)
 
-  // Laws-with-no-guidance: GUIDANCE_MISSING entries — context-level only (no per-page link),
-  // so show the union for the subject under the page detail. Scoped to the
-  // page's own category so equine pages don't show slurry's missing laws.
+  // GUIDANCE_MISSING is a subject-level concern (no per-page link), so show
+  // the union for the subject under the page detail, scoped to the page's
+  // own category.
   const missingLaws = missingMatches
     .map((m) => {
       if (m.legislation_proposition_id == null) return null
@@ -307,77 +279,37 @@ function getPageDetail(pageId) {
   return {
     page,
     correctness: agg?.quality_score?.correctness ?? null,
-    completeness: agg?.quality_score?.completeness ?? null,
     statements,
     missingLaws
   }
 }
 
-function suggestedAction(p) {
-  if (p.views >= 200000 && (p.correctness ?? 1) < 0.7) return 'Rework'
-  if ((p.correctness ?? 1) < 0.6) return 'Consider deleting'
-  if (p.conflictsCount > 0) return 'Rework'
-  if ((p.correctness ?? 1) < 0.75) return 'Rework'
-  return 'Rework'
-}
-
-function getDashboardPages() {
-  // Flag a page if correctness < 0.75, completeness < 0.7, or any conflicts.
-  const flagged = pages
-    .map((p) => {
-      const agg = pageAggregationById.get(p.id)
-      const analytics = pageAnalyticsById.get(p.id)
-      const correctness = agg?.quality_score?.correctness ?? null
-      const completeness = agg?.quality_score?.completeness ?? null
-      const conflictsCount = conflictsCountForPage(p.id)
-      const relevanceScore = relevanceByCategoryPage.get(
-        `${p.category_id}:${p.id}`
-      )
-      return {
-        id: p.id,
-        categoryId: p.category_id,
-        title: p.title,
-        url: p.url,
-        correctness,
-        completeness,
-        conflictsCount,
-        lastUpdated: analytics?.last_updated_date ?? null,
-        views: analytics?.view_count_period ?? null,
-        relevanceScore: relevanceScore ?? null
-      }
-    })
-    .filter(
-      (r) =>
-        (r.correctness != null && r.correctness < 0.75) ||
-        (r.completeness != null && r.completeness < 0.7) ||
-        r.conflictsCount > 0
-    )
-
-  const scored = flagged.map((p) => {
-    const correctnessPenalty = (1 - (p.correctness ?? 1)) * 100
-    const completenessPenalty = (1 - (p.completeness ?? 1)) * 40
-    const conflictPenalty = p.conflictsCount * 80
-    const viewWeight = (p.views ?? 0) / 100000
-    const ageDays = p.lastUpdated
-      ? (Date.now() - new Date(p.lastUpdated).getTime()) / (1000 * 60 * 60 * 24)
-      : 0
-    const agePenalty = Math.min(ageDays / 365, 5) * 5
-
-    const attentionScore =
-      correctnessPenalty +
-      completenessPenalty +
-      conflictPenalty +
-      viewWeight +
-      agePenalty
+function getDashboardPages(categoryId = null) {
+  const source = categoryId
+    ? pages.filter((p) => p.category_id === categoryId)
+    : pages
+  const rows = source.map((p) => {
+    const agg = pageAggregationById.get(p.id)
+    const analytics = pageAnalyticsById.get(p.id)
+    const reading = readingAgeByPageId.get(p.id)
     return {
-      ...p,
-      attentionScore,
-      suggestedAction: suggestedAction(p)
+      id: p.id,
+      categoryId: p.category_id,
+      title: p.title,
+      url: p.url,
+      correctness: agg?.quality_score?.correctness ?? null,
+      conflictsCount: conflictsCountForPage(p.id),
+      lastUpdated: analytics?.last_updated_date ?? null,
+      views: analytics?.view_count_period ?? null,
+      relevanceScore:
+        relevanceByCategoryPage.get(`${p.category_id}:${p.id}`) ?? null,
+      wordCount: reading?.word_count ?? null,
+      readingAge: reading?.reading_age ?? null
     }
   })
 
-  scored.sort((a, b) => b.attentionScore - a.attentionScore)
-  return scored
+  rows.sort((a, b) => a.title.localeCompare(b.title))
+  return rows
 }
 
 export const auditService = {

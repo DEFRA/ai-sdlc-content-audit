@@ -106,7 +106,7 @@ describe('proposition feedback endpoints', () => {
     test('renders one widget per statement and shows the success banner after submission', async () => {
       const { statusCode, payload } = await server.inject({
         method: 'GET',
-        url: '/audit/subjects/1/pages/1?feedback=success&matchId=1'
+        url: '/audit/subjects/1/pages/2?feedback=success&matchId=1'
       })
 
       expect(statusCode).toBe(200)
@@ -116,7 +116,7 @@ describe('proposition feedback endpoints', () => {
       expect(payload).toContain('Submit review')
       expect(payload).toContain('Thank you. Your review has been recorded.')
       expect(payload).toContain(
-        '/audit/subjects/1/pages/1/propositions/1/feedback'
+        '/audit/subjects/1/pages/2/propositions/1/feedback'
       )
     })
   })
