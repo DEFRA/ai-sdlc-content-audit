@@ -10,6 +10,7 @@ import {
 } from 'govuk-frontend'
 
 import { initSortableTables } from './sortable-table.js'
+import { initStickyTableScrolls } from './sticky-table-scroll.js'
 
 createAll(Button)
 createAll(CharacterCount)
@@ -19,3 +20,4 @@ createAll(Header)
 createAll(Radios)
 createAll(SkipLink)
 initSortableTables()
+initStickyTableScrolls()

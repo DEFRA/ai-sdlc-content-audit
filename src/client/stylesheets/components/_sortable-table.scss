@@ -110,15 +110,46 @@ th[data-sortable]:last-child .app-sortable-table__button {
   opacity: 1;
 }
 
+// Break out of the surrounding govuk-width-container so wide tables get the
+// full viewport width to lay out in, with horizontal scroll on overflow.
 .app-full-bleed {
-  padding-left: 30px;
-  padding-right: 30px;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  width: 100vw;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  padding-left: 60px;
+  padding-right: 60px;
   box-sizing: border-box;
+
+  @media (max-width: 64.0625em) {
+    padding-left: 30px;
+    padding-right: 30px;
+  }
 
   @media (max-width: 40.0625em) {
     padding-left: 15px;
     padding-right: 15px;
   }
+}
+
+// Floating sticky scrollbar that sits on top of the table and stays glued to
+// the top of the viewport while the table is in view, so users do not have to
+// scroll to the bottom of the table to find the horizontal scrollbar.
+.app-table-shadow-scroll {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  overflow-x: auto;
+  overflow-y: hidden;
+  height: 14px;
+  background: govuk-colour('light-grey');
+  border-bottom: 1px solid govuk-colour('mid-grey');
+}
+
+.app-table-shadow-scroll__inner {
+  height: 1px;
 }
 
 .app-table-scroll {
