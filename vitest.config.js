@@ -6,6 +6,7 @@ export default defineConfig({
     environment: 'node',
     clearMocks: true,
     include: ['test/**/*.test.js'],
+    setupFiles: ['./.vite/setup-files.js'],
     coverage: {
       provider: 'v8',
       reportsDirectory: './coverage',

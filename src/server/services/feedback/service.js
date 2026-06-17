@@ -1,9 +1,5 @@
 import { feedbackRepository } from './repository.js'
 
-function nowEpochSeconds() {
-  return Math.floor(Date.now() / 1000)
-}
-
 export const feedbackService = {
   async saveForMatch({
     categoryId,
@@ -13,25 +9,26 @@ export const feedbackService = {
     choice,
     comment
   }) {
-    const existing = (
-      await feedbackRepository.findByMatchIds([propositionMatchId])
-    ).get(propositionMatchId)
-    const now = nowEpochSeconds()
-    const entry = {
-      proposition_match_id: propositionMatchId,
-      category_id: categoryId,
-      page_id: pageId,
-      current_status: currentStatus,
+    return feedbackRepository.save({
+      propositionMatchId,
+      categoryId,
+      pageId,
+      currentStatus,
       choice,
-      comment: comment || null,
-      submitted_at: existing?.submitted_at ?? now,
-      updated_at: now
-    }
-    await feedbackRepository.upsert(propositionMatchId, entry)
-    return entry
+      comment: comment || null
+    })
   },
   async findByMatchIds(matchIds) {
-    return feedbackRepository.findByMatchIds(matchIds)
+    if (matchIds.length === 0) return new Map()
+    const wanted = new Set(matchIds)
+    const entries = await feedbackRepository.listAll()
+    const found = new Map()
+    for (const entry of entries) {
+      if (wanted.has(entry.propositionMatchId)) {
+        found.set(entry.propositionMatchId, entry)
+      }
+    }
+    return found
   },
   async listAll() {
     return feedbackRepository.listAll()

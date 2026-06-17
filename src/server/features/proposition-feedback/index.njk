@@ -6,7 +6,7 @@
   Renders the per-proposition feedback form.
   Required context:
     categoryId, pageId, matchId, widget
-    feedback (object or null) — { choice, comment, updated_at_label, ... }
+    feedback (object or null) — { choice, comment, updatedAtLabel, ... }
 #}
 
 {% set actionUrl = "/audit/subjects/" + categoryId + "/pages/" + pageId + "/propositions/" + matchId + "/feedback" %}
@@ -48,7 +48,7 @@
     preventDoubleClick: true
   }) }}
 
-  {% if isCompleted and feedback.updated_at_label %}
-    <p class="govuk-hint govuk-!-margin-top-2">Last saved {{ feedback.updated_at_label }}.</p>
+  {% if isCompleted and feedback.updatedAtLabel %}
+    <p class="govuk-hint govuk-!-margin-top-2">Last saved {{ feedback.updatedAtLabel }}.</p>
   {% endif %}
 </form>

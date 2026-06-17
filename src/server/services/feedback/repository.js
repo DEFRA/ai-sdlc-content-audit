@@ -1,54 +1,35 @@
 import { config } from '../../../config/config.js'
-import { buildRedisClient } from '../../common/helpers/redis-client.js'
-import { FEEDBACK_HASH_KEY } from './constants.js'
 
-let cachedClient = null
-
-function getClient() {
-  if (cachedClient) return cachedClient
-  cachedClient = buildRedisClient(config.get('redis'))
-  return cachedClient
+function baseUrl() {
+  return config.get('backendUrl').replace(/\/$/, '')
 }
 
-function parseEntry(raw) {
-  if (!raw) return null
-  try {
-    return JSON.parse(raw)
-  } catch {
-    return null
+async function send(method, path, body) {
+  const response = await fetch(`${baseUrl()}${path}`, {
+    method,
+    headers: body ? { 'content-type': 'application/json' } : undefined,
+    body: body ? JSON.stringify(body) : undefined
+  })
+
+  if (!response.ok) {
+    const text = await response.text().catch(() => '')
+    throw new Error(
+      `Feedback backend ${method} ${path} failed: ${response.status} ${text}`
+    )
   }
+
+  if (response.status === 204) return null
+  return response.json()
 }
 
 export const feedbackRepository = {
-  async upsert(matchId, entry) {
-    await getClient().hset(
-      FEEDBACK_HASH_KEY,
-      String(matchId),
-      JSON.stringify(entry)
-    )
+  save(entry) {
+    return send('POST', '/feedback', entry)
   },
-  async findByMatchIds(matchIds) {
-    if (matchIds.length === 0) return new Map()
-    const fields = matchIds.map((id) => String(id))
-    const raw = await getClient().hmget(FEEDBACK_HASH_KEY, ...fields)
-    const result = new Map()
-    raw.forEach((value, i) => {
-      const parsed = parseEntry(value)
-      if (parsed) result.set(matchIds[i], parsed)
-    })
-    return result
-  },
-  async listAll() {
-    const all = await getClient().hgetall(FEEDBACK_HASH_KEY)
-    return Object.values(all ?? {})
-      .map(parseEntry)
-      .filter(Boolean)
+  listAll() {
+    return send('GET', '/feedback')
   },
   async clear() {
-    await getClient().del(FEEDBACK_HASH_KEY)
+    await send('DELETE', '/feedback')
   }
-}
-
-export function _resetForTests(client) {
-  cachedClient = client ?? null
 }

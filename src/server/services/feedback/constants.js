@@ -1,5 +1,3 @@
-export const FEEDBACK_HASH_KEY = 'feedback:propositions'
-
 export const FEEDBACK_CHOICES = {
   INTERESTED: { label: 'I am interested in this' },
   NOT_INTERESTED: { label: 'I am not interested in this' },

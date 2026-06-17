@@ -1,84 +1,60 @@
-import { vi } from 'vitest'
-
-const fakeClient = {
-  hset: vi.fn().mockResolvedValue(1),
-  hmget: vi.fn().mockResolvedValue([]),
-  hgetall: vi.fn().mockResolvedValue({}),
-  del: vi.fn().mockResolvedValue(1),
-  on: vi.fn()
-}
-
-vi.mock('../../../../../src/server/common/helpers/redis-client.js', () => ({
-  buildRedisClient: vi.fn(() => fakeClient)
-}))
-
-const { feedbackRepository, _resetForTests } =
-  await import('../../../../../src/server/services/feedback/repository.js')
+import { feedbackRepository } from '../../../../../src/server/services/feedback/repository.js'
 
 describe('#feedbackRepository', () => {
   beforeEach(() => {
-    _resetForTests(fakeClient)
-    vi.clearAllMocks()
+    fetchMock.resetMocks()
   })
 
-  test('upsert HSETs the entry keyed by match id', async () => {
-    const entry = { proposition_match_id: 7, choice: 'INTERESTED' }
+  test('save POSTs the entry as JSON to /feedback', async () => {
+    const entry = { propositionMatchId: 7, choice: 'INTERESTED' }
+    const returned = {
+      ...entry,
+      submittedAt: 1700000000,
+      updatedAt: 1700000000
+    }
+    fetchMock.mockResponseOnce(JSON.stringify(returned), { status: 201 })
 
-    await feedbackRepository.upsert(7, entry)
+    const result = await feedbackRepository.save(entry)
 
-    expect(fakeClient.hset).toHaveBeenCalledWith(
-      'feedback:propositions',
-      '7',
-      JSON.stringify(entry)
+    const [url, init] = fetchMock.mock.calls[0]
+    expect(url).toBe('http://localhost:3001/feedback')
+    expect(init.method).toBe('POST')
+    expect(init.headers['content-type']).toBe('application/json')
+    expect(JSON.parse(init.body)).toEqual(entry)
+    expect(result).toEqual(returned)
+  })
+
+  test('listAll GETs /feedback and returns the parsed array', async () => {
+    fetchMock.mockResponseOnce(
+      JSON.stringify([{ propositionMatchId: 1 }, { propositionMatchId: 2 }])
     )
-  })
-
-  test('findByMatchIds HMGETs the requested fields and returns a Map of parsed entries', async () => {
-    fakeClient.hmget.mockResolvedValueOnce([
-      JSON.stringify({ proposition_match_id: 1, choice: 'INTERESTED' }),
-      null,
-      JSON.stringify({ proposition_match_id: 3, choice: 'AI_MISTAKE' })
-    ])
-
-    const result = await feedbackRepository.findByMatchIds([1, 2, 3])
-
-    expect(fakeClient.hmget).toHaveBeenCalledWith(
-      'feedback:propositions',
-      '1',
-      '2',
-      '3'
-    )
-    expect(result.size).toBe(2)
-    expect(result.get(1).choice).toBe('INTERESTED')
-    expect(result.get(3).choice).toBe('AI_MISTAKE')
-    expect(result.has(2)).toBe(false)
-  })
-
-  test('findByMatchIds returns an empty Map when called with no ids', async () => {
-    const result = await feedbackRepository.findByMatchIds([])
-
-    expect(fakeClient.hmget).not.toHaveBeenCalled()
-    expect(result.size).toBe(0)
-  })
-
-  test('listAll HGETALLs the hash and parses every value', async () => {
-    fakeClient.hgetall.mockResolvedValueOnce({
-      1: JSON.stringify({ proposition_match_id: 1 }),
-      2: JSON.stringify({ proposition_match_id: 2 })
-    })
 
     const result = await feedbackRepository.listAll()
 
-    expect(fakeClient.hgetall).toHaveBeenCalledWith('feedback:propositions')
+    const [url, init] = fetchMock.mock.calls[0]
+    expect(url).toBe('http://localhost:3001/feedback')
+    expect(init.method).toBe('GET')
     expect(result).toEqual([
-      { proposition_match_id: 1 },
-      { proposition_match_id: 2 }
+      { propositionMatchId: 1 },
+      { propositionMatchId: 2 }
     ])
   })
 
-  test('clear DELs the hash', async () => {
+  test('clear DELETEs /feedback and resolves on 204', async () => {
+    fetchMock.mockImplementationOnce(
+      async () => new Response(null, { status: 204 })
+    )
+
     await feedbackRepository.clear()
 
-    expect(fakeClient.del).toHaveBeenCalledWith('feedback:propositions')
+    const [url, init] = fetchMock.mock.calls[0]
+    expect(url).toBe('http://localhost:3001/feedback')
+    expect(init.method).toBe('DELETE')
+  })
+
+  test('throws when the backend returns a non-2xx response', async () => {
+    fetchMock.mockResponseOnce('boom', { status: 500 })
+
+    await expect(feedbackRepository.listAll()).rejects.toThrow(/500/)
   })
 })

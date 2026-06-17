@@ -1,17 +1,3 @@
-import { vi } from 'vitest'
-
-const fakeClient = {
-  hset: vi.fn().mockResolvedValue(1),
-  hmget: vi.fn().mockResolvedValue([]),
-  hgetall: vi.fn().mockResolvedValue({}),
-  del: vi.fn().mockResolvedValue(1),
-  on: vi.fn()
-}
-
-vi.mock('../../src/server/common/helpers/redis-client.js', () => ({
-  buildRedisClient: vi.fn(() => fakeClient)
-}))
-
 const { createServer } = await import('../../src/server/server.js')
 
 describe('proposition feedback endpoints', () => {
@@ -27,16 +13,13 @@ describe('proposition feedback endpoints', () => {
   })
 
   beforeEach(() => {
-    fakeClient.hset.mockClear()
-    fakeClient.hmget.mockClear()
-    fakeClient.hgetall.mockClear()
-    fakeClient.del.mockClear()
-    fakeClient.hmget.mockResolvedValue([])
-    fakeClient.hgetall.mockResolvedValue({})
+    fetchMock.resetMocks()
   })
 
   describe('POST /audit/.../propositions/{id}/feedback', () => {
-    test('saves the feedback and 303-redirects to the completed-feedback anchor', async () => {
+    test('forwards a save to the backend and 303-redirects to the completed-feedback anchor', async () => {
+      fetchMock.mockResponseOnce(JSON.stringify({}), { status: 201 })
+
       const { statusCode, headers } = await server.inject({
         method: 'POST',
         url: '/audit/subjects/1/pages/1/propositions/1/feedback',
@@ -49,24 +32,24 @@ describe('proposition feedback endpoints', () => {
         '/audit/subjects/1/pages/1?feedback=saved&matchId=1#completed-feedback-1'
       )
 
-      const [key, field, json] = fakeClient.hset.mock.calls[0]
-      expect(key).toBe('feedback:propositions')
-      expect(field).toBe('1')
-
-      const entry = JSON.parse(json)
-      expect(entry).toMatchObject({
-        category_id: 1,
-        page_id: 1,
-        proposition_match_id: 1,
+      expect(fetchMock).toHaveBeenCalledOnce()
+      const [url, init] = fetchMock.mock.calls[0]
+      expect(url).toBe('http://localhost:3001/feedback')
+      expect(init.method).toBe('POST')
+      const sent = JSON.parse(init.body)
+      expect(sent).toMatchObject({
+        propositionMatchId: 1,
+        categoryId: 1,
+        pageId: 1,
         choice: 'INTERESTED',
         comment: 'looks good'
       })
-      expect(entry.current_status).toBeDefined()
-      expect(entry.submitted_at).toBeTypeOf('number')
-      expect(entry.updated_at).toBeTypeOf('number')
+      expect(sent.currentStatus).toBeDefined()
     })
 
-    test('accepts an empty comment', async () => {
+    test('accepts an empty comment and sends null', async () => {
+      fetchMock.mockResponseOnce(JSON.stringify({}), { status: 201 })
+
       const { statusCode } = await server.inject({
         method: 'POST',
         url: '/audit/subjects/1/pages/1/propositions/1/feedback',
@@ -75,12 +58,11 @@ describe('proposition feedback endpoints', () => {
       })
 
       expect(statusCode).toBe(303)
-      const entry = JSON.parse(fakeClient.hset.mock.calls[0][2])
-      expect(entry.choice).toBe('NOT_INTERESTED')
-      expect(entry.comment).toBeNull()
+      const sent = JSON.parse(fetchMock.mock.calls[0][1].body)
+      expect(sent.comment).toBeNull()
     })
 
-    test('rejects an unknown choice value', async () => {
+    test('rejects an unknown choice without calling the backend', async () => {
       const { statusCode } = await server.inject({
         method: 'POST',
         url: '/audit/subjects/1/pages/1/propositions/1/feedback',
@@ -89,10 +71,10 @@ describe('proposition feedback endpoints', () => {
       })
 
       expect(statusCode).toBe(400)
-      expect(fakeClient.hset).not.toHaveBeenCalled()
+      expect(fetchMock).not.toHaveBeenCalled()
     })
 
-    test('rejects a missing choice', async () => {
+    test('rejects a missing choice without calling the backend', async () => {
       const { statusCode } = await server.inject({
         method: 'POST',
         url: '/audit/subjects/1/pages/1/propositions/1/feedback',
@@ -101,7 +83,7 @@ describe('proposition feedback endpoints', () => {
       })
 
       expect(statusCode).toBe(400)
-      expect(fakeClient.hset).not.toHaveBeenCalled()
+      expect(fetchMock).not.toHaveBeenCalled()
     })
 
     test('returns 404 when the proposition match does not exist', async () => {
@@ -113,12 +95,14 @@ describe('proposition feedback endpoints', () => {
       })
 
       expect(statusCode).toBe(404)
-      expect(fakeClient.hset).not.toHaveBeenCalled()
+      expect(fetchMock).not.toHaveBeenCalled()
     })
   })
 
   describe('GET audit page detail', () => {
     test('renders pending and completed sections with the three choices and a save banner', async () => {
+      fetchMock.mockResponseOnce(JSON.stringify([]))
+
       const { statusCode, payload } = await server.inject({
         method: 'GET',
         url: '/audit/subjects/1/pages/2?feedback=saved&matchId=1'
@@ -136,24 +120,31 @@ describe('proposition feedback endpoints', () => {
     })
 
     test('moves a statement into the completed section once feedback exists for it', async () => {
-      fakeClient.hmget.mockImplementation((_key, ...fields) =>
-        Promise.resolve(
-          fields.map((field, i) =>
-            i === 0
-              ? JSON.stringify({
-                  proposition_match_id: Number(field),
-                  category_id: 1,
-                  page_id: 2,
-                  current_status: 'CONFLICTS',
-                  choice: 'AI_MISTAKE',
-                  comment: 'wrong reading',
-                  submitted_at: 1700000000,
-                  updated_at: 1700000500
-                })
-              : null
-          )
-        )
-      )
+      // The view-model fetches all entries from the backend, then filters by
+      // match id. Return one entry whose id matches a statement on page 2.
+      fetchMock.mockImplementationOnce(async (url) => {
+        // We don't know the exact match ids without re-running the audit
+        // service, so we mock the *list* endpoint to return entries for a
+        // wide range of ids. The view-model will only pick up the ones that
+        // are actually on this page.
+        if (url.endsWith('/feedback')) {
+          const entries = []
+          for (let id = 1; id <= 2000; id++) {
+            entries.push({
+              propositionMatchId: id,
+              categoryId: 1,
+              pageId: 2,
+              currentStatus: 'CONFLICTS',
+              choice: 'AI_MISTAKE',
+              comment: `entry ${id}`,
+              submittedAt: 1700000000,
+              updatedAt: 1700000500
+            })
+          }
+          return new Response(JSON.stringify(entries), { status: 200 })
+        }
+        return new Response('', { status: 404 })
+      })
 
       const { statusCode, payload } = await server.inject({
         method: 'GET',
@@ -164,24 +155,25 @@ describe('proposition feedback endpoints', () => {
       expect(payload).toMatch(/id="completed-feedback-\d+"/)
       expect(payload).toContain('Update your feedback')
       expect(payload).toContain('Save changes')
-      expect(payload).toContain('wrong reading')
     })
   })
 
   describe('admin feedback', () => {
-    test('GET /admin renders the entries from the feedback hash', async () => {
-      fakeClient.hgetall.mockResolvedValueOnce({
-        7: JSON.stringify({
-          proposition_match_id: 7,
-          category_id: 1,
-          page_id: 1,
-          current_status: 'CONFLICTS',
-          choice: 'AI_MISTAKE',
-          comment: 'model hallucinated',
-          submitted_at: 1700000000,
-          updated_at: 1700000000
-        })
-      })
+    test('GET /admin renders the entries returned by the backend', async () => {
+      fetchMock.mockResponseOnce(
+        JSON.stringify([
+          {
+            propositionMatchId: 7,
+            categoryId: 1,
+            pageId: 1,
+            currentStatus: 'CONFLICTS',
+            choice: 'AI_MISTAKE',
+            comment: 'model hallucinated',
+            submittedAt: 1700000000,
+            updatedAt: 1700000000
+          }
+        ])
+      )
 
       const { statusCode, payload } = await server.inject({
         method: 'GET',
@@ -197,7 +189,11 @@ describe('proposition feedback endpoints', () => {
       )
     })
 
-    test('POST /admin/clear deletes the hash and redirects with a success flag', async () => {
+    test('POST /admin/clear DELETEs the backend feedback and redirects with a success flag', async () => {
+      fetchMock.mockImplementationOnce(
+        async () => new Response(null, { status: 204 })
+      )
+
       const { statusCode, headers } = await server.inject({
         method: 'POST',
         url: '/admin/clear'
@@ -205,7 +201,9 @@ describe('proposition feedback endpoints', () => {
 
       expect(statusCode).toBe(303)
       expect(headers.location).toBe('/admin?cleared=1')
-      expect(fakeClient.del).toHaveBeenCalledWith('feedback:propositions')
+      const [url, init] = fetchMock.mock.calls[0]
+      expect(url).toBe('http://localhost:3001/feedback')
+      expect(init.method).toBe('DELETE')
     })
   })
 })

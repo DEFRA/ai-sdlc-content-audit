@@ -213,6 +213,12 @@ export const config = convict({
       default: 'x-cdp-request-id',
       env: 'TRACING_HEADER'
     }
+  },
+  backendUrl: {
+    doc: 'Base URL of the ai-sdlc-content-audit-backend API',
+    format: String,
+    default: 'http://localhost:3001',
+    env: 'BACKEND_URL'
   }
 })
 

@@ -21,16 +21,15 @@ function formatTimestamp(epochSeconds) {
 export const adminFeedbackViewModel = {
   async get(query = {}) {
     const entries = await feedbackService.listAll()
-    entries.sort((a, b) => (b.updated_at ?? 0) - (a.updated_at ?? 0))
     const rows = entries.map((entry) => ({
-      id: entry.proposition_match_id,
-      updatedAt: entry.updated_at ? formatTimestamp(entry.updated_at) : '—',
-      currentStatusLabel: statusLabel(entry.current_status),
+      id: entry.propositionMatchId,
+      updatedAt: entry.updatedAt ? formatTimestamp(entry.updatedAt) : '—',
+      currentStatusLabel: statusLabel(entry.currentStatus),
       choiceLabel: choiceLabel(entry.choice),
       comment: entry.comment,
       pageHref:
-        `/audit/subjects/${entry.category_id}/pages/${entry.page_id}` +
-        `#completed-feedback-${entry.proposition_match_id}`
+        `/audit/subjects/${entry.categoryId}/pages/${entry.pageId}` +
+        `#completed-feedback-${entry.propositionMatchId}`
     }))
 
     return {

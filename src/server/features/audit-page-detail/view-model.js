@@ -20,10 +20,8 @@ function decorateFeedback(entry) {
   if (!entry) return null
   return {
     ...entry,
-    choice_label: FEEDBACK_CHOICES[entry.choice]?.label ?? entry.choice,
-    updated_at_label: entry.updated_at
-      ? formatTimestamp(entry.updated_at)
-      : null
+    choiceLabel: FEEDBACK_CHOICES[entry.choice]?.label ?? entry.choice,
+    updatedAtLabel: entry.updatedAt ? formatTimestamp(entry.updatedAt) : null
   }
 }
 
