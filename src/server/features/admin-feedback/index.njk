@@ -44,9 +44,9 @@
             </caption>
             <thead class="govuk-table__head">
               <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__header">Submitted</th>
+                <th scope="col" class="govuk-table__header">Last updated</th>
                 <th scope="col" class="govuk-table__header">Current status</th>
-                <th scope="col" class="govuk-table__header">Suggested status</th>
+                <th scope="col" class="govuk-table__header">Feedback</th>
                 <th scope="col" class="govuk-table__header">Comment</th>
                 <th scope="col" class="govuk-table__header">Source</th>
               </tr>
@@ -54,9 +54,9 @@
             <tbody class="govuk-table__body">
               {% for row in rows %}
                 <tr class="govuk-table__row">
-                  <td class="govuk-table__cell">{{ row.submittedAt }}</td>
-                  <td class="govuk-table__cell">{{ row.currentStatusLabel }}</td>
-                  <td class="govuk-table__cell">{{ row.suggestedStatusLabel or "—" }}</td>
+                  <td class="govuk-table__cell">{{ row.updatedAt }}</td>
+                  <td class="govuk-table__cell">{{ row.currentStatusLabel or "—" }}</td>
+                  <td class="govuk-table__cell">{{ row.choiceLabel or "—" }}</td>
                   <td class="govuk-table__cell">{{ row.comment or "—" }}</td>
                   <td class="govuk-table__cell">
                     <a class="govuk-link" href="{{ row.pageHref }}">View proposition</a>

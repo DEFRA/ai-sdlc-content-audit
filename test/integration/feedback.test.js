@@ -1,8 +1,9 @@
 import { vi } from 'vitest'
 
 const fakeClient = {
-  rpush: vi.fn().mockResolvedValue(1),
-  lrange: vi.fn().mockResolvedValue([]),
+  hset: vi.fn().mockResolvedValue(1),
+  hmget: vi.fn().mockResolvedValue([]),
+  hgetall: vi.fn().mockResolvedValue({}),
   del: vi.fn().mockResolvedValue(1),
   on: vi.fn()
 }
@@ -26,115 +27,161 @@ describe('proposition feedback endpoints', () => {
   })
 
   beforeEach(() => {
-    fakeClient.rpush.mockClear()
-    fakeClient.lrange.mockClear()
+    fakeClient.hset.mockClear()
+    fakeClient.hmget.mockClear()
+    fakeClient.hgetall.mockClear()
     fakeClient.del.mockClear()
-    fakeClient.lrange.mockResolvedValue([])
+    fakeClient.hmget.mockResolvedValue([])
+    fakeClient.hgetall.mockResolvedValue({})
   })
 
   describe('POST /audit/.../propositions/{id}/feedback', () => {
-    test('records the entry and 303-redirects back to the page detail', async () => {
+    test('saves the feedback and 303-redirects to the completed-feedback anchor', async () => {
       const { statusCode, headers } = await server.inject({
         method: 'POST',
         url: '/audit/subjects/1/pages/1/propositions/1/feedback',
-        payload: 'suggested_status=GROUNDED&comment=hello',
+        payload: 'choice=INTERESTED&comment=looks%20good',
         headers: { 'content-type': 'application/x-www-form-urlencoded' }
       })
 
       expect(statusCode).toBe(303)
       expect(headers.location).toBe(
-        '/audit/subjects/1/pages/1?feedback=success&matchId=1#proposition-1'
+        '/audit/subjects/1/pages/1?feedback=saved&matchId=1#completed-feedback-1'
       )
 
-      const [key, json] = fakeClient.rpush.mock.calls[0]
-      expect(key).toBe('feedback:entries')
+      const [key, field, json] = fakeClient.hset.mock.calls[0]
+      expect(key).toBe('feedback:propositions')
+      expect(field).toBe('1')
 
       const entry = JSON.parse(json)
       expect(entry).toMatchObject({
         category_id: 1,
         page_id: 1,
         proposition_match_id: 1,
-        suggested_status: 'GROUNDED',
-        comment: 'hello'
+        choice: 'INTERESTED',
+        comment: 'looks good'
       })
       expect(entry.current_status).toBeDefined()
-      expect(entry.id).toBeDefined()
       expect(entry.submitted_at).toBeTypeOf('number')
+      expect(entry.updated_at).toBeTypeOf('number')
     })
 
-    test('accepts an empty payload as a bare disagreement flag', async () => {
+    test('accepts an empty comment', async () => {
       const { statusCode } = await server.inject({
         method: 'POST',
         url: '/audit/subjects/1/pages/1/propositions/1/feedback',
-        payload: 'suggested_status=&comment=',
+        payload: 'choice=NOT_INTERESTED&comment=',
         headers: { 'content-type': 'application/x-www-form-urlencoded' }
       })
 
       expect(statusCode).toBe(303)
-
-      const entry = JSON.parse(fakeClient.rpush.mock.calls[0][1])
-      expect(entry.suggested_status).toBeNull()
+      const entry = JSON.parse(fakeClient.hset.mock.calls[0][2])
+      expect(entry.choice).toBe('NOT_INTERESTED')
       expect(entry.comment).toBeNull()
     })
 
-    test('rejects an unknown status constant', async () => {
+    test('rejects an unknown choice value', async () => {
       const { statusCode } = await server.inject({
         method: 'POST',
         url: '/audit/subjects/1/pages/1/propositions/1/feedback',
-        payload: 'suggested_status=NOT_A_STATUS',
+        payload: 'choice=NOPE',
         headers: { 'content-type': 'application/x-www-form-urlencoded' }
       })
 
       expect(statusCode).toBe(400)
-      expect(fakeClient.rpush).not.toHaveBeenCalled()
+      expect(fakeClient.hset).not.toHaveBeenCalled()
+    })
+
+    test('rejects a missing choice', async () => {
+      const { statusCode } = await server.inject({
+        method: 'POST',
+        url: '/audit/subjects/1/pages/1/propositions/1/feedback',
+        payload: 'comment=hi',
+        headers: { 'content-type': 'application/x-www-form-urlencoded' }
+      })
+
+      expect(statusCode).toBe(400)
+      expect(fakeClient.hset).not.toHaveBeenCalled()
     })
 
     test('returns 404 when the proposition match does not exist', async () => {
       const { statusCode } = await server.inject({
         method: 'POST',
         url: '/audit/subjects/1/pages/1/propositions/999999/feedback',
-        payload: '',
+        payload: 'choice=INTERESTED',
         headers: { 'content-type': 'application/x-www-form-urlencoded' }
       })
 
       expect(statusCode).toBe(404)
-      expect(fakeClient.rpush).not.toHaveBeenCalled()
+      expect(fakeClient.hset).not.toHaveBeenCalled()
     })
   })
 
-  describe('audit page detail with widget included', () => {
-    test('renders one widget per statement and shows the success banner after submission', async () => {
+  describe('GET audit page detail', () => {
+    test('renders pending and completed sections with the three choices and a save banner', async () => {
       const { statusCode, payload } = await server.inject({
         method: 'GET',
-        url: '/audit/subjects/1/pages/2?feedback=success&matchId=1'
+        url: '/audit/subjects/1/pages/2?feedback=saved&matchId=1'
       })
 
       expect(statusCode).toBe(200)
-      expect(payload).toContain('Flag this match for review')
-      expect(payload).toContain('Suggested status (optional)')
-      expect(payload).toContain('Comment (optional)')
-      expect(payload).toContain('Submit review')
-      expect(payload).toContain('Thank you. Your review has been recorded.')
-      expect(payload).toContain(
-        '/audit/subjects/1/pages/2/propositions/1/feedback'
+      expect(payload).toContain('Pending feedback')
+      expect(payload).toContain('Completed feedback')
+      expect(payload).toContain('I am interested in this')
+      expect(payload).toContain('I am not interested in this')
+      expect(payload).toContain('This is a mistake in the AI')
+      expect(payload).toContain('Your feedback has been saved.')
+      expect(payload).toContain('href="#pending-feedback"')
+      expect(payload).toContain('href="#completed-feedback"')
+    })
+
+    test('moves a statement into the completed section once feedback exists for it', async () => {
+      fakeClient.hmget.mockImplementation((_key, ...fields) =>
+        Promise.resolve(
+          fields.map((field, i) =>
+            i === 0
+              ? JSON.stringify({
+                  proposition_match_id: Number(field),
+                  category_id: 1,
+                  page_id: 2,
+                  current_status: 'CONFLICTS',
+                  choice: 'AI_MISTAKE',
+                  comment: 'wrong reading',
+                  submitted_at: 1700000000,
+                  updated_at: 1700000500
+                })
+              : null
+          )
+        )
       )
+
+      const { statusCode, payload } = await server.inject({
+        method: 'GET',
+        url: '/audit/subjects/1/pages/2'
+      })
+
+      expect(statusCode).toBe(200)
+      expect(payload).toMatch(/id="completed-feedback-\d+"/)
+      expect(payload).toContain('Update your feedback')
+      expect(payload).toContain('Save changes')
+      expect(payload).toContain('wrong reading')
     })
   })
 
   describe('admin feedback', () => {
-    test('GET /admin renders the entries returned by Redis', async () => {
-      fakeClient.lrange.mockResolvedValue([
-        JSON.stringify({
-          id: 'abc',
-          submitted_at: 1700000000,
+    test('GET /admin renders the entries from the feedback hash', async () => {
+      fakeClient.hgetall.mockResolvedValueOnce({
+        7: JSON.stringify({
+          proposition_match_id: 7,
           category_id: 1,
           page_id: 1,
-          proposition_match_id: 1,
           current_status: 'CONFLICTS',
-          suggested_status: 'GROUNDED',
-          comment: 'mismatch'
+          choice: 'AI_MISTAKE',
+          comment: 'model hallucinated',
+          submitted_at: 1700000000,
+          updated_at: 1700000000
         })
-      ])
+      })
 
       const { statusCode, payload } = await server.inject({
         method: 'GET',
@@ -143,26 +190,14 @@ describe('proposition feedback endpoints', () => {
 
       expect(statusCode).toBe(200)
       expect(payload).toContain('Feedback admin')
-      expect(payload).toContain('mismatch')
-      expect(payload).toContain('/audit/subjects/1/pages/1#proposition-1')
+      expect(payload).toContain('model hallucinated')
+      expect(payload).toContain('This is a mistake in the AI')
+      expect(payload).toContain(
+        '/audit/subjects/1/pages/1#completed-feedback-7'
+      )
     })
 
-    test('GET /admin/feedback.json downloads the raw list as JSON', async () => {
-      const stored = [{ id: 'abc', submitted_at: 1700000000 }]
-      fakeClient.lrange.mockResolvedValue([JSON.stringify(stored[0])])
-
-      const { statusCode, headers, payload } = await server.inject({
-        method: 'GET',
-        url: '/admin/feedback.json'
-      })
-
-      expect(statusCode).toBe(200)
-      expect(headers['content-type']).toContain('application/json')
-      expect(headers['content-disposition']).toContain('attachment')
-      expect(JSON.parse(payload)).toEqual(stored)
-    })
-
-    test('POST /admin/clear deletes the Redis list and redirects with a success flag', async () => {
+    test('POST /admin/clear deletes the hash and redirects with a success flag', async () => {
       const { statusCode, headers } = await server.inject({
         method: 'POST',
         url: '/admin/clear'
@@ -170,7 +205,7 @@ describe('proposition feedback endpoints', () => {
 
       expect(statusCode).toBe(303)
       expect(headers.location).toBe('/admin?cleared=1')
-      expect(fakeClient.del).toHaveBeenCalledWith('feedback:entries')
+      expect(fakeClient.del).toHaveBeenCalledWith('feedback:propositions')
     })
   })
 })

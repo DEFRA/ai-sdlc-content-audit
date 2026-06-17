@@ -4,25 +4,26 @@ import { feedbackRepository } from '../../../../../src/server/services/feedback/
 import { feedbackService } from '../../../../../src/server/services/feedback/service.js'
 
 describe('#feedbackService', () => {
-  const recordInput = {
+  const saveInput = {
     categoryId: 1,
     pageId: 42,
     propositionMatchId: 7,
     currentStatus: 'CONFLICTS',
-    suggestedStatus: 'GROUNDED',
-    comment: 'looks wrong to me'
+    choice: 'INTERESTED',
+    comment: 'looks interesting'
   }
 
   beforeEach(() => {
-    vi.spyOn(feedbackRepository, 'append').mockResolvedValue(undefined)
+    vi.spyOn(feedbackRepository, 'upsert').mockResolvedValue(undefined)
+    vi.spyOn(feedbackRepository, 'findByMatchIds').mockResolvedValue(new Map())
     vi.spyOn(feedbackRepository, 'listAll').mockResolvedValue([])
     vi.spyOn(feedbackRepository, 'clear').mockResolvedValue(undefined)
   })
 
-  describe('record', () => {
-    test('writes a self-describing entry with a generated id and unix-seconds timestamp', async () => {
+  describe('saveForMatch', () => {
+    test('writes a self-describing entry with submitted_at and updated_at', async () => {
       const before = Math.floor(Date.now() / 1000)
-      const entry = await feedbackService.record(recordInput)
+      const entry = await feedbackService.saveForMatch(saveInput)
       const after = Math.floor(Date.now() / 1000)
 
       expect(entry).toMatchObject({
@@ -30,40 +31,53 @@ describe('#feedbackService', () => {
         page_id: 42,
         proposition_match_id: 7,
         current_status: 'CONFLICTS',
-        suggested_status: 'GROUNDED',
-        comment: 'looks wrong to me'
+        choice: 'INTERESTED',
+        comment: 'looks interesting'
       })
-      expect(entry.id).toMatch(
-        /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
-      )
       expect(entry.submitted_at).toBeGreaterThanOrEqual(before)
       expect(entry.submitted_at).toBeLessThanOrEqual(after)
-      expect(feedbackRepository.append).toHaveBeenCalledWith(entry)
+      expect(entry.updated_at).toBeGreaterThanOrEqual(entry.submitted_at)
+      expect(feedbackRepository.upsert).toHaveBeenCalledWith(7, entry)
     })
 
-    test('stores empty optional fields as null', async () => {
-      const entry = await feedbackService.record({
-        ...recordInput,
-        suggestedStatus: '',
+    test('stores an empty comment as null', async () => {
+      const entry = await feedbackService.saveForMatch({
+        ...saveInput,
         comment: ''
       })
 
-      expect(entry.suggested_status).toBeNull()
       expect(entry.comment).toBeNull()
     })
 
-    test('generates a fresh id for every submission', async () => {
-      const first = await feedbackService.record(recordInput)
-      const second = await feedbackService.record(recordInput)
+    test('preserves the original submitted_at when updating an existing entry', async () => {
+      feedbackRepository.findByMatchIds.mockResolvedValueOnce(
+        new Map([
+          [7, { proposition_match_id: 7, submitted_at: 1000, updated_at: 1500 }]
+        ])
+      )
 
-      expect(first.id).not.toBe(second.id)
+      const entry = await feedbackService.saveForMatch(saveInput)
+
+      expect(entry.submitted_at).toBe(1000)
+      expect(entry.updated_at).toBeGreaterThan(1500)
+    })
+  })
+
+  describe('findByMatchIds', () => {
+    test('delegates to the repository', async () => {
+      const stored = new Map([[1, { proposition_match_id: 1 }]])
+      feedbackRepository.findByMatchIds.mockResolvedValueOnce(stored)
+
+      const result = await feedbackService.findByMatchIds([1])
+
+      expect(result).toBe(stored)
     })
   })
 
   describe('listAll', () => {
     test('returns whatever the repository has stored', async () => {
-      const stored = [{ id: 'abc' }, { id: 'def' }]
-      feedbackRepository.listAll.mockResolvedValue(stored)
+      const stored = [{ proposition_match_id: 1 }]
+      feedbackRepository.listAll.mockResolvedValueOnce(stored)
 
       const result = await feedbackService.listAll()
 

@@ -1,5 +1,7 @@
 {% extends "layouts/page.njk" %}
 
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+
 {% block beforeContent %}
   {{ govukBreadcrumbs({
     items: [
@@ -11,6 +13,54 @@
   }) }}
 {% endblock %}
 
+{% macro statementCard(s, isCompleted) %}
+  {% set borderColour = "#b1b4b6" %}
+  {% if s.statusTone == "red" %}{% set borderColour = "#d4351c" %}{% endif %}
+  {% if s.statusTone == "yellow" %}{% set borderColour = "#ffdd00" %}{% endif %}
+  {% if s.statusTone == "green" %}{% set borderColour = "#00703c" %}{% endif %}
+
+  {% set anchor = ("completed-feedback-" if isCompleted else "pending-feedback-") + s.id %}
+
+  <div id="{{ anchor }}" class="govuk-summary-card govuk-!-margin-bottom-4" style="border-top:6px solid {{ borderColour }};">
+    <div class="govuk-summary-card__title-wrapper">
+      <h3 class="govuk-summary-card__title govuk-heading-s govuk-!-margin-bottom-0">
+        {{ s.statusLabel }}
+      </h3>
+      <strong class="govuk-tag govuk-tag--{{ s.statusTone }}">{{ s.statusLabel }}</strong>
+    </div>
+    <div class="govuk-summary-card__content">
+      <dl class="govuk-summary-list">
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key" style="width:25%;">This guidance says</dt>
+          <dd class="govuk-summary-list__value">{{ s.guidanceText }}</dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Our finding</dt>
+          <dd class="govuk-summary-list__value">{{ s.explanation if s.explanation else s.statusMeaning }}</dd>
+        </div>
+        {% if s.lawName %}
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Related law</dt>
+            <dd class="govuk-summary-list__value">
+              <a class="govuk-link" href="{{ s.lawUrl }}" rel="noopener noreferrer" target="_blank">{{ s.lawName }}</a>
+            </dd>
+          </div>
+        {% endif %}
+        {% if s.lawText %}
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">What the law says</dt>
+            <dd class="govuk-summary-list__value">{{ s.lawText }}</dd>
+          </div>
+        {% endif %}
+      </dl>
+      {% set matchId = s.id %}
+      {% set feedback = s.feedback %}
+      {% set widget = feedbackWidget %}
+      {% include "features/proposition-feedback/index.njk" %}
+    </div>
+  </div>
+{% endmacro %}
+
 {% block content %}
   <div class="govuk-width-container">
     <div class="govuk-grid-row">
@@ -20,82 +70,45 @@
           <a class="govuk-link" href="{{ page.url }}" rel="noopener noreferrer" target="_blank">View the live page (opens in new tab)</a>
         </p>
 
-        <h2 class="govuk-heading-l govuk-!-margin-top-6">Overall scores</h2>
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-one-half">
-            <p class="govuk-body-s govuk-!-margin-bottom-1" style="color:#505a5f;">Correctness</p>
-            <p class="govuk-heading-xl govuk-!-margin-bottom-2">{{ correctness }}</p>
-            <p class="govuk-body-s">How well this guidance agrees with the law.</p>
-          </div>
-        </div>
-
-        <h2 class="govuk-heading-l govuk-!-margin-top-6">What we checked, statement by statement</h2>
-
-        {% if hasStatements %}
-          {% for s in statements %}
-            {% set borderColour = "#b1b4b6" %}
-            {% if s.statusTone == "red" %}{% set borderColour = "#d4351c" %}{% endif %}
-            {% if s.statusTone == "orange" %}{% set borderColour = "#f47738" %}{% endif %}
-            {% if s.statusTone == "yellow" %}{% set borderColour = "#ffdd00" %}{% endif %}
-            {% if s.statusTone == "blue" %}{% set borderColour = "#1d70b8" %}{% endif %}
-            {% if s.statusTone == "green" %}{% set borderColour = "#00703c" %}{% endif %}
-
-            <div class="govuk-summary-card govuk-!-margin-bottom-4" style="border-top:6px solid {{ borderColour }};">
-              <div class="govuk-summary-card__title-wrapper">
-                <h3 class="govuk-summary-card__title govuk-heading-s govuk-!-margin-bottom-0">
-                  Statement {{ loop.index }} of {{ statements | length }}
-                </h3>
-                <strong class="govuk-tag govuk-tag--{{ s.statusTone }}">{{ s.statusLabel }}</strong>
-              </div>
-              <div class="govuk-summary-card__content">
-                <dl class="govuk-summary-list">
-                  <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key" style="width:25%;">This guidance says</dt>
-                    <dd class="govuk-summary-list__value">{{ s.guidanceText }}</dd>
-                  </div>
-                  <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Our finding</dt>
-                    <dd class="govuk-summary-list__value">{{ s.explanation if s.explanation else s.statusMeaning }}</dd>
-                  </div>
-                  {% if s.lawName %}
-                    <div class="govuk-summary-list__row">
-                      <dt class="govuk-summary-list__key">Related law</dt>
-                      <dd class="govuk-summary-list__value">
-                        <a class="govuk-link" href="{{ s.lawUrl }}" rel="noopener noreferrer" target="_blank">{{ s.lawName }}</a>
-                      </dd>
-                    </div>
-                  {% endif %}
-                  {% if s.lawText %}
-                    <div class="govuk-summary-list__row">
-                      <dt class="govuk-summary-list__key">What the law says</dt>
-                      <dd class="govuk-summary-list__value">{{ s.lawText }}</dd>
-                    </div>
-                  {% endif %}
-                </dl>
-                {% set matchId = s.id %}
-                {% set widget = feedbackWidget %}
-                {% set justSubmitted = submittedMatchId == s.id %}
-                {% include "features/proposition-feedback/index.njk" %}
-              </div>
-            </div>
-          {% endfor %}
-        {% else %}
-          <p class="govuk-body">We have not yet broken this page down statement by statement.</p>
+        {% if savedMatchId %}
+          {{ govukNotificationBanner({
+            type: "success",
+            text: "Your feedback has been saved."
+          }) }}
         {% endif %}
 
-        {% if hasMissingLaws %}
-          <h2 class="govuk-heading-l govuk-!-margin-top-6">Laws with no guidance on this page</h2>
-          <p class="govuk-body">These laws apply to this subject but the page does not address them.</p>
+        <nav aria-label="Jump to section" class="govuk-!-margin-bottom-6">
           <ul class="govuk-list">
-            {% for ml in missingLaws %}
-              <li style="padding:12px 0;border-bottom:1px solid #b1b4b6;">
-                <p class="govuk-body govuk-!-margin-bottom-1"><strong>{{ ml.lawName }}</strong></p>
-                <p class="govuk-body-s govuk-!-margin-bottom-1">{{ ml.lawText }}</p>
-                <a class="govuk-link govuk-body-s" href="{{ ml.lawUrl }}" rel="noopener noreferrer" target="_blank">View this law</a>
-              </li>
-            {% endfor %}
+            <li>
+              <a class="govuk-link" href="#pending-feedback">Pending feedback ({{ pending | length }})</a>
+            </li>
+            <li>
+              <a class="govuk-link" href="#completed-feedback">Completed feedback ({{ completed | length }})</a>
+            </li>
           </ul>
-        {% endif %}
+        </nav>
+
+        <section id="pending-feedback" aria-labelledby="pending-feedback-heading">
+          <h2 id="pending-feedback-heading" class="govuk-heading-l govuk-!-margin-top-6">Pending feedback</h2>
+          {% if hasPending %}
+            {% for s in pending %}
+              {{ statementCard(s, false) }}
+            {% endfor %}
+          {% else %}
+            <p class="govuk-body">No statements are waiting for feedback on this page.</p>
+          {% endif %}
+        </section>
+
+        <section id="completed-feedback" aria-labelledby="completed-feedback-heading">
+          <h2 id="completed-feedback-heading" class="govuk-heading-l govuk-!-margin-top-8">Completed feedback</h2>
+          {% if hasCompleted %}
+            {% for s in completed %}
+              {{ statementCard(s, true) }}
+            {% endfor %}
+          {% else %}
+            <p class="govuk-body">You have not submitted feedback on any statements on this page yet.</p>
+          {% endif %}
+        </section>
       </div>
     </div>
   </div>

@@ -3,12 +3,12 @@ import Boom from '@hapi/boom'
 import { auditPageDetailViewModel } from './view-model.js'
 
 export const auditPageDetailController = {
-  handler(request, h) {
+  async handler(request, h) {
     try {
       const categoryId = Number(request.params.categoryId)
       const pageId = Number(request.params.pageId)
 
-      const viewModel = auditPageDetailViewModel.get(
+      const viewModel = await auditPageDetailViewModel.get(
         categoryId,
         pageId,
         request.query

@@ -1,9 +1,12 @@
-import { STATUS_META, STATUS_ORDER } from '../../services/audit/constants.js'
+import {
+  FEEDBACK_CHOICES,
+  FEEDBACK_CHOICE_ORDER
+} from '../../services/feedback/constants.js'
 
 export const propositionFeedbackWidget = {
   commentMaxLength: 1000,
-  statusOptions: STATUS_ORDER.map((value) => ({
+  choices: FEEDBACK_CHOICE_ORDER.map((value) => ({
     value,
-    text: STATUS_META[value].label
+    text: FEEDBACK_CHOICES[value].label
   }))
 }

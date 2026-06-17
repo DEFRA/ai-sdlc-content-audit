@@ -1,5 +1,3 @@
-import { randomUUID } from 'node:crypto'
-
 import { feedbackRepository } from './repository.js'
 
 function nowEpochSeconds() {
@@ -7,26 +5,33 @@ function nowEpochSeconds() {
 }
 
 export const feedbackService = {
-  async record({
+  async saveForMatch({
     categoryId,
     pageId,
     propositionMatchId,
     currentStatus,
-    suggestedStatus,
+    choice,
     comment
   }) {
+    const existing = (
+      await feedbackRepository.findByMatchIds([propositionMatchId])
+    ).get(propositionMatchId)
+    const now = nowEpochSeconds()
     const entry = {
-      id: randomUUID(),
-      submitted_at: nowEpochSeconds(),
+      proposition_match_id: propositionMatchId,
       category_id: categoryId,
       page_id: pageId,
-      proposition_match_id: propositionMatchId,
       current_status: currentStatus,
-      suggested_status: suggestedStatus || null,
-      comment: comment || null
+      choice,
+      comment: comment || null,
+      submitted_at: existing?.submitted_at ?? now,
+      updated_at: now
     }
-    await feedbackRepository.append(entry)
+    await feedbackRepository.upsert(propositionMatchId, entry)
     return entry
+  },
+  async findByMatchIds(matchIds) {
+    return feedbackRepository.findByMatchIds(matchIds)
   },
   async listAll() {
     return feedbackRepository.listAll()

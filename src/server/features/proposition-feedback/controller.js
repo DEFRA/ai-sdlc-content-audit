@@ -1,24 +1,20 @@
 import Boom from '@hapi/boom'
 import Joi from 'joi'
 
-import { STATUS_ORDER } from '../../services/audit/constants.js'
 import { auditService } from '../../services/audit/service.js'
+import { FEEDBACK_CHOICE_ORDER } from '../../services/feedback/constants.js'
 import { feedbackService } from '../../services/feedback/service.js'
 import { propositionFeedbackWidget } from './view-model.js'
 
 const payloadSchema = Joi.object({
-  flag: Joi.any().strip(),
-  suggested_status: Joi.string()
-    .allow('')
-    .valid('', ...STATUS_ORDER)
-    .default(''),
+  choice: Joi.string()
+    .valid(...FEEDBACK_CHOICE_ORDER)
+    .required(),
   comment: Joi.string()
     .allow('')
     .max(propositionFeedbackWidget.commentMaxLength)
     .default('')
-})
-  .default({})
-  .allow(null)
+}).required()
 
 export const propositionFeedbackController = {
   options: {
@@ -40,21 +36,20 @@ export const propositionFeedbackController = {
       const currentStatus = auditService.getMatchStatus(propositionMatchId)
       if (!currentStatus) return Boom.notFound()
 
-      const payload = request.payload ?? {}
-      const { suggested_status: suggestedStatus, comment } = payload
+      const { choice, comment } = request.payload
 
-      await feedbackService.record({
+      await feedbackService.saveForMatch({
         categoryId,
         pageId,
         propositionMatchId,
         currentStatus,
-        suggestedStatus,
+        choice,
         comment: typeof comment === 'string' ? comment.trim() : ''
       })
 
       return h
         .redirect(
-          `/audit/subjects/${categoryId}/pages/${pageId}?feedback=success&matchId=${propositionMatchId}#proposition-${propositionMatchId}`
+          `/audit/subjects/${categoryId}/pages/${pageId}?feedback=saved&matchId=${propositionMatchId}#completed-feedback-${propositionMatchId}`
         )
         .code(303)
     } catch (error) {

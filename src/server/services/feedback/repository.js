@@ -1,6 +1,6 @@
 import { config } from '../../../config/config.js'
 import { buildRedisClient } from '../../common/helpers/redis-client.js'
-import { FEEDBACK_LIST_KEY } from './constants.js'
+import { FEEDBACK_HASH_KEY } from './constants.js'
 
 let cachedClient = null
 
@@ -10,16 +10,42 @@ function getClient() {
   return cachedClient
 }
 
+function parseEntry(raw) {
+  if (!raw) return null
+  try {
+    return JSON.parse(raw)
+  } catch {
+    return null
+  }
+}
+
 export const feedbackRepository = {
-  async append(entry) {
-    await getClient().rpush(FEEDBACK_LIST_KEY, JSON.stringify(entry))
+  async upsert(matchId, entry) {
+    await getClient().hset(
+      FEEDBACK_HASH_KEY,
+      String(matchId),
+      JSON.stringify(entry)
+    )
+  },
+  async findByMatchIds(matchIds) {
+    if (matchIds.length === 0) return new Map()
+    const fields = matchIds.map((id) => String(id))
+    const raw = await getClient().hmget(FEEDBACK_HASH_KEY, ...fields)
+    const result = new Map()
+    raw.forEach((value, i) => {
+      const parsed = parseEntry(value)
+      if (parsed) result.set(matchIds[i], parsed)
+    })
+    return result
   },
   async listAll() {
-    const raw = await getClient().lrange(FEEDBACK_LIST_KEY, 0, -1)
-    return raw.map((value) => JSON.parse(value))
+    const all = await getClient().hgetall(FEEDBACK_HASH_KEY)
+    return Object.values(all ?? {})
+      .map(parseEntry)
+      .filter(Boolean)
   },
   async clear() {
-    await getClient().del(FEEDBACK_LIST_KEY)
+    await getClient().del(FEEDBACK_HASH_KEY)
   }
 }
 

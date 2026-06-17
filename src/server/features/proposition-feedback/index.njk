@@ -1,64 +1,54 @@
-{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
-{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
 {#
-  Renders the per-proposition feedback widget.
-  Required context: categoryId, pageId, matchId, widget, justSubmitted (bool).
+  Renders the per-proposition feedback form.
+  Required context:
+    categoryId, pageId, matchId, widget
+    feedback (object or null) — { choice, comment, updated_at_label, ... }
 #}
 
 {% set actionUrl = "/audit/subjects/" + categoryId + "/pages/" + pageId + "/propositions/" + matchId + "/feedback" %}
+{% set isCompleted = feedback != null %}
+{% set buttonText = "Save changes" if isCompleted else "Submit feedback" %}
+{% set legendText = "Update your feedback" if isCompleted else "Your feedback" %}
+{% set selectedChoice = feedback.choice if isCompleted else "" %}
+{% set commentValue = feedback.comment if isCompleted else "" %}
 
-{% set revealHtml %}
-  {{ govukSelect({
-    id: "suggested-status-" + matchId,
-    name: "suggested_status",
-    label: { text: "Suggested status (optional)" },
+<form method="post" action="{{ actionUrl }}" class="app-proposition-feedback govuk-!-margin-top-4" novalidate>
+  {{ govukRadios({
+    name: "choice",
+    idPrefix: "choice-" + matchId,
+    fieldset: {
+      legend: {
+        text: legendText,
+        classes: "govuk-fieldset__legend--s"
+      }
+    },
     items: [
-      { value: "", text: "— Select —", selected: true }
-    ].concat(widget.statusOptions)
+      { value: "INTERESTED", text: "I am interested in this", checked: selectedChoice == "INTERESTED" },
+      { value: "NOT_INTERESTED", text: "I am not interested in this", checked: selectedChoice == "NOT_INTERESTED" },
+      { value: "AI_MISTAKE", text: "This is a mistake in the AI", checked: selectedChoice == "AI_MISTAKE" }
+    ]
   }) }}
 
   {{ govukCharacterCount({
     id: "comment-" + matchId,
     name: "comment",
-    label: { text: "Comment (optional)" },
+    label: { text: "Add a comment (optional)" },
     maxlength: widget.commentMaxLength,
     threshold: 80,
-    rows: 4
+    rows: 3,
+    value: commentValue
   }) }}
 
   {{ govukButton({
-    text: "Submit review",
+    text: buttonText,
     preventDoubleClick: true
   }) }}
-{% endset %}
 
-<form id="proposition-{{ matchId }}" method="post" action="{{ actionUrl }}" class="app-proposition-feedback govuk-!-margin-top-3" novalidate>
-  {% if justSubmitted %}
-    <div class="govuk-notification-banner govuk-notification-banner--success" role="alert"
-         aria-labelledby="feedback-banner-title-{{ matchId }}" data-module="govuk-notification-banner">
-      <div class="govuk-notification-banner__header">
-        <h2 class="govuk-notification-banner__title" id="feedback-banner-title-{{ matchId }}">Success</h2>
-      </div>
-      <div class="govuk-notification-banner__content">
-        <p class="govuk-notification-banner__heading">Thank you. Your review has been recorded.</p>
-      </div>
-    </div>
+  {% if isCompleted and feedback.updated_at_label %}
+    <p class="govuk-hint govuk-!-margin-top-2">Last saved {{ feedback.updated_at_label }}.</p>
   {% endif %}
-
-  {{ govukCheckboxes({
-    name: "flag",
-    idPrefix: "flag-" + matchId,
-    classes: "govuk-checkboxes--small",
-    items: [
-      {
-        value: "yes",
-        text: "Flag this match for review",
-        hint: { text: "Tell us if you think the status above is wrong." },
-        conditional: { html: revealHtml }
-      }
-    ]
-  }) }}
 </form>
