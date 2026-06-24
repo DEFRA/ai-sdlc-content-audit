@@ -1,19 +1,16 @@
 [
   {
-    "category_id": 1,
-    "total_pages_audited": 2669,
+    "category": "slurry",
+    "total_pages_audited": 18136,
     "laws_found": 5,
-    "pages_relevant": 46,
-    "relevance_threshold": {
-      "labels_slurry_gte": 0.5
-    },
+    "pages_relevant": 53,
     "proposition_status_counts": {
-      "UNGROUNDED": 374,
-      "GUIDANCE_BROADER": 47,
-      "GUIDANCE_INCOMPLETE": 85,
-      "GROUNDED": 54,
-      "CONFLICTS": 54,
-      "GUIDANCE_MISSING": 532
+      "UNGROUNDED": 445,
+      "GUIDANCE_BROADER": 34,
+      "GUIDANCE_INCOMPLETE": 49,
+      "GROUNDED": 41,
+      "CONFLICTS": 45,
+      "GUIDANCE_MISSING": 487
     }
   }
 ]

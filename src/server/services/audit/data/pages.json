@@ -1,416 +1,426 @@
 [
   {
-    "id": 1,
-    "category_id": 1,
+    "content_id": "55a899a4-d19f-4c5e-bd69-884de46be4c9",
+    "category": "slurry",
+    "url": "https://www.gov.uk/government/publications/applying-the-farming-rules-for-water",
+    "title": "Enforcing the Farming Rules for Water",
+    "description": "Criteria for the Environment Agency to use when enforcing the Farming Rules for Water, particularly for autumn and winter applications of organic manures.",
+    "document_type": "statutory_guidance"
+  },
+  {
+    "content_id": "31f599c9-108a-4352-9d05-c93c57b8cbc1",
+    "category": "slurry",
     "url": "https://www.gov.uk/government/publications/bird-flu-licence-to-move-and-spread-used-poultry-litter-manure-and-slurry-in-a-protection-or-surveillance-zone",
     "title": "Bird flu: licence to move and spread used poultry litter, manure and slurry in a protection or surveillance zone (EXD353(HPAI)(EW))",
     "description": "General licence to move from premises and spread poultry litter, manure and slurry in a protection or surveillance zone in England and Wales.",
-    "document_type": "statutory_guidance",
-    "content_id": "31f599c9-108a-4352-9d05-c93c57b8cbc1"
+    "document_type": "statutory_guidance"
   },
   {
-    "id": 2,
-    "category_id": 1,
+    "content_id": "b813dc85-6be5-4dbc-b201-a50d3d56c5c7",
+    "category": "slurry",
+    "url": "https://www.gov.uk/government/publications/code-of-good-agricultural-practice-for-reducing-ammonia-emissions",
+    "title": "Code of Good Agricultural Practice for reducing ammonia emissions",
+    "description": "This Code of Good Agricultural Practice (COGAP) provides best practice guidance for reducing ammonia emissions from farms in England.",
+    "document_type": "guidance"
+  },
+  {
+    "content_id": "2c889373-09c3-4bfe-b5cd-0913bcecef5d",
+    "category": "slurry",
+    "url": "https://www.gov.uk/government/publications/farming-equipment-and-technology-fund-2024",
+    "title": "Farming Equipment and Technology Fund (FETF) 2024 (closed)",
+    "description": "A closed FETF grant for help to buy items that improve productivity, manage slurry and improve animal health and welfare. ",
+    "document_type": "guidance"
+  },
+  {
+    "content_id": "08ae896b-dd80-48a5-b123-555450e619d8",
+    "category": "slurry",
+    "url": "https://www.gov.uk/government/publications/farming-equipment-and-technology-fund-2025",
+    "title": "Farming Equipment and Technology Fund (FETF) 2025 (closed)",
+    "description": "A closed FETF grant for help to buy items that improve productivity, manage slurry and improve animal health and welfare.",
+    "document_type": "guidance"
+  },
+  {
+    "content_id": "8e2c6659-9470-475e-9873-e22e1c70aa55",
+    "category": "slurry",
     "url": "https://www.gov.uk/government/publications/farming-equipment-and-technology-fund-fetf-2026-closed",
     "title": "Farming Equipment and Technology Fund (FETF) 2026 (Closed)",
     "description": "A grant to help buy items that improve productivity, manage slurry and improve animal health and welfare. Applications closed at midday on 12 May 2026",
-    "document_type": "guidance",
-    "content_id": "8e2c6659-9470-475e-9873-e22e1c70aa55"
+    "document_type": "guidance"
   },
   {
-    "id": 3,
-    "category_id": 1,
+    "content_id": "5f45d9f7-7631-11e4-a3cb-005056011aef",
+    "category": "slurry",
     "url": "https://www.gov.uk/government/publications/intensive-farming-introduction-and-chapters",
     "title": "Intensive farming: comply with your environmental permit",
     "description": "How to comply with the conditions in your environmental permit for intensive pig and poultry farming.",
-    "document_type": "guidance",
-    "content_id": "5f45d9f7-7631-11e4-a3cb-005056011aef"
+    "document_type": "guidance"
   },
   {
-    "id": 4,
-    "category_id": 1,
+    "content_id": "0b080d22-c03f-44f9-830b-4846486557d6",
+    "category": "slurry",
     "url": "https://www.gov.uk/government/publications/landspreading-apply-to-deploy-mobile-plant",
     "title": "Landspreading: apply to deploy mobile plant",
     "description": "Information you must provide in your application to deploy mobile plant for landspreading waste. How you must operate under your approved deployment.",
-    "document_type": "guidance",
-    "content_id": "0b080d22-c03f-44f9-830b-4846486557d6"
+    "document_type": "guidance"
   },
   {
-    "id": 5,
-    "category_id": 1,
+    "content_id": "f575cace-c10d-4e82-adfa-560161313324",
+    "category": "slurry",
     "url": "https://www.gov.uk/government/publications/landspreading-how-to-comply-with-your-permit",
     "title": "Landspreading: how to comply with your permit",
     "description": "How to meet the rules in your permit if you use mobile plant to spread waste to land for agricultural benefit or ecological improvement.",
-    "document_type": "guidance",
-    "content_id": "f575cace-c10d-4e82-adfa-560161313324"
+    "document_type": "guidance"
   },
   {
-    "id": 6,
-    "category_id": 1,
+    "content_id": "8ff54c75-395f-4615-9dad-695d0d879dc4",
+    "category": "slurry",
     "url": "https://www.gov.uk/government/publications/low-risk-waste-positions-effluent-and-sludge",
     "title": "Low risk waste positions: effluent and sludge",
     "description": "The Environment Agency has provided these low risk waste positions (LRWPs) for waste operations that it considers may be suitable for an exemption. ",
-    "document_type": "guidance",
-    "content_id": "8ff54c75-395f-4615-9dad-695d0d879dc4"
+    "document_type": "guidance"
   },
   {
-    "id": 7,
-    "category_id": 1,
+    "content_id": "98756b51-f712-4e5e-95e7-3345aad6f3b5",
+    "category": "slurry",
     "url": "https://www.gov.uk/government/publications/manure-fertilisers-and-soil-improvers-import-information-notes",
     "title": "Manure, fertilisers and soil improvers - Import Information Notes",
     "description": "Guidance for vets, importers and border control officials when importing manure, fertilisers and soil improvers to Great Britain.",
-    "document_type": "guidance",
-    "content_id": "98756b51-f712-4e5e-95e7-3345aad6f3b5"
+    "document_type": "guidance"
   },
   {
-    "id": 8,
-    "category_id": 1,
+    "content_id": "5f1e4c8c-7631-11e4-a3cb-005056011aef",
+    "category": "slurry",
+    "url": "https://www.gov.uk/government/publications/pig-and-poultry-assurance-scheme-intensive-farming",
+    "title": "Pig and Poultry Assurance Scheme",
+    "description": "Guidance about the Pig and Poultry Assurance Scheme available under the Environmental Permitting (England and Wales) Regulations 2010.",
+    "document_type": "guidance"
+  },
+  {
+    "content_id": "d6dabbb6-07ca-4522-8f72-31c7a48867a1",
+    "category": "slurry",
     "url": "https://www.gov.uk/government/publications/slurry-infrastructure-grant",
     "title": "Slurry Infrastructure grant round 1: guidance for invited applicants",
     "description": "Invited applicants can apply for a grant to improve or expand slurry storage capacity to 6 months.",
-    "document_type": "guidance",
-    "content_id": "d6dabbb6-07ca-4522-8f72-31c7a48867a1"
+    "document_type": "guidance"
   },
   {
-    "id": 9,
-    "category_id": 1,
+    "content_id": "9fda8bbf-f60a-4edd-a12f-22b4a10854bc",
+    "category": "slurry",
+    "url": "https://www.gov.uk/government/publications/slurry-infrastructure-grant-information-for-local-planning-authorities",
+    "title": "Slurry Infrastructure grant: information for local planning authorities",
+    "description": "Advice from Natural England on planning applications for slurry management on farms.",
+    "document_type": "guidance"
+  },
+  {
+    "content_id": "683ea317-f3d3-46b5-94ed-56a7ae3c2f6a",
+    "category": "slurry",
     "url": "https://www.gov.uk/government/publications/slurry-infrastructure-grant-round-2-guidance-for-invited-applicants",
     "title": "Slurry Infrastructure grant round 2: guidance for invited applicants",
     "description": "Invited applicants can apply for a grant to improve or expand slurry storage capacity and to cover stores. ",
-    "document_type": "guidance",
-    "content_id": "683ea317-f3d3-46b5-94ed-56a7ae3c2f6a"
+    "document_type": "guidance"
   },
   {
-    "id": 10,
-    "category_id": 1,
+    "content_id": "b41f55f2-2795-4680-a058-c925790d2286",
+    "category": "slurry",
     "url": "https://www.gov.uk/government/publications/solidifying-wet-utilities-excavation-waste-using-non-waste-absorbents-rps-275",
     "title": "Solidifying wet utilities excavation waste using non-waste absorbents: RPS 275",
     "description": "Environment Agency regulatory position on using non-waste absorbents to solidify saturated soils and slurry wastes produced during construction and excavation works.",
-    "document_type": "guidance",
-    "content_id": "b41f55f2-2795-4680-a058-c925790d2286"
+    "document_type": "guidance"
   },
   {
-    "id": 11,
-    "category_id": 1,
+    "content_id": "f785b3f1-ffe5-41c4-b6b9-b55a21e78a69",
+    "category": "slurry",
     "url": "https://www.gov.uk/government/publications/sr2010-no17-storage-of-wastes-to-be-used-in-land-treatment",
     "title": "SR2010 No 17: storage of wastes to be used in land treatment",
     "description": "Standard rules to allow storage of wastes to be used in land treatment.",
-    "document_type": "statutory_guidance",
-    "content_id": "f785b3f1-ffe5-41c4-b6b9-b55a21e78a69"
+    "document_type": "statutory_guidance"
   },
   {
-    "id": 12,
-    "category_id": 1,
+    "content_id": "5f45750b-7631-11e4-a3cb-005056011aef",
+    "category": "slurry",
     "url": "https://www.gov.uk/government/publications/sr2010-no4-mobile-plant-for-land-spreading",
     "title": "SR2010 No 4: mobile plant for land-spreading",
     "description": "Standard rules to operate mobile plant for land spreading and deployment form.",
-    "document_type": "statutory_guidance",
-    "content_id": "5f45750b-7631-11e4-a3cb-005056011aef"
+    "document_type": "statutory_guidance"
   },
   {
-    "id": 13,
-    "category_id": 1,
+    "content_id": "5f457b8e-7631-11e4-a3cb-005056011aef",
+    "category": "slurry",
     "url": "https://www.gov.uk/government/publications/sr2010-no6-mobile-plant-for-land-spreading-of-sewage-sludge",
     "title": "SR2010 No 6: mobile plant for landspreading of sewage sludge",
     "description": "Standard rules to operate mobile plant for landspreading of sewage sludge and deployment form.",
-    "document_type": "statutory_guidance",
-    "content_id": "5f457b8e-7631-11e4-a3cb-005056011aef"
+    "document_type": "statutory_guidance"
   },
   {
-    "id": 14,
-    "category_id": 1,
+    "content_id": "24ded379-4bd6-4227-bd9b-06b78e9f8d52",
+    "category": "slurry",
     "url": "https://www.gov.uk/government/publications/sr2021-no-10-anaerobic-digestion-of-non-hazardous-sludge-at-a-waste-water-treatment-works-including-the-use-of-the-resultant-biogas",
     "title": "SR2021 No 10: anaerobic digestion of non-hazardous sludge at a waste water treatment works, including the use of the resultant biogas",
     "description": "For a Part A installation with a biological treatment capacity exceeding 100 tonnes each day, accepting no more than 500,000 tonnes a year.",
-    "document_type": "statutory_guidance",
-    "content_id": "24ded379-4bd6-4227-bd9b-06b78e9f8d52"
+    "document_type": "statutory_guidance"
   },
   {
-    "id": 15,
-    "category_id": 1,
+    "content_id": "eba968f8-4ff2-4938-abe8-4186d4b8d447",
+    "category": "slurry",
     "url": "https://www.gov.uk/government/publications/sr2021-no-8-on-farm-anaerobic-digestion-facility-using-farm-wastes-only-including-use-of-the-resultant-biogas-installations",
     "title": "SR2021 No 8: on-farm anaerobic digestion facility using farm wastes only, including use of the resultant biogas – installations",
     "description": "For a Part A installation with an anaerobic digestion capacity of over 100 tonnes of waste, or a combination of waste and non-waste each day and accepting no more than 100,000 tonnes per year.",
-    "document_type": "statutory_guidance",
-    "content_id": "eba968f8-4ff2-4938-abe8-4186d4b8d447"
+    "document_type": "statutory_guidance"
   },
   {
-    "id": 16,
-    "category_id": 1,
+    "content_id": "6020e641-9418-41a1-b6f8-9f26fb24806b",
+    "category": "slurry",
     "url": "https://www.gov.uk/government/publications/sr2021-no-9-on-farm-anaerobic-digestion-facility-including-use-of-the-resultant-biogas-waste-recovery-operation",
     "title": "SR2021 No 9: on-farm anaerobic digestion facility, including use of the resultant biogas – waste recovery operation",
     "description": "For a facility with a treatment capacity of less than 100 tonnes of waste, or a combination of waste and non-waste each day accepting no more than 35,000 tonnes each year.",
-    "document_type": "statutory_guidance",
-    "content_id": "6020e641-9418-41a1-b6f8-9f26fb24806b"
+    "document_type": "statutory_guidance"
   },
   {
-    "id": 17,
-    "category_id": 1,
+    "content_id": "c339ee8d-62eb-4ca6-a6ed-263b7d5d4b94",
+    "category": "slurry",
     "url": "https://www.gov.uk/government/publications/sr2023-no-1-capture-treatment-and-storage-of-biogas-from-lagoons-and-tanks",
     "title": "SR2023 No 1: capture, treatment and storage of biogas from lagoons and tanks",
     "description": "Standard rules to capture, treat and store biogas from lagoons and tanks.",
-    "document_type": "statutory_guidance",
-    "content_id": "c339ee8d-62eb-4ca6-a6ed-263b7d5d4b94"
+    "document_type": "statutory_guidance"
   },
   {
-    "id": 18,
-    "category_id": 1,
+    "content_id": "a83f60a2-c928-45a4-aaec-1e7b7991110a",
+    "category": "slurry",
     "url": "https://www.gov.uk/government/publications/storing-and-using-manure-to-breed-worms-for-a-wormery-rps-316",
     "title": "Storing and using manure to breed worms for a wormery: RPS 316",
     "description": "Environment Agency regulatory position on storing and using farmyard and horse manure to breed worms to make a wormery (vermiculture).",
-    "document_type": "guidance",
-    "content_id": "a83f60a2-c928-45a4-aaec-1e7b7991110a"
+    "document_type": "guidance"
   },
   {
-    "id": 19,
-    "category_id": 1,
+    "content_id": "de0f8f13-6900-41fd-beaf-16cb4547f96d",
+    "category": "slurry",
     "url": "https://www.gov.uk/government/publications/treating-and-storing-litter-straw-manure-and-slurry-from-an-animal-disease-outbreak-rps-36",
     "title": "Storing and treating litter, straw, slurry and washwater from an animal disease outbreak: RPS 36",
     "description": "Environment Agency regulatory position on storing and treating litter, straw, slurry and washwater in a location where an animal disease outbreak has been identified by the Animal and Plant Health Agency.",
-    "document_type": "guidance",
-    "content_id": "de0f8f13-6900-41fd-beaf-16cb4547f96d"
+    "document_type": "guidance"
   },
   {
-    "id": 20,
-    "category_id": 1,
+    "content_id": "fcc84b5c-73d0-47a3-af96-1649259d8a3f",
+    "category": "slurry",
     "url": "https://www.gov.uk/government/publications/use-of-clay-in-slurry-lagoons-or-irrigation-reservoirs-rps-91",
     "title": "Use of clay in slurry lagoons or irrigation reservoirs: RPS 91",
     "description": "Environment Agency regulatory position on using waste clay in the construction of slurry lagoons or irrigation/winter storage reservoirs. ",
-    "document_type": "guidance",
-    "content_id": "fcc84b5c-73d0-47a3-af96-1649259d8a3f"
+    "document_type": "guidance"
   },
   {
-    "id": 21,
-    "category_id": 1,
+    "content_id": "bfa25594-2282-4811-9e35-583f62876fc4",
+    "category": "slurry",
     "url": "https://www.gov.uk/government/publications/waste-codes-for-sewage-sludge-and-sludge-containing-other-materials-rps-231",
     "title": "Using waste codes for sludge materials: RPS 231",
     "description": "Environment Agency regulatory position on the use of additional waste codes to store, treat or spread sewage sludge and septic tank sludge to land.",
-    "document_type": "guidance",
-    "content_id": "bfa25594-2282-4811-9e35-583f62876fc4"
+    "document_type": "guidance"
   },
   {
-    "id": 22,
-    "category_id": 1,
+    "content_id": "e274edd5-8fab-47e7-a0b1-249a55995a80",
+    "category": "slurry",
     "url": "https://www.gov.uk/guidance/ammonia-emission-factors-for-pig-and-poultry-screening-modelling-and-reporting",
     "title": "Ammonia emission factors for pig and poultry screening, modelling and reporting",
     "description": "You can use these emission factors to quantify the amount of ammonia emitted from your permitted pig or poultry operations.",
-    "document_type": "detailed_guide",
-    "content_id": "e274edd5-8fab-47e7-a0b1-249a55995a80"
+    "document_type": "detailed_guide"
   },
   {
-    "id": 23,
-    "category_id": 1,
+    "content_id": "4f519564-5233-41f8-be2c-7ca9476cf3c9",
+    "category": "slurry",
     "url": "https://www.gov.uk/guidance/construct-a-new-or-substantially-enlarge-an-existing-silage-slurry-or-agricultural-fuel-oil-store-or-store-field-silage-on-a-new-site",
     "title": "Construct a new or substantially enlarge an existing silage, slurry or agricultural fuel oil store, or store field silage on a new site",
     "description": "Use this service to notify the Environment Agency if you plan to construct a new or substantially enlarge an existing silage, slurry or agricultural fuel oil store, or store field silage on a new site.",
-    "document_type": "detailed_guide",
-    "content_id": "4f519564-5233-41f8-be2c-7ca9476cf3c9"
+    "document_type": "detailed_guide"
   },
   {
-    "id": 24,
-    "category_id": 1,
+    "content_id": "ab238df0-434d-4c6a-a2da-cf34bf1d8ee9",
+    "category": "slurry",
     "url": "https://www.gov.uk/guidance/get-approval-to-burn-poultry-manure-in-a-combustion-unit",
     "title": "Burn poultry manure in a combustion unit",
     "description": "How to get approval to burn poultry manure in a combustion unit on your farm or holding. ",
-    "document_type": "detailed_guide",
-    "content_id": "ab238df0-434d-4c6a-a2da-cf34bf1d8ee9"
+    "document_type": "detailed_guide"
   },
   {
-    "id": 25,
-    "category_id": 1,
+    "content_id": "5fa75896-7631-11e4-a3cb-005056011aef",
+    "category": "slurry",
     "url": "https://www.gov.uk/guidance/grassland-derogations-for-livestock-manure-in-nitrate-vulnerable-zones",
     "title": "Grassland derogations for livestock manure in nitrate vulnerable zones",
     "description": "What to do if the livestock manure produced on your farm is likely to exceed the amount you're allowed to spread on your land in an NVZ (farm limit).",
-    "document_type": "detailed_guide",
-    "content_id": "5fa75896-7631-11e4-a3cb-005056011aef"
+    "document_type": "detailed_guide"
   },
   {
-    "id": 26,
-    "category_id": 1,
+    "content_id": "eb30e644-d2f6-4445-9738-d314a23e9b9f",
+    "category": "slurry",
     "url": "https://www.gov.uk/guidance/handling-of-manure-and-slurry-to-reduce-antibiotic-resistance",
     "title": "Handling of manure and slurry to reduce antibiotic resistance",
     "description": "Guidance on the handling of slurry and manure to help reduce the spread of antibiotic resistant bacteria.",
-    "document_type": "detailed_guide",
-    "content_id": "eb30e644-d2f6-4445-9738-d314a23e9b9f"
+    "document_type": "detailed_guide"
   },
   {
-    "id": 27,
-    "category_id": 1,
+    "content_id": "cc323cbf-0964-4a9c-8613-a031a14b1b1a",
+    "category": "slurry",
     "url": "https://www.gov.uk/guidance/how-to-do-the-sfi-actions-for-nutrient-management",
     "title": "How to do the SFI actions for nutrient management",
     "description": "Find out how you could do the SFI actions for nutrient management. ",
-    "document_type": "detailed_guide",
-    "content_id": "cc323cbf-0964-4a9c-8613-a031a14b1b1a"
+    "document_type": "detailed_guide"
   },
   {
-    "id": 28,
-    "category_id": 1,
+    "content_id": "5ff11820-7631-11e4-a3cb-005056011aef",
+    "category": "slurry",
     "url": "https://www.gov.uk/guidance/how-to-use-store-or-move-manure-guano-and-digestive-tract-content",
     "title": "How to use, store or move manure, guano and digestive tract content",
     "description": "Find out how you can use manure, guano and digestive tract content, including how to store and move them.",
-    "document_type": "detailed_guide",
-    "content_id": "5ff11820-7631-11e4-a3cb-005056011aef"
+    "document_type": "detailed_guide"
   },
   {
-    "id": 29,
-    "category_id": 1,
+    "content_id": "b8cc451c-d924-4390-8e21-5bac18e28983",
+    "category": "slurry",
     "url": "https://www.gov.uk/guidance/intensive-pig-and-poultry-farm-inspection",
     "title": "Intensive pig and poultry farm inspections",
     "description": "Information for farmers about inspections the Environment Agency carries out on pig and poultry farm structures, records and, maintenance and management plans.",
-    "document_type": "detailed_guide",
-    "content_id": "b8cc451c-d924-4390-8e21-5bac18e28983"
+    "document_type": "detailed_guide"
   },
   {
-    "id": 30,
-    "category_id": 1,
+    "content_id": "5d431924-deb6-4cae-875d-4ce32089795f",
+    "category": "slurry",
+    "url": "https://www.gov.uk/guidance/landspreading-benefits-and-risks-of-the-waste-types-you-can-use",
+    "title": "Landspreading: benefits and risks of the waste types you can use",
+    "description": "Information on waste codes and descriptions to use when landspreading to improve soil health.",
+    "document_type": "manual"
+  },
+  {
+    "content_id": "cc063373-63c5-4b01-82d9-bff30b9161f8",
+    "category": "slurry",
     "url": "https://www.gov.uk/guidance/landspreading-to-improve-soil-health",
     "title": "Landspreading to improve soil health",
     "description": "How to meet the requirements of using mobile plant for landspreading waste to provide agricultural benefit or ecological improvement.",
-    "document_type": "detailed_guide",
-    "content_id": "cc063373-63c5-4b01-82d9-bff30b9161f8"
+    "document_type": "detailed_guide"
   },
   {
-    "id": 31,
-    "category_id": 1,
+    "content_id": "d784c1fe-2bbf-40b0-8ce3-373cdb53d13b",
+    "category": "slurry",
     "url": "https://www.gov.uk/guidance/pigs-and-poultry-intensive-farming-environmental-permits",
     "title": "Pigs and poultry intensive farming: environmental permits",
     "description": "How to apply for an environmental permit if you rear pigs and poultry intensively, including how to comply with and change the permit. ",
-    "document_type": "detailed_guide",
-    "content_id": "d784c1fe-2bbf-40b0-8ce3-373cdb53d13b"
+    "document_type": "detailed_guide"
   },
   {
-    "id": 32,
-    "category_id": 1,
+    "content_id": "72381feb-58cd-4cf4-a9d6-62083cbb4a5d",
+    "category": "slurry",
     "url": "https://www.gov.uk/guidance/preventing-agricultural-pollution-in-exceptional-weather",
     "title": "Preventing agricultural pollution in exceptional circumstances",
     "description": "Spreading slurry and milk on agricultural land: Environment Agency advice in exceptional circumstances such as extreme weather.  ",
-    "document_type": "detailed_guide",
-    "content_id": "72381feb-58cd-4cf4-a9d6-62083cbb4a5d"
+    "document_type": "detailed_guide"
   },
   {
-    "id": 33,
-    "category_id": 1,
+    "content_id": "5ff11ff3-7631-11e4-a3cb-005056011aef",
+    "category": "slurry",
     "url": "https://www.gov.uk/guidance/processing-manure-for-sale-as-fertiliser-in-the-eu",
     "title": "Processing manure for sale as fertiliser in the EU",
     "description": "How to process manure, guano or digestive tract content for sale as a fertiliser in the EU, including how to propose a new treatment method.",
-    "document_type": "detailed_guide",
-    "content_id": "5ff11ff3-7631-11e4-a3cb-005056011aef"
+    "document_type": "detailed_guide"
   },
   {
-    "id": 34,
-    "category_id": 1,
+    "content_id": "f601d439-fb39-40d5-b826-12fa95017d68",
+    "category": "slurry",
     "url": "https://www.gov.uk/guidance/report-nitrogen-and-phosphorus-emissions-from-intensive-pig-and-poultry-farms",
     "title": "Report nitrogen and phosphorus emissions from intensive pig and poultry farms",
     "description": "Calculate the annual nitrogen and phosphorus emissions from your livestock. Report the data to the Environment Agency. ",
-    "document_type": "detailed_guide",
-    "content_id": "f601d439-fb39-40d5-b826-12fa95017d68"
+    "document_type": "detailed_guide"
   },
   {
-    "id": 35,
-    "category_id": 1,
+    "content_id": "2037d660-68f2-42d2-b99c-f5d8c4a34df2",
+    "category": "slurry",
     "url": "https://www.gov.uk/guidance/request-an-ammonia-screening-assessment",
     "title": "Request an ammonia screening assessment",
     "description": "Use these forms to request an ammonia screening assessment as part of an intensive farming permit application.",
-    "document_type": "detailed_guide",
-    "content_id": "2037d660-68f2-42d2-b99c-f5d8c4a34df2"
+    "document_type": "detailed_guide"
   },
   {
-    "id": 36,
-    "category_id": 1,
+    "content_id": "831430a9-bbda-4b69-870d-cf21d83990d4",
+    "category": "slurry",
     "url": "https://www.gov.uk/guidance/rules-for-farmers-and-land-managers",
     "title": "Rules for farmers and land managers",
     "description": "What you must do when you keep livestock or manage land. ",
-    "document_type": "detailed_guide",
-    "content_id": "831430a9-bbda-4b69-870d-cf21d83990d4"
+    "document_type": "detailed_guide"
   },
   {
-    "id": 37,
-    "category_id": 1,
+    "content_id": "2971146e-427b-4984-86e8-d4d498ccc32c",
+    "category": "slurry",
     "url": "https://www.gov.uk/guidance/rules-for-farmers-and-land-managers-to-prevent-water-pollution",
     "title": "How to comply with the Farming Rules for Water",
     "description": "What you must do to prevent water pollution when you manage organic manures, manufactured fertiliser, soil and livestock.\r\n",
-    "document_type": "detailed_guide",
-    "content_id": "2971146e-427b-4984-86e8-d4d498ccc32c"
+    "document_type": "detailed_guide"
   },
   {
-    "id": 38,
-    "category_id": 1,
+    "content_id": "5fa7461e-7631-11e4-a3cb-005056011aef",
+    "category": "slurry",
     "url": "https://www.gov.uk/guidance/storing-organic-manures-in-nitrate-vulnerable-zones",
     "title": "Storing organic manures in nitrate vulnerable zones",
     "description": "How to provide enough storage and keep storage records of organic manures in a nitrate vulnerable zone (NVZ).",
-    "document_type": "detailed_guide",
-    "content_id": "5fa7461e-7631-11e4-a3cb-005056011aef"
+    "document_type": "detailed_guide"
   },
   {
-    "id": 39,
-    "category_id": 1,
+    "content_id": "3c951850-eaec-44ee-bb0c-52e4e53a66fb",
+    "category": "slurry",
     "url": "https://www.gov.uk/guidance/storing-silage-slurry-and-agricultural-fuel-oil",
     "title": "Storing silage, slurry and agricultural fuel oil",
     "description": "Rules you must follow, who’s responsible, when to notify the Environment Agency and what to do if you get an enforcement notice.\r\n",
-    "document_type": "detailed_guide",
-    "content_id": "3c951850-eaec-44ee-bb0c-52e4e53a66fb"
+    "document_type": "detailed_guide"
   },
   {
-    "id": 40,
-    "category_id": 1,
+    "content_id": "058e5667-7705-43ae-8732-b507e9161b9b",
+    "category": "slurry",
     "url": "https://www.gov.uk/guidance/using-a-mechanical-slurry-separator-to-manage-your-slurry",
     "title": "Using a mechanical slurry separator to manage your slurry",
     "description": "What farmers and land managers must know about slurry separators, storing and applying separated materials.",
-    "document_type": "detailed_guide",
-    "content_id": "058e5667-7705-43ae-8732-b507e9161b9b"
+    "document_type": "detailed_guide"
   },
   {
-    "id": 41,
-    "category_id": 1,
+    "content_id": "f1333a06-49c9-4919-a56c-d21d103871b9",
+    "category": "slurry",
     "url": "https://www.gov.uk/guidance/waste-exemption-nwfd-2-temporary-storage-at-the-place-of-production--2",
     "title": "Temporary storage where waste is produced (NWFD 2 exemption)",
     "description": "You can temporarily store any waste at the place of production before it’s collected. You do not need to register this exemption.",
-    "document_type": "detailed_guide",
-    "content_id": "f1333a06-49c9-4919-a56c-d21d103871b9"
+    "document_type": "detailed_guide"
   },
   {
-    "id": 42,
-    "category_id": 1,
+    "content_id": "5f4d6064-7631-11e4-a3cb-005056011aef",
+    "category": "slurry",
     "url": "https://www.gov.uk/guidance/waste-exemption-s3-storing-sludge",
     "title": "S3: storing sludge",
     "description": "S3 waste exemption lets you store sewage sludge at a site where it will be used in accordance with the Sludge (Use in Agriculture) Regulations 1989.",
-    "document_type": "detailed_guide",
-    "content_id": "5f4d6064-7631-11e4-a3cb-005056011aef"
+    "document_type": "detailed_guide"
   },
   {
-    "id": 43,
-    "category_id": 1,
+    "content_id": "5f4d3163-7631-11e4-a3cb-005056011aef",
+    "category": "slurry",
     "url": "https://www.gov.uk/guidance/waste-exemption-t24-anaerobic-digestion-at-premises-used-for-agriculture-and-burning-resulting-biogas",
     "title": "T24: anaerobic digestion on farms",
     "description": "T24 exemption allows farmers to anaerobically digest manure, slurry and vegetation on their farms to produce digestate for use as fertiliser or soil conditioner.",
-    "document_type": "detailed_guide",
-    "content_id": "5f4d3163-7631-11e4-a3cb-005056011aef"
+    "document_type": "detailed_guide"
   },
   {
-    "id": 44,
-    "category_id": 1,
+    "content_id": "5f4d6b9f-7631-11e4-a3cb-005056011aef",
+    "category": "slurry",
     "url": "https://www.gov.uk/guidance/waste-exemption-u10-spreading-waste-to-benefit-agricultural-land",
     "title": "U10: spreading waste to benefit agricultural land",
     "description": "U10 exemption lets you spread certain wastes on agricultural land to improve soil, instead of using manufactured fertilisers or virgin materials.",
-    "document_type": "detailed_guide",
-    "content_id": "5f4d6b9f-7631-11e4-a3cb-005056011aef"
+    "document_type": "detailed_guide"
   },
   {
-    "id": 45,
-    "category_id": 1,
+    "content_id": "5f4d6beb-7631-11e4-a3cb-005056011aef",
+    "category": "slurry",
     "url": "https://www.gov.uk/guidance/waste-exemption-u11-spreading-waste-to-benefit-non-agricultural-land",
     "title": "U11: spreading waste on non-agricultural land",
     "description": "U11 exemption lets you spread waste on non-agricultural land to improve soil, instead of using manufactured fertilisers or virgin materials.",
-    "document_type": "detailed_guide",
-    "content_id": "5f4d6beb-7631-11e4-a3cb-005056011aef"
+    "document_type": "detailed_guide"
   },
   {
-    "id": 46,
-    "category_id": 1,
+    "content_id": "5f4d6dab-7631-11e4-a3cb-005056011aef",
+    "category": "slurry",
     "url": "https://www.gov.uk/guidance/waste-exemption-u15-pig-and-poultry-ash",
     "title": "U15: mixing pig and poultry ash with manure",
     "description": "U15 exemption allows you to mix ash from burning pig or poultry with slurry or manure, and spread it on farmland to provide the soil with nutrients.",
-    "document_type": "detailed_guide",
-    "content_id": "5f4d6dab-7631-11e4-a3cb-005056011aef"
+    "document_type": "detailed_guide"
   }
 ]
