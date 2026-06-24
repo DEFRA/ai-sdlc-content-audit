@@ -5,7 +5,7 @@ import { auditPagesListViewModel } from './view-model.js'
 export const auditPagesListController = {
   handler(request, h) {
     try {
-      const categoryId = Number(request.params.categoryId)
+      const categoryId = request.params.categoryId
       const statusFilter = request.query.status || null
 
       const viewModel = auditPagesListViewModel.get(categoryId, statusFilter)

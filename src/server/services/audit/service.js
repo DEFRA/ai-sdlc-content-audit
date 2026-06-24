@@ -10,40 +10,42 @@ function load(name) {
   return JSON.parse(readFileSync(join(dataDir, name), 'utf8'))
 }
 
+// Pipeline-native shapes (Esther output). Entities are keyed by their natural
+// pipeline ids: pages by content_id, legislation by source_record_id, law
+// propositions by `prop:` id, guidance propositions by `g-` id, matches by a
+// derived `m-` id. No synthetic integer surrogate keys.
 const categories = load('categories.json')
 const legislation = load('legislation.json')
 const legislationPropositions = load('legislation-propositions.json')
 const pages = load('pages.json')
 const guidancePropositions = load('guidance-propositions.json')
 const propositionMatches = load('proposition-matches.json')
-const pageAggregations = load('page-aggregations.json')
 const pageAnalytics = load('page-analytics.json')
 const subjectSummaries = load('subject-summary.json')
 const pageRelevance = load('page-relevance.json')
 const pageReadingAge = load('pages-reading-age.json')
 
 const subjectSummaryByCategory = new Map(
-  subjectSummaries.map((s) => [s.category_id, s])
+  subjectSummaries.map((s) => [s.category, s])
 )
 const relevanceByCategoryPage = new Map(
-  pageRelevance.map((r) => [`${r.category_id}:${r.page_id}`, r.relevance_score])
+  pageRelevance.map((r) => [`${r.category}:${r.content_id}`, r.relevance_score])
 )
 
-const legislationById = new Map(legislation.map((l) => [l.id, l]))
+const legislationById = new Map(legislation.map((l) => [l.source_record_id, l]))
 const legislationPropositionById = new Map(
   legislationPropositions.map((lp) => [lp.id, lp])
 )
-const pageById = new Map(pages.map((p) => [p.id, p]))
-const pageAggregationById = new Map(pageAggregations.map((a) => [a.page_id, a]))
-const pageAnalyticsById = new Map(pageAnalytics.map((a) => [a.page_id, a]))
-const readingAgeByPageId = new Map(pageReadingAge.map((r) => [r.page_id, r]))
+const pageById = new Map(pages.map((p) => [p.content_id, p]))
+const pageAnalyticsById = new Map(pageAnalytics.map((a) => [a.content_id, a]))
+const readingAgeByPageId = new Map(pageReadingAge.map((r) => [r.content_id, r]))
 
 const guidancePropositionsByPage = new Map()
 for (const gp of guidancePropositions) {
-  if (!guidancePropositionsByPage.has(gp.page_id)) {
-    guidancePropositionsByPage.set(gp.page_id, [])
+  if (!guidancePropositionsByPage.has(gp.content_id)) {
+    guidancePropositionsByPage.set(gp.content_id, [])
   }
-  guidancePropositionsByPage.get(gp.page_id).push(gp)
+  guidancePropositionsByPage.get(gp.content_id).push(gp)
 }
 
 const matchByGuidanceId = new Map()
@@ -54,11 +56,11 @@ for (const m of propositionMatches) {
 }
 
 const missingMatches = propositionMatches.filter(
-  (m) => m.match_status === 'GUIDANCE_MISSING'
+  (m) => m.relationship === 'GUIDANCE_MISSING'
 )
 
 function pageIdsForCategory(categoryId) {
-  return pages.filter((p) => p.category_id === categoryId).map((p) => p.id)
+  return pages.filter((p) => p.category === categoryId).map((p) => p.content_id)
 }
 
 function conflictsCountForPage(pageId) {
@@ -66,7 +68,7 @@ function conflictsCountForPage(pageId) {
   let n = 0
   for (const gp of gps) {
     const m = matchByGuidanceId.get(gp.id)
-    if (m && m.match_status === 'CONFLICTS') n++
+    if (m && m.relationship === 'CONFLICTS') n++
   }
   return n
 }
@@ -76,7 +78,7 @@ function statusForPage(pageId) {
   const set = new Set()
   for (const gp of gps) {
     const m = matchByGuidanceId.get(gp.id)
-    if (m) set.add(m.match_status)
+    if (m) set.add(m.relationship)
   }
   return set
 }
@@ -92,28 +94,28 @@ function getAllCategories() {
 function getLawsForSubject(categoryId) {
   const propositionsByLaw = new Map()
   for (const lp of legislationPropositions) {
-    if (!propositionsByLaw.has(lp.legislation_id)) {
-      propositionsByLaw.set(lp.legislation_id, [])
+    if (!propositionsByLaw.has(lp.source_record_id)) {
+      propositionsByLaw.set(lp.source_record_id, [])
     }
-    propositionsByLaw.get(lp.legislation_id).push(lp)
+    propositionsByLaw.get(lp.source_record_id).push(lp)
   }
 
   const matchesByLawPropositionId = new Map()
   for (const m of propositionMatches) {
-    if (m.legislation_proposition_id == null) continue
-    if (!matchesByLawPropositionId.has(m.legislation_proposition_id)) {
-      matchesByLawPropositionId.set(m.legislation_proposition_id, [])
+    if (m.law_proposition_id == null) continue
+    if (!matchesByLawPropositionId.has(m.law_proposition_id)) {
+      matchesByLawPropositionId.set(m.law_proposition_id, [])
     }
-    matchesByLawPropositionId.get(m.legislation_proposition_id).push(m)
+    matchesByLawPropositionId.get(m.law_proposition_id).push(m)
   }
 
   const lawsForCategory =
     categoryId == null
       ? legislation
-      : legislation.filter((l) => l.category_id === categoryId)
+      : legislation.filter((l) => l.category === categoryId)
 
   return lawsForCategory.map((law) => {
-    const props = propositionsByLaw.get(law.id) ?? []
+    const props = propositionsByLaw.get(law.source_record_id) ?? []
     let propsWithGuidance = 0
     let conflictsCount = 0
 
@@ -121,14 +123,14 @@ function getLawsForSubject(categoryId) {
       const matches = matchesByLawPropositionId.get(prop.id) ?? []
       let hasGuidance = false
       for (const m of matches) {
-        if (m.match_status !== 'GUIDANCE_MISSING') hasGuidance = true
-        if (m.match_status === 'CONFLICTS') conflictsCount++
+        if (m.relationship !== 'GUIDANCE_MISSING') hasGuidance = true
+        if (m.relationship === 'CONFLICTS') conflictsCount++
       }
       if (hasGuidance) propsWithGuidance++
     }
 
     return {
-      id: law.id,
+      id: law.source_record_id,
       name: law.name,
       url: law.url,
       propositionCount: props.length,
@@ -156,12 +158,12 @@ function getSubjectOverview(categoryId) {
 
   const missingLawIds = new Set()
   for (const m of missingMatches) {
-    if (m.legislation_proposition_id == null) continue
-    const lp = legislationPropositionById.get(m.legislation_proposition_id)
+    if (m.law_proposition_id == null) continue
+    const lp = legislationPropositionById.get(m.law_proposition_id)
     if (!lp) continue
-    const law = legislationById.get(lp.legislation_id)
-    if (law && law.category_id !== categoryId) continue
-    missingLawIds.add(lp.legislation_id)
+    const law = legislationById.get(lp.source_record_id)
+    if (law && law.category !== categoryId) continue
+    missingLawIds.add(lp.source_record_id)
   }
 
   return {
@@ -178,12 +180,10 @@ function getSubjectOverview(categoryId) {
 function decoratePage(pageId) {
   const page = pageById.get(pageId)
   if (!page) return null
-  const agg = pageAggregationById.get(pageId)
   return {
-    id: page.id,
+    id: page.content_id,
     url: page.url,
     title: page.title,
-    correctness: agg?.quality_score?.correctness ?? null,
     conflictsCount: conflictsCountForPage(pageId)
   }
 }
@@ -200,25 +200,25 @@ function getRelevantPages(categoryId, statusFilter = null) {
 }
 
 function buildStatement(guidanceProp, match) {
-  const meta = STATUS_META[match.match_status]
+  const meta = STATUS_META[match.relationship]
   let lawName = null
   let lawUrl = null
   let lawText = null
 
-  if (match.legislation_proposition_id != null) {
-    const lp = legislationPropositionById.get(match.legislation_proposition_id)
+  if (match.law_proposition_id != null) {
+    const lp = legislationPropositionById.get(match.law_proposition_id)
     if (lp) {
-      const law = legislationById.get(lp.legislation_id)
+      const law = legislationById.get(lp.source_record_id)
       lawName = law?.name ?? null
       lawUrl = law?.url ?? null
-      lawText = lp.text
+      lawText = lp.proposition_text
     }
   }
 
   return {
     id: match.id,
-    status: match.match_status,
-    guidanceText: guidanceProp.text,
+    status: match.relationship,
+    guidanceText: guidanceProp.proposition_text,
     statusLabel: meta.label,
     statusMeaning: meta.meaning,
     statusTone: meta.tone,
@@ -227,20 +227,18 @@ function buildStatement(guidanceProp, match) {
     lawUrl,
     lawText,
     explanation: match.explanation ?? null,
-    confidence: match.confidence ?? null,
-    correctnessScore: match.correctness_score ?? null
+    confidence: match.confidence ?? null
   }
 }
 
 function getMatchStatus(propositionMatchId) {
   const match = propositionMatches.find((m) => m.id === propositionMatchId)
-  return match ? match.match_status : null
+  return match ? match.relationship : null
 }
 
 function getPageDetail(pageId) {
   const page = pageById.get(pageId)
   if (!page) return null
-  const agg = pageAggregationById.get(pageId)
   const gps = guidancePropositionsByPage.get(pageId) ?? []
 
   const statements = gps
@@ -257,28 +255,23 @@ function getPageDetail(pageId) {
   // own category.
   const missingLaws = missingMatches
     .map((m) => {
-      if (m.legislation_proposition_id == null) return null
-      const lp = legislationPropositionById.get(m.legislation_proposition_id)
+      if (m.law_proposition_id == null) return null
+      const lp = legislationPropositionById.get(m.law_proposition_id)
       if (!lp) return null
-      const law = legislationById.get(lp.legislation_id)
-      if (
-        law &&
-        page.category_id != null &&
-        law.category_id !== page.category_id
-      ) {
+      const law = legislationById.get(lp.source_record_id)
+      if (law && page.category != null && law.category !== page.category) {
         return null
       }
       return {
         lawName: law?.name ?? null,
         lawUrl: law?.url ?? null,
-        lawText: lp.text
+        lawText: lp.proposition_text
       }
     })
     .filter(Boolean)
 
   return {
     page,
-    correctness: agg?.quality_score?.correctness ?? null,
     statements,
     missingLaws
   }
@@ -286,23 +279,21 @@ function getPageDetail(pageId) {
 
 function getDashboardPages(categoryId = null) {
   const source = categoryId
-    ? pages.filter((p) => p.category_id === categoryId)
+    ? pages.filter((p) => p.category === categoryId)
     : pages
   const rows = source.map((p) => {
-    const agg = pageAggregationById.get(p.id)
-    const analytics = pageAnalyticsById.get(p.id)
-    const reading = readingAgeByPageId.get(p.id)
+    const analytics = pageAnalyticsById.get(p.content_id)
+    const reading = readingAgeByPageId.get(p.content_id)
     return {
-      id: p.id,
-      categoryId: p.category_id,
+      id: p.content_id,
+      categoryId: p.category,
       title: p.title,
       url: p.url,
-      correctness: agg?.quality_score?.correctness ?? null,
-      conflictsCount: conflictsCountForPage(p.id),
+      conflictsCount: conflictsCountForPage(p.content_id),
       lastUpdated: analytics?.last_updated_date ?? null,
       views: analytics?.view_count_period ?? null,
       relevanceScore:
-        relevanceByCategoryPage.get(`${p.category_id}:${p.id}`) ?? null,
+        relevanceByCategoryPage.get(`${p.category}:${p.content_id}`) ?? null,
       wordCount: reading?.word_count ?? null,
       readingAge: reading?.reading_age ?? null
     }

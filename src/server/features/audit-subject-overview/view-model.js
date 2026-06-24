@@ -1,10 +1,5 @@
 import { auditService } from '../../services/audit/service.js'
 
-function pct(v) {
-  if (v == null) return 'Not available'
-  return `${Math.round(v * 100)}%`
-}
-
 function formatNumber(n) {
   if (n == null) return 'Not available'
   return n.toLocaleString('en-GB')
@@ -22,8 +17,6 @@ function buildImprovementDashboard(categoryId) {
     detailHref: `/audit/subjects/${r.categoryId}/pages/${r.id}`,
     relevance: relevanceDisplay(r.relevanceScore),
     relevanceRaw: r.relevanceScore ?? -1,
-    correctness: pct(r.correctness),
-    correctnessRaw: r.correctness ?? -1,
     conflicts: r.conflictsCount,
     lastUpdated: r.lastUpdated ?? 'Not available',
     lastUpdatedRaw: r.lastUpdated ?? '',

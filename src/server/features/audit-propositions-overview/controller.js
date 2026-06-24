@@ -5,7 +5,7 @@ import { auditPropositionsOverviewViewModel } from './view-model.js'
 export const auditPropositionsOverviewController = {
   handler(request, h) {
     try {
-      const categoryId = Number(request.params.categoryId)
+      const categoryId = request.params.categoryId
       const viewModel = auditPropositionsOverviewViewModel.get(categoryId)
       if (!viewModel) return Boom.notFound()
 

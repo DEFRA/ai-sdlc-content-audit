@@ -5,7 +5,7 @@ import { auditLawsListViewModel } from './view-model.js'
 export const auditLawsListController = {
   handler(request, h) {
     try {
-      const categoryId = Number(request.params.categoryId)
+      const categoryId = request.params.categoryId
       const viewModel = auditLawsListViewModel.get(categoryId)
       if (!viewModel) return Boom.notFound()
 

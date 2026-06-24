@@ -1,11 +1,6 @@
 import { auditService } from '../../services/audit/service.js'
 import { STATUS_META, STATUS_ORDER } from '../../services/audit/constants.js'
 
-function pct(value) {
-  if (value == null) return '—'
-  return `${Math.round(value * 100)}%`
-}
-
 export const auditPagesListViewModel = {
   get(categoryId, statusFilter) {
     const category = auditService.getCategory(categoryId)
@@ -16,8 +11,6 @@ export const auditPagesListViewModel = {
     const tableRows = rows.map((r) => ({
       page: { title: r.title, url: r.url },
       detailHref: `/audit/subjects/${categoryId}/pages/${r.id}`,
-      correctness: pct(r.correctness),
-      correctnessRaw: r.correctness ?? -1,
       conflicts: r.conflictsCount
     }))
 

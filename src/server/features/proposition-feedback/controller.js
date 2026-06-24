@@ -20,9 +20,9 @@ export const propositionFeedbackController = {
   options: {
     validate: {
       params: Joi.object({
-        categoryId: Joi.number().integer().required(),
-        pageId: Joi.number().integer().required(),
-        propositionMatchId: Joi.number().integer().required()
+        categoryId: Joi.string().required(),
+        pageId: Joi.string().required(),
+        propositionMatchId: Joi.string().required()
       }),
       payload: payloadSchema,
       failAction(request, h, err) {

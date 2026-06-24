@@ -59,9 +59,7 @@ export const auditPageDetailViewModel = {
     completed.sort(sortByStatus)
 
     const savedMatchId =
-      query.feedback === 'saved' && query.matchId != null
-        ? Number(query.matchId)
-        : null
+      query.feedback === 'saved' && query.matchId != null ? query.matchId : null
 
     return {
       pageTitle: detail.page.title,

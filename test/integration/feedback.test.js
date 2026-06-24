@@ -1,5 +1,18 @@
 const { createServer } = await import('../../src/server/server.js')
 
+// Pipeline-native ids from the audit data (Esther output): category slug,
+// page content_id, and a derived `m-` match id for a displayed statement
+// (GROUNDED) on that page.
+const CATEGORY_ID = 'slurry'
+const PAGE_ID = '5fa75896-7631-11e4-a3cb-005056011aef'
+const MATCH_ID = 'm-87695826'
+const MISSING_MATCH_ID = 'm-nonexistent'
+
+const feedbackUrl = (matchId = MATCH_ID) =>
+  `/audit/subjects/${CATEGORY_ID}/pages/${PAGE_ID}/propositions/${matchId}/feedback`
+const pageDetailUrl = (query = '') =>
+  `/audit/subjects/${CATEGORY_ID}/pages/${PAGE_ID}${query}`
+
 describe('proposition feedback endpoints', () => {
   let server
 
@@ -22,14 +35,14 @@ describe('proposition feedback endpoints', () => {
 
       const { statusCode, headers } = await server.inject({
         method: 'POST',
-        url: '/audit/subjects/1/pages/1/propositions/1/feedback',
+        url: feedbackUrl(),
         payload: 'choice=INTERESTED&comment=looks%20good',
         headers: { 'content-type': 'application/x-www-form-urlencoded' }
       })
 
       expect(statusCode).toBe(303)
       expect(headers.location).toBe(
-        '/audit/subjects/1/pages/1?feedback=saved&matchId=1#completed-feedback-1'
+        `${pageDetailUrl(`?feedback=saved&matchId=${MATCH_ID}`)}#completed-feedback-${MATCH_ID}`
       )
 
       expect(fetchMock).toHaveBeenCalledOnce()
@@ -38,9 +51,9 @@ describe('proposition feedback endpoints', () => {
       expect(init.method).toBe('POST')
       const sent = JSON.parse(init.body)
       expect(sent).toMatchObject({
-        propositionMatchId: 1,
-        categoryId: 1,
-        pageId: 1,
+        propositionMatchId: MATCH_ID,
+        categoryId: CATEGORY_ID,
+        pageId: PAGE_ID,
         choice: 'INTERESTED',
         comment: 'looks good'
       })
@@ -52,7 +65,7 @@ describe('proposition feedback endpoints', () => {
 
       const { statusCode } = await server.inject({
         method: 'POST',
-        url: '/audit/subjects/1/pages/1/propositions/1/feedback',
+        url: feedbackUrl(),
         payload: 'choice=NOT_INTERESTED&comment=',
         headers: { 'content-type': 'application/x-www-form-urlencoded' }
       })
@@ -65,7 +78,7 @@ describe('proposition feedback endpoints', () => {
     test('rejects an unknown choice without calling the backend', async () => {
       const { statusCode } = await server.inject({
         method: 'POST',
-        url: '/audit/subjects/1/pages/1/propositions/1/feedback',
+        url: feedbackUrl(),
         payload: 'choice=NOPE',
         headers: { 'content-type': 'application/x-www-form-urlencoded' }
       })
@@ -77,7 +90,7 @@ describe('proposition feedback endpoints', () => {
     test('rejects a missing choice without calling the backend', async () => {
       const { statusCode } = await server.inject({
         method: 'POST',
-        url: '/audit/subjects/1/pages/1/propositions/1/feedback',
+        url: feedbackUrl(),
         payload: 'comment=hi',
         headers: { 'content-type': 'application/x-www-form-urlencoded' }
       })
@@ -89,7 +102,7 @@ describe('proposition feedback endpoints', () => {
     test('returns 404 when the proposition match does not exist', async () => {
       const { statusCode } = await server.inject({
         method: 'POST',
-        url: '/audit/subjects/1/pages/1/propositions/999999/feedback',
+        url: feedbackUrl(MISSING_MATCH_ID),
         payload: 'choice=INTERESTED',
         headers: { 'content-type': 'application/x-www-form-urlencoded' }
       })
@@ -105,7 +118,7 @@ describe('proposition feedback endpoints', () => {
 
       const { statusCode, payload } = await server.inject({
         method: 'GET',
-        url: '/audit/subjects/1/pages/2?feedback=saved&matchId=1'
+        url: pageDetailUrl(`?feedback=saved&matchId=${MATCH_ID}`)
       })
 
       expect(statusCode).toBe(200)
@@ -121,38 +134,30 @@ describe('proposition feedback endpoints', () => {
 
     test('moves a statement into the completed section once feedback exists for it', async () => {
       // The view-model fetches all entries from the backend, then filters by
-      // match id. Return one entry whose id matches a statement on page 2.
-      fetchMock.mockImplementationOnce(async (url) => {
-        // We don't know the exact match ids without re-running the audit
-        // service, so we mock the *list* endpoint to return entries for a
-        // wide range of ids. The view-model will only pick up the ones that
-        // are actually on this page.
-        if (url.endsWith('/feedback')) {
-          const entries = []
-          for (let id = 1; id <= 2000; id++) {
-            entries.push({
-              propositionMatchId: id,
-              categoryId: 1,
-              pageId: 2,
-              currentStatus: 'CONFLICTS',
-              choice: 'AI_MISTAKE',
-              comment: `entry ${id}`,
-              submittedAt: 1700000000,
-              updatedAt: 1700000500
-            })
+      // match id. Return one entry whose id matches a displayed statement on
+      // the page so it lands in the completed section.
+      fetchMock.mockResponseOnce(
+        JSON.stringify([
+          {
+            propositionMatchId: MATCH_ID,
+            categoryId: CATEGORY_ID,
+            pageId: PAGE_ID,
+            currentStatus: 'GROUNDED',
+            choice: 'AI_MISTAKE',
+            comment: 'entry',
+            submittedAt: 1700000000,
+            updatedAt: 1700000500
           }
-          return new Response(JSON.stringify(entries), { status: 200 })
-        }
-        return new Response('', { status: 404 })
-      })
+        ])
+      )
 
       const { statusCode, payload } = await server.inject({
         method: 'GET',
-        url: '/audit/subjects/1/pages/2'
+        url: pageDetailUrl()
       })
 
       expect(statusCode).toBe(200)
-      expect(payload).toMatch(/id="completed-feedback-\d+"/)
+      expect(payload).toContain(`id="completed-feedback-${MATCH_ID}"`)
       expect(payload).toContain('Update your feedback')
       expect(payload).toContain('Save changes')
     })
@@ -163,9 +168,9 @@ describe('proposition feedback endpoints', () => {
       fetchMock.mockResponseOnce(
         JSON.stringify([
           {
-            propositionMatchId: 7,
-            categoryId: 1,
-            pageId: 1,
+            propositionMatchId: MATCH_ID,
+            categoryId: CATEGORY_ID,
+            pageId: PAGE_ID,
             currentStatus: 'CONFLICTS',
             choice: 'AI_MISTAKE',
             comment: 'model hallucinated',
@@ -185,7 +190,7 @@ describe('proposition feedback endpoints', () => {
       expect(payload).toContain('model hallucinated')
       expect(payload).toContain('This is a mistake in the AI')
       expect(payload).toContain(
-        '/audit/subjects/1/pages/1#completed-feedback-7'
+        `/audit/subjects/${CATEGORY_ID}/pages/${PAGE_ID}#completed-feedback-${MATCH_ID}`
       )
     })
 

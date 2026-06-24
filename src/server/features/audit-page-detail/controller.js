@@ -5,8 +5,8 @@ import { auditPageDetailViewModel } from './view-model.js'
 export const auditPageDetailController = {
   async handler(request, h) {
     try {
-      const categoryId = Number(request.params.categoryId)
-      const pageId = Number(request.params.pageId)
+      const categoryId = request.params.categoryId
+      const pageId = request.params.pageId
 
       const viewModel = await auditPageDetailViewModel.get(
         categoryId,
