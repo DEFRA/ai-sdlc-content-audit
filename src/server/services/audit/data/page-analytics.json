@@ -1,320 +1,500 @@
 [
   {
-    "content_id": "55a899a4-d19f-4c5e-bd69-884de46be4c9",
-    "last_updated_date": "2025-06-18",
-    "view_count_period": 9,
+    "content_id": "52cb8143-6baf-4003-822a-32fc9460289c",
+    "last_updated_date": "2026-05-01",
+    "view_count_period": 0,
     "period": "last_12_months"
   },
   {
-    "content_id": "31f599c9-108a-4352-9d05-c93c57b8cbc1",
-    "last_updated_date": "2025-12-20",
-    "view_count_period": 1,
+    "content_id": "52073e88-847b-40c2-adf3-23408f75f5c0",
+    "last_updated_date": "2026-05-01",
+    "view_count_period": 0,
     "period": "last_12_months"
   },
   {
-    "content_id": "b813dc85-6be5-4dbc-b201-a50d3d56c5c7",
-    "last_updated_date": "2024-01-01",
-    "view_count_period": 13,
+    "content_id": "65394e2e-dadc-4e33-81bf-f63d73d557ac",
+    "last_updated_date": "2026-05-01",
+    "view_count_period": 0,
+    "period": "last_12_months"
+  },
+  {
+    "content_id": "f5cd2a43-b5a4-40a0-a225-55744cd2f072",
+    "last_updated_date": "2026-05-01",
+    "view_count_period": 0,
+    "period": "last_12_months"
+  },
+  {
+    "content_id": "bfef30fc-81fe-43d7-acb6-9ac4612793a4",
+    "last_updated_date": "2026-05-01",
+    "view_count_period": 0,
+    "period": "last_12_months"
+  },
+  {
+    "content_id": "a96db0d9-ff03-4f17-91c4-b07db7a0e8c3",
+    "last_updated_date": "2026-05-01",
+    "view_count_period": 0,
+    "period": "last_12_months"
+  },
+  {
+    "content_id": "5b0fd471-9af4-42f6-9a46-fbf6d75672d1",
+    "last_updated_date": "2026-05-01",
+    "view_count_period": 0,
+    "period": "last_12_months"
+  },
+  {
+    "content_id": "974d2f40-0a8a-4c39-a717-8232c3469de6",
+    "last_updated_date": "2026-03-03",
+    "view_count_period": 0,
+    "period": "last_12_months"
+  },
+  {
+    "content_id": "7f3860f5-a814-47e8-8e84-6cb7c3f56018",
+    "last_updated_date": "2026-03-03",
+    "view_count_period": 0,
+    "period": "last_12_months"
+  },
+  {
+    "content_id": "d2154991-5a14-4ac8-b036-fc067079e36c",
+    "last_updated_date": "2026-03-03",
+    "view_count_period": 0,
+    "period": "last_12_months"
+  },
+  {
+    "content_id": "cdd8c658-7c5f-4496-b661-03b97270864c",
+    "last_updated_date": "2026-05-11",
+    "view_count_period": 0,
+    "period": "last_12_months"
+  },
+  {
+    "content_id": "95084395-70c3-4cb2-9ce8-1a31deb707b4",
+    "last_updated_date": "2026-03-03",
+    "view_count_period": 0,
+    "period": "last_12_months"
+  },
+  {
+    "content_id": "6a515eeb-03d5-4f4b-b828-0a361a2c3d94",
+    "last_updated_date": "2026-03-03",
+    "view_count_period": 0,
+    "period": "last_12_months"
+  },
+  {
+    "content_id": "5e10b4e9-1e20-4eb6-9207-3e0c0831c8c0",
+    "last_updated_date": "2026-03-03",
+    "view_count_period": 0,
+    "period": "last_12_months"
+  },
+  {
+    "content_id": "fc04870d-7667-4535-abb4-83aab2998d3a",
+    "last_updated_date": "2026-03-03",
+    "view_count_period": 0,
+    "period": "last_12_months"
+  },
+  {
+    "content_id": "b0ca6333-5806-4e7c-8230-b15cd8a3c1f7",
+    "last_updated_date": "2026-03-03",
+    "view_count_period": 0,
+    "period": "last_12_months"
+  },
+  {
+    "content_id": "2ffe97f6-9c28-4315-bf84-a1e8fc72637b",
+    "last_updated_date": "2026-03-03",
+    "view_count_period": 0,
+    "period": "last_12_months"
+  },
+  {
+    "content_id": "5d02819c-e478-4c21-97e1-ce737eb300bf",
+    "last_updated_date": "2026-03-03",
+    "view_count_period": 0,
+    "period": "last_12_months"
+  },
+  {
+    "content_id": "a40e7f9b-3647-4644-acff-aa1cedea52b9",
+    "last_updated_date": "2026-03-03",
+    "view_count_period": 0,
+    "period": "last_12_months"
+  },
+  {
+    "content_id": "8e9b96f9-b760-4b6f-bd91-db13337af503",
+    "last_updated_date": "2026-03-03",
+    "view_count_period": 0,
+    "period": "last_12_months"
+  },
+  {
+    "content_id": "50ccaa6e-177e-4cdf-9b88-5a50ef46108a",
+    "last_updated_date": "2026-04-21",
+    "view_count_period": 0,
+    "period": "last_12_months"
+  },
+  {
+    "content_id": "509afee5-0be4-4f9d-8ab5-fc687d93a413",
+    "last_updated_date": "2026-04-21",
+    "view_count_period": 0,
+    "period": "last_12_months"
+  },
+  {
+    "content_id": "2e06554f-6fca-4e39-85cf-561a7b143a4a",
+    "last_updated_date": "2026-04-21",
+    "view_count_period": 0,
+    "period": "last_12_months"
+  },
+  {
+    "content_id": "1fe2bdfe-43b4-42bd-8928-d7b241fd4865",
+    "last_updated_date": "2026-04-21",
+    "view_count_period": 0,
+    "period": "last_12_months"
+  },
+  {
+    "content_id": "948afe14-b815-4add-96ae-fc327d50d110",
+    "last_updated_date": "2026-04-21",
+    "view_count_period": 0,
+    "period": "last_12_months"
+  },
+  {
+    "content_id": "09fbfd76-7af7-4f40-b013-c9d08bf973b5",
+    "last_updated_date": "2026-04-21",
+    "view_count_period": 0,
+    "period": "last_12_months"
+  },
+  {
+    "content_id": "bc2408d6-408d-4cd6-8e3a-704abc0dfa4e",
+    "last_updated_date": "2026-04-21",
+    "view_count_period": 0,
+    "period": "last_12_months"
+  },
+  {
+    "content_id": "61b3269e-c9fa-4a48-9754-4b2ef8b6d0f8",
+    "last_updated_date": "2026-04-21",
+    "view_count_period": 0,
+    "period": "last_12_months"
+  },
+  {
+    "content_id": "cd771443-8e2d-48a3-ad33-61467e2624fe",
+    "last_updated_date": "2026-04-21",
+    "view_count_period": 0,
+    "period": "last_12_months"
+  },
+  {
+    "content_id": "a52e0aa4-8d93-4f69-a8b2-da711712b8c6",
+    "last_updated_date": "2026-04-21",
+    "view_count_period": 0,
+    "period": "last_12_months"
+  },
+  {
+    "content_id": "3da92f95-89bd-4cef-ad80-202a8397d587",
+    "last_updated_date": "2026-04-21",
+    "view_count_period": 0,
     "period": "last_12_months"
   },
   {
     "content_id": "2c889373-09c3-4bfe-b5cd-0913bcecef5d",
-    "last_updated_date": "2025-04-09",
-    "view_count_period": 47,
+    "last_updated_date": "2026-03-03",
+    "view_count_period": 0,
+    "period": "last_12_months"
+  },
+  {
+    "content_id": "571c132a-6eb8-475a-b6cb-01e92ccb8843",
+    "last_updated_date": "2026-03-03",
+    "view_count_period": 0,
     "period": "last_12_months"
   },
   {
     "content_id": "08ae896b-dd80-48a5-b123-555450e619d8",
-    "last_updated_date": "2026-03-02",
-    "view_count_period": 186,
+    "last_updated_date": "2026-05-11",
+    "view_count_period": 0,
     "period": "last_12_months"
   },
   {
-    "content_id": "8e2c6659-9470-475e-9873-e22e1c70aa55",
-    "last_updated_date": "2026-05-12",
-    "view_count_period": 654,
+    "content_id": "b2406a81-6fa3-40d4-bc26-f0dac93cf903",
+    "last_updated_date": "2026-05-11",
+    "view_count_period": 0,
     "period": "last_12_months"
   },
   {
-    "content_id": "5f45d9f7-7631-11e4-a3cb-005056011aef",
-    "last_updated_date": "2017-03-20",
-    "view_count_period": 18,
+    "content_id": "e9cb77dd-5402-4103-9574-a0fc4ec30460",
+    "last_updated_date": "2026-05-11",
+    "view_count_period": 0,
     "period": "last_12_months"
   },
   {
-    "content_id": "0b080d22-c03f-44f9-830b-4846486557d6",
-    "last_updated_date": "2026-02-27",
-    "view_count_period": 16,
+    "content_id": "c2bd5e6b-924a-46cb-9229-e9f987f4232e",
+    "last_updated_date": "2026-04-21",
+    "view_count_period": 0,
     "period": "last_12_months"
   },
   {
-    "content_id": "f575cace-c10d-4e82-adfa-560161313324",
-    "last_updated_date": "2023-07-04",
-    "view_count_period": 9,
+    "content_id": "c623ea9a-9724-4d8b-b0f9-c10c2a044270",
+    "last_updated_date": "2026-03-03",
+    "view_count_period": 0,
     "period": "last_12_months"
   },
   {
-    "content_id": "8ff54c75-395f-4615-9dad-695d0d879dc4",
-    "last_updated_date": "2025-01-22",
-    "view_count_period": 10,
+    "content_id": "1d2ff30e-6a18-4a4b-96d1-3a1a49a3c017",
+    "last_updated_date": "2026-03-03",
+    "view_count_period": 0,
     "period": "last_12_months"
   },
   {
-    "content_id": "98756b51-f712-4e5e-95e7-3345aad6f3b5",
-    "last_updated_date": "2024-12-02",
-    "view_count_period": 8,
+    "content_id": "4d360716-5171-42a9-9b05-fcd4e88d33f0",
+    "last_updated_date": "2026-04-21",
+    "view_count_period": 0,
     "period": "last_12_months"
   },
   {
-    "content_id": "5f1e4c8c-7631-11e4-a3cb-005056011aef",
-    "last_updated_date": "2026-04-08",
-    "view_count_period": 1,
+    "content_id": "2ffabeaf-249e-4e07-9ac5-bc05f37c163c",
+    "last_updated_date": "2025-12-10",
+    "view_count_period": 0,
     "period": "last_12_months"
   },
   {
     "content_id": "d6dabbb6-07ca-4522-8f72-31c7a48867a1",
-    "last_updated_date": "2024-03-12",
-    "view_count_period": 9,
+    "last_updated_date": "2026-05-11",
+    "view_count_period": 0,
     "period": "last_12_months"
   },
   {
-    "content_id": "9fda8bbf-f60a-4edd-a12f-22b4a10854bc",
-    "last_updated_date": "2024-04-02",
-    "view_count_period": 1,
+    "content_id": "9ab310c9-dd0e-4c42-8e33-5c617683c4a4",
+    "last_updated_date": "2026-05-11",
+    "view_count_period": 0,
     "period": "last_12_months"
   },
   {
-    "content_id": "683ea317-f3d3-46b5-94ed-56a7ae3c2f6a",
-    "last_updated_date": "2026-04-16",
-    "view_count_period": 62,
+    "content_id": "69936dd8-3f64-4cbc-8ba0-b6c5027622f0",
+    "last_updated_date": "2026-05-11",
+    "view_count_period": 0,
     "period": "last_12_months"
   },
   {
-    "content_id": "b41f55f2-2795-4680-a058-c925790d2286",
-    "last_updated_date": "2025-11-30",
-    "view_count_period": 4,
+    "content_id": "5dd1a9e0-65ee-4411-a047-25e4d73ed52a",
+    "last_updated_date": "2026-05-11",
+    "view_count_period": 0,
     "period": "last_12_months"
   },
   {
-    "content_id": "f785b3f1-ffe5-41c4-b6b9-b55a21e78a69",
-    "last_updated_date": "2026-02-12",
-    "view_count_period": 12,
+    "content_id": "6acf4afe-375e-4198-8d4e-3cd5baf3eaf0",
+    "last_updated_date": "2026-05-11",
+    "view_count_period": 0,
     "period": "last_12_months"
   },
   {
-    "content_id": "5f45750b-7631-11e4-a3cb-005056011aef",
-    "last_updated_date": "2019-04-03",
-    "view_count_period": 53,
+    "content_id": "7c0a6ba3-b0fe-434e-8c56-9e3003a3dbbc",
+    "last_updated_date": "2026-03-03",
+    "view_count_period": 0,
     "period": "last_12_months"
   },
   {
-    "content_id": "5f457b8e-7631-11e4-a3cb-005056011aef",
-    "last_updated_date": "2019-04-03",
-    "view_count_period": 9,
+    "content_id": "6e2acc6a-0695-43bd-b958-939b328e07c7",
+    "last_updated_date": "2026-03-03",
+    "view_count_period": 0,
     "period": "last_12_months"
   },
   {
-    "content_id": "24ded379-4bd6-4227-bd9b-06b78e9f8d52",
-    "last_updated_date": "2026-02-26",
-    "view_count_period": 7,
+    "content_id": "beb0fb04-c887-48ed-8d63-5e9c2a51a9ab",
+    "last_updated_date": "2026-04-21",
+    "view_count_period": 0,
     "period": "last_12_months"
   },
   {
-    "content_id": "eba968f8-4ff2-4938-abe8-4186d4b8d447",
-    "last_updated_date": "2026-02-26",
-    "view_count_period": 11,
+    "content_id": "c8f8fa0f-ef01-4101-8577-6d0546efef50",
+    "last_updated_date": "2026-04-21",
+    "view_count_period": 0,
     "period": "last_12_months"
   },
   {
-    "content_id": "6020e641-9418-41a1-b6f8-9f26fb24806b",
-    "last_updated_date": "2026-02-26",
-    "view_count_period": 58,
-    "period": "last_12_months"
-  },
-  {
-    "content_id": "c339ee8d-62eb-4ca6-a6ed-263b7d5d4b94",
-    "last_updated_date": "2024-11-06",
-    "view_count_period": 6,
-    "period": "last_12_months"
-  },
-  {
-    "content_id": "a83f60a2-c928-45a4-aaec-1e7b7991110a",
-    "last_updated_date": "2025-01-08",
-    "view_count_period": 1,
+    "content_id": "10daaae6-fa62-42ff-b5fd-b4287680f6f4",
+    "last_updated_date": "2026-04-21",
+    "view_count_period": 0,
     "period": "last_12_months"
   },
   {
     "content_id": "de0f8f13-6900-41fd-beaf-16cb4547f96d",
-    "last_updated_date": "2023-10-06",
-    "view_count_period": 1,
+    "last_updated_date": "2026-05-08",
+    "view_count_period": 0,
     "period": "last_12_months"
   },
   {
-    "content_id": "fcc84b5c-73d0-47a3-af96-1649259d8a3f",
-    "last_updated_date": "2023-10-16",
-    "view_count_period": 2,
+    "content_id": "f83c8eac-399f-4950-a9aa-ebf1900a8d7b",
+    "last_updated_date": "2026-04-21",
+    "view_count_period": 0,
     "period": "last_12_months"
   },
   {
-    "content_id": "bfa25594-2282-4811-9e35-583f62876fc4",
-    "last_updated_date": "2024-09-12",
-    "view_count_period": 20,
+    "content_id": "8575c715-2adb-440a-bd91-fe13cc3ff99d",
+    "last_updated_date": "2026-03-23",
+    "view_count_period": 0,
+    "period": "last_12_months"
+  },
+  {
+    "content_id": "ad78e491-fb7a-4a8c-a4b8-ba1fcf22ba6c",
+    "last_updated_date": "2026-03-16",
+    "view_count_period": 0,
+    "period": "last_12_months"
+  },
+  {
+    "content_id": "4f2ea9d0-6ecf-4aee-9c7b-de840fdc6756",
+    "last_updated_date": "2026-03-16",
+    "view_count_period": 0,
+    "period": "last_12_months"
+  },
+  {
+    "content_id": "770511fb-ba55-49b0-8866-c545d37839c4",
+    "last_updated_date": "2026-03-16",
+    "view_count_period": 0,
     "period": "last_12_months"
   },
   {
     "content_id": "e274edd5-8fab-47e7-a0b1-249a55995a80",
-    "last_updated_date": "2024-12-04",
-    "view_count_period": 45,
+    "last_updated_date": "2026-05-01",
+    "view_count_period": 0,
+    "period": "last_12_months"
+  },
+  {
+    "content_id": "ac9cacc4-b87d-4548-b614-d381b119389c",
+    "last_updated_date": "2026-05-11",
+    "view_count_period": 0,
+    "period": "last_12_months"
+  },
+  {
+    "content_id": "2d7d7122-f322-4f0c-8b40-6b8deac9381c",
+    "last_updated_date": "2026-04-21",
+    "view_count_period": 0,
+    "period": "last_12_months"
+  },
+  {
+    "content_id": "5fd95a86-7631-11e4-a3cb-005056011aef",
+    "last_updated_date": "2026-05-11",
+    "view_count_period": 0,
     "period": "last_12_months"
   },
   {
     "content_id": "4f519564-5233-41f8-be2c-7ca9476cf3c9",
-    "last_updated_date": "2026-01-26",
-    "view_count_period": 58,
+    "last_updated_date": "2026-04-21",
+    "view_count_period": 0,
     "period": "last_12_months"
   },
   {
-    "content_id": "ab238df0-434d-4c6a-a2da-cf34bf1d8ee9",
-    "last_updated_date": "2016-10-20",
-    "view_count_period": 11,
+    "content_id": "a056c143-0758-4680-adcc-e7fc82a097a8",
+    "last_updated_date": "2026-03-16",
+    "view_count_period": 0,
     "period": "last_12_months"
   },
   {
-    "content_id": "5fa75896-7631-11e4-a3cb-005056011aef",
-    "last_updated_date": "2025-11-10",
-    "view_count_period": 17,
+    "content_id": "4735a0ed-fdf1-4241-8bce-679005c64c23",
+    "last_updated_date": "2026-04-21",
+    "view_count_period": 0,
+    "period": "last_12_months"
+  },
+  {
+    "content_id": "1aaab703-bf44-4979-a6ca-4a974259b2fa",
+    "last_updated_date": "2026-03-16",
+    "view_count_period": 0,
+    "period": "last_12_months"
+  },
+  {
+    "content_id": "62ac4a13-acfb-4a89-bf76-6fd575e83c5f",
+    "last_updated_date": "2026-03-16",
+    "view_count_period": 0,
+    "period": "last_12_months"
+  },
+  {
+    "content_id": "4a3e015d-185c-4ff2-b9c9-b9044a6d3d63",
+    "last_updated_date": "2026-03-16",
+    "view_count_period": 0,
+    "period": "last_12_months"
+  },
+  {
+    "content_id": "3cdd5699-3044-479d-9a28-148e70bf6e41",
+    "last_updated_date": "2026-05-11",
+    "view_count_period": 0,
     "period": "last_12_months"
   },
   {
     "content_id": "eb30e644-d2f6-4445-9738-d314a23e9b9f",
-    "last_updated_date": "2016-08-09",
-    "view_count_period": 18,
-    "period": "last_12_months"
-  },
-  {
-    "content_id": "cc323cbf-0964-4a9c-8613-a031a14b1b1a",
-    "last_updated_date": "2025-03-27",
-    "view_count_period": 147,
+    "last_updated_date": "2026-05-11",
+    "view_count_period": 0,
     "period": "last_12_months"
   },
   {
     "content_id": "5ff11820-7631-11e4-a3cb-005056011aef",
-    "last_updated_date": "2017-01-26",
-    "view_count_period": 14,
+    "last_updated_date": "2026-05-11",
+    "view_count_period": 0,
+    "period": "last_12_months"
+  },
+  {
+    "content_id": "a5d24454-5960-4623-8175-b5530e0e8b50",
+    "last_updated_date": "2026-05-11",
+    "view_count_period": 0,
     "period": "last_12_months"
   },
   {
     "content_id": "b8cc451c-d924-4390-8e21-5bac18e28983",
-    "last_updated_date": "2023-05-24",
-    "view_count_period": 2,
-    "period": "last_12_months"
-  },
-  {
-    "content_id": "5d431924-deb6-4cae-875d-4ce32089795f",
-    "last_updated_date": "2023-05-04",
-    "view_count_period": 20,
-    "period": "last_12_months"
-  },
-  {
-    "content_id": "cc063373-63c5-4b01-82d9-bff30b9161f8",
-    "last_updated_date": "2023-05-04",
-    "view_count_period": 21,
-    "period": "last_12_months"
-  },
-  {
-    "content_id": "d784c1fe-2bbf-40b0-8ce3-373cdb53d13b",
     "last_updated_date": "2026-05-01",
-    "view_count_period": 69,
+    "view_count_period": 0,
+    "period": "last_12_months"
+  },
+  {
+    "content_id": "7f58223b-7232-4c3f-8260-000295e17f27",
+    "last_updated_date": "2026-04-21",
+    "view_count_period": 0,
+    "period": "last_12_months"
+  },
+  {
+    "content_id": "7d4d48a1-2ba9-4983-badf-0e2ab7d7c3c9",
+    "last_updated_date": "2026-04-21",
+    "view_count_period": 0,
+    "period": "last_12_months"
+  },
+  {
+    "content_id": "19c188e9-43cf-45c8-8a53-613c1ce5a2a1",
+    "last_updated_date": "2026-05-05",
+    "view_count_period": 0,
+    "period": "last_12_months"
+  },
+  {
+    "content_id": "8f07883b-7d97-45d6-abd3-4bb236862218",
+    "last_updated_date": "2026-01-20",
+    "view_count_period": 0,
     "period": "last_12_months"
   },
   {
     "content_id": "72381feb-58cd-4cf4-a9d6-62083cbb4a5d",
-    "last_updated_date": "2022-08-04",
-    "view_count_period": 8,
-    "period": "last_12_months"
-  },
-  {
-    "content_id": "5ff11ff3-7631-11e4-a3cb-005056011aef",
-    "last_updated_date": "2014-10-09",
-    "view_count_period": 2,
-    "period": "last_12_months"
-  },
-  {
-    "content_id": "f601d439-fb39-40d5-b826-12fa95017d68",
-    "last_updated_date": "2025-12-04",
-    "view_count_period": 6,
+    "last_updated_date": "2026-05-11",
+    "view_count_period": 0,
     "period": "last_12_months"
   },
   {
     "content_id": "2037d660-68f2-42d2-b99c-f5d8c4a34df2",
-    "last_updated_date": "2026-05-01",
-    "view_count_period": 30,
+    "last_updated_date": "2026-05-12",
+    "view_count_period": 0,
+    "period": "last_12_months"
+  },
+  {
+    "content_id": "78460c5e-82ee-49e8-a015-3d14ba6544d2",
+    "last_updated_date": "2026-04-21",
+    "view_count_period": 0,
     "period": "last_12_months"
   },
   {
     "content_id": "831430a9-bbda-4b69-870d-cf21d83990d4",
-    "last_updated_date": "2026-04-22",
-    "view_count_period": 196,
-    "period": "last_12_months"
-  },
-  {
-    "content_id": "2971146e-427b-4984-86e8-d4d498ccc32c",
-    "last_updated_date": "2026-02-04",
-    "view_count_period": 208,
+    "last_updated_date": "2026-05-11",
+    "view_count_period": 0,
     "period": "last_12_months"
   },
   {
     "content_id": "5fa7461e-7631-11e4-a3cb-005056011aef",
-    "last_updated_date": "2023-10-12",
-    "view_count_period": 66,
-    "period": "last_12_months"
-  },
-  {
-    "content_id": "3c951850-eaec-44ee-bb0c-52e4e53a66fb",
-    "last_updated_date": "2026-01-26",
-    "view_count_period": 178,
-    "period": "last_12_months"
-  },
-  {
-    "content_id": "058e5667-7705-43ae-8732-b507e9161b9b",
-    "last_updated_date": "2023-10-25",
-    "view_count_period": 6,
-    "period": "last_12_months"
-  },
-  {
-    "content_id": "f1333a06-49c9-4919-a56c-d21d103871b9",
-    "last_updated_date": "2025-07-01",
-    "view_count_period": 96,
-    "period": "last_12_months"
-  },
-  {
-    "content_id": "5f4d6064-7631-11e4-a3cb-005056011aef",
-    "last_updated_date": "2025-07-01",
-    "view_count_period": 57,
+    "last_updated_date": "2026-05-11",
+    "view_count_period": 0,
     "period": "last_12_months"
   },
   {
     "content_id": "5f4d3163-7631-11e4-a3cb-005056011aef",
-    "last_updated_date": "2025-07-01",
-    "view_count_period": 29,
-    "period": "last_12_months"
-  },
-  {
-    "content_id": "5f4d6b9f-7631-11e4-a3cb-005056011aef",
-    "last_updated_date": "2026-01-26",
-    "view_count_period": 135,
-    "period": "last_12_months"
-  },
-  {
-    "content_id": "5f4d6beb-7631-11e4-a3cb-005056011aef",
-    "last_updated_date": "2026-01-26",
-    "view_count_period": 39,
+    "last_updated_date": "2026-04-21",
+    "view_count_period": 0,
     "period": "last_12_months"
   },
   {
     "content_id": "5f4d6dab-7631-11e4-a3cb-005056011aef",
-    "last_updated_date": "2025-07-01",
-    "view_count_period": 10,
+    "last_updated_date": "2026-04-21",
+    "view_count_period": 0,
     "period": "last_12_months"
   }
 ]

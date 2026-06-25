@@ -4,8 +4,8 @@ const { createServer } = await import('../../src/server/server.js')
 // page content_id, and a derived `m-` match id for a displayed statement
 // (GROUNDED) on that page.
 const CATEGORY_ID = 'slurry'
-const PAGE_ID = '5fa75896-7631-11e4-a3cb-005056011aef'
-const MATCH_ID = 'm-87695826'
+const PAGE_ID = '9ab310c9-dd0e-4c42-8e33-5c617683c4a4'
+const MATCH_ID = 'm-3dd2e65d'
 const MISSING_MATCH_ID = 'm-nonexistent'
 
 const feedbackUrl = (matchId = MATCH_ID) =>

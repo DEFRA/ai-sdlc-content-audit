@@ -3,14 +3,14 @@
     "category": "slurry",
     "total_pages_audited": 18136,
     "laws_found": 5,
-    "pages_relevant": 53,
+    "pages_relevant": 83,
     "proposition_status_counts": {
-      "UNGROUNDED": 445,
-      "GUIDANCE_BROADER": 34,
-      "GUIDANCE_INCOMPLETE": 49,
-      "GROUNDED": 41,
-      "CONFLICTS": 45,
-      "GUIDANCE_MISSING": 487
+      "UNGROUNDED": 1212,
+      "GUIDANCE_BROADER": 63,
+      "GUIDANCE_INCOMPLETE": 14,
+      "GROUNDED": 60,
+      "CONFLICTS": 7,
+      "GUIDANCE_MISSING": 392
     }
   }
 ]
