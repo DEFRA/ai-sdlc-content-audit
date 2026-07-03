@@ -43,12 +43,12 @@ describe('load-presentation', () => {
       }
 
       writeRun('meadow-verdict', 'slurry')
-      writeRun('net-herring', 'fish')
+      writeRun('harbour-perch', 'fish')
 
       const { merged, runIds } = loadPresentationFromRuns(runsDir)
 
-      expect(runIds).toEqual(['meadow-verdict', 'net-herring'])
-      expect(merged.categories.map((row) => row.id)).toEqual(['slurry', 'fish'])
+      expect(runIds).toEqual(['harbour-perch', 'meadow-verdict'])
+      expect(merged.categories.map((row) => row.id)).toEqual(['fish', 'slurry'])
       expect(merged.legislation).toHaveLength(2)
       expect(merged.pages).toHaveLength(2)
     } finally {
