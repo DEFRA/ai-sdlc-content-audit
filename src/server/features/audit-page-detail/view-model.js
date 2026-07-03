@@ -34,14 +34,19 @@ export const auditPageDetailViewModel = {
     const category = auditService.getCategory(categoryId)
     if (!category) return null
 
-    const detail = auditService.getPageDetail(pageId)
+    const detail = auditService.getPageDetail(categoryId, pageId)
     if (!detail) return null
 
     const displayed = detail.statements.filter((s) => STATUS_RANK.has(s.status))
 
-    const feedbackByMatchId = await feedbackService.findByMatchIds(
-      displayed.map((s) => s.id)
-    )
+    let feedbackByMatchId = new Map()
+    try {
+      feedbackByMatchId = await feedbackService.findByMatchIds(
+        displayed.map((s) => s.id)
+      )
+    } catch {
+      // Feedback backend unavailable — render audit content with all statements pending.
+    }
 
     const pending = []
     const completed = []
