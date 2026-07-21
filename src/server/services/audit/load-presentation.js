@@ -27,6 +27,16 @@ const FLAT_FILES = {
   pages_reading_age: 'pages-reading-age.json'
 }
 
+const ENVELOPE_STAMP_KEYS = [
+  'legislation',
+  'legislation_propositions',
+  'pages',
+  'guidance_propositions',
+  'proposition_matches',
+  'page_relevance',
+  'subject_summary'
+]
+
 function emptyPresentation() {
   return Object.fromEntries(PRESENTATION_KEYS.map((key) => [key, []]))
 }
@@ -58,8 +68,46 @@ function listRunIds(runsDir) {
     .sort()
 }
 
-function stampCategory(rows, category) {
+export function stampCategory(rows, category) {
   return rows.map((row) => (row.category != null ? row : { ...row, category }))
+}
+
+function stampEnvelopeCategory(presentation, category) {
+  for (const key of ENVELOPE_STAMP_KEYS) {
+    presentation[key] = stampCategory(presentation[key] ?? [], category)
+  }
+}
+
+function deriveFlatDirCategories(presentation) {
+  const categoryBySourceRecordId = new Map()
+  for (const law of presentation.legislation) {
+    if (law.category != null && law.source_record_id != null) {
+      categoryBySourceRecordId.set(law.source_record_id, law.category)
+    }
+  }
+
+  presentation.legislation_propositions =
+    presentation.legislation_propositions.map((row) => {
+      if (row.category != null) return row
+      const category = categoryBySourceRecordId.get(row.source_record_id)
+      return category != null ? { ...row, category } : row
+    })
+
+  const categoryByLawPropositionId = new Map()
+  for (const prop of presentation.legislation_propositions) {
+    if (prop.category != null) {
+      categoryByLawPropositionId.set(prop.id, prop.category)
+    }
+  }
+
+  presentation.proposition_matches = presentation.proposition_matches.map(
+    (row) => {
+      if (row.category != null) return row
+      if (row.law_proposition_id == null) return row
+      const category = categoryByLawPropositionId.get(row.law_proposition_id)
+      return category != null ? { ...row, category } : row
+    }
+  )
 }
 
 function loadRunEnvelope(outputPath) {
@@ -71,10 +119,7 @@ function loadRunEnvelope(outputPath) {
   const presentation = { ...envelope.presentation }
 
   if (envelope.category != null) {
-    presentation.guidance_propositions = stampCategory(
-      presentation.guidance_propositions ?? [],
-      envelope.category
-    )
+    stampEnvelopeCategory(presentation, envelope.category)
   }
 
   return presentation
@@ -98,6 +143,8 @@ export function loadPresentationFromFlatDir(dataDir) {
   for (const key of PRESENTATION_KEYS) {
     merged[key] = loadJson(join(dataDir, FLAT_FILES[key]))
   }
+
+  deriveFlatDirCategories(merged)
 
   return { merged, runIds: [] }
 }
