@@ -7,6 +7,8 @@
   Required context:
     categoryId, pageId, matchId, widget
     feedback (object or null) — { choice, comment, updatedAtLabel, ... }
+  Optional:
+    statusFilter — current page-detail status filter, preserved on submit
 #}
 
 {% set actionUrl = "/audit/subjects/" + categoryId + "/pages/" + pageId + "/propositions/" + matchId + "/feedback" %}
@@ -17,6 +19,9 @@
 {% set commentValue = feedback.comment if isCompleted else "" %}
 
 <form method="post" action="{{ actionUrl }}" class="app-proposition-feedback govuk-!-margin-top-4" novalidate>
+  {% if statusFilter %}
+    <input type="hidden" name="status" value="{{ statusFilter }}">
+  {% endif %}
   {{ govukRadios({
     name: "choice",
     idPrefix: "choice-" + matchId,

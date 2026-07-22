@@ -1,6 +1,7 @@
 import Boom from '@hapi/boom'
 import Joi from 'joi'
 
+import { PAGE_FILTER_STATUSES } from '../../services/audit/constants.js'
 import { auditService } from '../../services/audit/service.js'
 import { FEEDBACK_CHOICE_ORDER } from '../../services/feedback/constants.js'
 import { feedbackService } from '../../services/feedback/service.js'
@@ -13,7 +14,10 @@ const payloadSchema = Joi.object({
   comment: Joi.string()
     .allow('')
     .max(propositionFeedbackWidget.commentMaxLength)
-    .default('')
+    .default(''),
+  status: Joi.string()
+    .valid(...PAGE_FILTER_STATUSES)
+    .optional()
 }).required()
 
 export const propositionFeedbackController = {
@@ -36,7 +40,7 @@ export const propositionFeedbackController = {
       const currentStatus = auditService.getMatchStatus(propositionMatchId)
       if (!currentStatus) return Boom.notFound()
 
-      const { choice, comment } = request.payload
+      const { choice, comment, status } = request.payload
 
       await feedbackService.saveForMatch({
         categoryId,
@@ -47,9 +51,10 @@ export const propositionFeedbackController = {
         comment: typeof comment === 'string' ? comment.trim() : ''
       })
 
+      const statusQuery = status ? `&status=${encodeURIComponent(status)}` : ''
       return h
         .redirect(
-          `/audit/subjects/${categoryId}/pages/${pageId}?feedback=saved&matchId=${propositionMatchId}#completed-feedback-${propositionMatchId}`
+          `/audit/subjects/${categoryId}/pages/${pageId}?feedback=saved&matchId=${propositionMatchId}${statusQuery}#completed-feedback-${propositionMatchId}`
         )
         .code(303)
     } catch (error) {

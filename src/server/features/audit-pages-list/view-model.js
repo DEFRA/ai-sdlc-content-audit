@@ -1,5 +1,8 @@
 import { auditService } from '../../services/audit/service.js'
-import { STATUS_META, STATUS_ORDER } from '../../services/audit/constants.js'
+import {
+  PAGE_FILTER_STATUSES,
+  STATUS_META
+} from '../../services/audit/constants.js'
 
 export const auditPagesListViewModel = {
   get(categoryId, statusFilter) {
@@ -10,7 +13,9 @@ export const auditPagesListViewModel = {
 
     const tableRows = rows.map((r) => ({
       page: { title: r.title, url: r.url },
-      detailHref: `/audit/subjects/${categoryId}/pages/${r.id}`,
+      detailHref: statusFilter
+        ? `/audit/subjects/${categoryId}/pages/${r.id}?status=${statusFilter}`
+        : `/audit/subjects/${categoryId}/pages/${r.id}`,
       conflicts: r.conflictsCount
     }))
 
@@ -24,15 +29,13 @@ export const auditPagesListViewModel = {
         href: baseHref,
         active: !statusFilter
       },
-      ...STATUS_ORDER.filter((status) => status !== 'GUIDANCE_MISSING').map(
-        (status) => ({
-          key: status,
-          label: STATUS_META[status].label,
-          tone: STATUS_META[status].tone,
-          href: `${baseHref}?status=${status}`,
-          active: statusFilter === status
-        })
-      )
+      ...PAGE_FILTER_STATUSES.map((status) => ({
+        key: status,
+        label: STATUS_META[status].label,
+        tone: STATUS_META[status].tone,
+        href: `${baseHref}?status=${status}`,
+        active: statusFilter === status
+      }))
     ]
 
     const activeOption = statusFilter

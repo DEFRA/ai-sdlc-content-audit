@@ -77,7 +77,36 @@
           }) }}
         {% endif %}
 
-        <nav aria-label="Jump to section" class="govuk-!-margin-bottom-6">
+        <nav class="audit-filter-bar" aria-label="Filter statements by group">
+          <p class="govuk-body govuk-!-margin-bottom-2">Filter by group</p>
+          <ul class="audit-filter-bar__list">
+            {% for option in filterOptions %}
+              <li class="audit-filter-bar__item">
+                <a class="audit-filter-bar__link" href="{{ option.href }}">
+                  <strong class="govuk-tag {% if option.tone %}govuk-tag--{{ option.tone }}{% endif %} audit-filter-bar__tag">
+                    {% if option.count != null %}{{ option.label }} ({{ option.count }}){% else %}{{ option.label }}{% endif %}
+                  </strong>
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+          {% if activeOption %}
+            <p class="govuk-body govuk-!-margin-top-3 govuk-!-margin-bottom-0">
+              <a class="govuk-link" href="{{ clearFilterHref }}">Clear filter</a>
+            </p>
+          {% endif %}
+        </nav>
+
+        {% if activeOption %}
+          <p class="audit-filter-bar__selected govuk-body govuk-!-margin-top-6 govuk-!-margin-bottom-2">
+            Selected:
+            <strong class="govuk-tag {% if activeOption.tone %}govuk-tag--{{ activeOption.tone }}{% endif %} audit-filter-bar__tag" aria-current="page">
+              {{ activeOption.label }} ({{ activeOption.count }})
+            </strong>
+          </p>
+        {% endif %}
+
+        <nav aria-label="Jump to section" class="govuk-!-margin-bottom-6 govuk-!-margin-top-6">
           <ul class="govuk-list">
             <li>
               <a class="govuk-link" href="#pending-feedback">Pending feedback ({{ pending | length }})</a>
@@ -94,6 +123,8 @@
             {% for s in pending %}
               {{ statementCard(s, false) }}
             {% endfor %}
+          {% elif activeOption %}
+            <p class="govuk-body">No statements in this group on this page.</p>
           {% else %}
             <p class="govuk-body">No statements are waiting for feedback on this page.</p>
           {% endif %}
@@ -105,6 +136,8 @@
             {% for s in completed %}
               {{ statementCard(s, true) }}
             {% endfor %}
+          {% elif activeOption %}
+            <p class="govuk-body">No statements in this group on this page.</p>
           {% else %}
             <p class="govuk-body">You have not submitted feedback on any statements on this page yet.</p>
           {% endif %}

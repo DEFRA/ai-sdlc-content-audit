@@ -63,3 +63,9 @@ export const STATUS_ORDER = [
   'GUIDANCE_BROADER',
   'GROUNDED'
 ]
+
+// Statuses the pages-list filter bar can select (and that detail/feedback
+// may preserve in the URL). Excludes GUIDANCE_MISSING — those have no pages.
+export const PAGE_FILTER_STATUSES = STATUS_ORDER.filter(
+  (status) => status !== 'GUIDANCE_MISSING'
+)
