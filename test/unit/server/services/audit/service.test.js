@@ -207,4 +207,63 @@ describe('createAuditService', () => {
       })
     ])
   })
+
+  test('page detail surfaces NO_MATCH statements for unmatched guidance', () => {
+    const service = createAuditService(
+      emptyPresentation({
+        categories: [{ id: 'slurry', title: 'Slurry' }],
+        pages: [
+          {
+            content_id: 'cid-a',
+            category: 'slurry',
+            url: 'https://www.gov.uk/a',
+            title: 'Page A'
+          }
+        ],
+        guidance_propositions: [
+          {
+            id: 'susan-1',
+            category: 'slurry',
+            content_id: 'cid-a',
+            proposition_text: 'Do X.'
+          }
+        ],
+        proposition_matches: [
+          {
+            id: 'm-nomatch',
+            category: 'slurry',
+            guidance_proposition_id: 'susan-1',
+            law_proposition_id: null,
+            relationship: 'NO_MATCH',
+            explanation: null,
+            confidence: null
+          }
+        ],
+        page_relevance: [
+          { category: 'slurry', content_id: 'cid-a', relevance_score: 0.9 }
+        ],
+        subject_summary: [
+          {
+            category: 'slurry',
+            laws_found: 0,
+            total_pages_audited: 1,
+            pages_relevant: 1,
+            proposition_status_counts: { NO_MATCH: 1 }
+          }
+        ]
+      })
+    )
+
+    const detail = service.getPageDetail('slurry', 'cid-a')
+    expect(detail.statements).toEqual([
+      expect.objectContaining({
+        id: 'm-nomatch',
+        status: 'NO_MATCH',
+        guidanceText: 'Do X.',
+        statusLabel: 'No law candidate',
+        lawName: null,
+        lawText: null
+      })
+    ])
+  })
 })

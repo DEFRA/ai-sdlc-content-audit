@@ -100,6 +100,16 @@
     "explanation": "Regulation 7(2) describes the standard the Agency must apply when specifying required works — reducing to a minimum any significant risk of pollution — which supports the guidance's framing that notices are issued where there is a significant risk of pollution. However, it is a supplementary provision to reg 7(1) rather than the primary anchor."
   },
   {
+    "id": "m-8f4cae9f",
+    "guidance_proposition_id": "susan-ef92f343b178a474-11",
+    "law_proposition_id": null,
+    "relationship": "NO_MATCH",
+    "confidence": null,
+    "cosine_score": null,
+    "bert_score_f1": null,
+    "explanation": null
+  },
+  {
     "id": "m-0698f8a5",
     "guidance_proposition_id": "susan-ef92f343b178a474-12",
     "law_proposition_id": "bcand:297badcb25473d76",
@@ -108,6 +118,16 @@
     "cosine_score": 0.6681,
     "bert_score_f1": null,
     "explanation": "This regulation sets a specific 50-metre minimum siting distance from watercourses as a floor. The guidance's general statement not to pollute rivers or watercourses when constructing storage is broader than (but consistent with) this specific rule, raising the obligation to a general no-pollution standard rather than a precise distance."
+  },
+  {
+    "id": "m-bc13092e",
+    "guidance_proposition_id": "susan-ef92f343b178a474-13",
+    "law_proposition_id": null,
+    "relationship": "NO_MATCH",
+    "confidence": null,
+    "cosine_score": null,
+    "bert_score_f1": null,
+    "explanation": null
   },
   {
     "id": "m-bc81dac4",
@@ -610,6 +630,16 @@
     "explanation": "This provision requires occupiers to record crop-sowing information within one week; it has no connection to appeals against notices or any appeal deadline."
   },
   {
+    "id": "m-1b931c92",
+    "guidance_proposition_id": "susan-ef92f343b178a474-64",
+    "law_proposition_id": null,
+    "relationship": "NO_MATCH",
+    "confidence": null,
+    "cosine_score": null,
+    "bert_score_f1": null,
+    "explanation": null
+  },
+  {
     "id": "m-33355249",
     "guidance_proposition_id": "susan-ef92f343b178a474-65",
     "law_proposition_id": "bcand:87841ad30c37313a",
@@ -768,6 +798,26 @@
     "cosine_score": 0.7704,
     "bert_score_f1": null,
     "explanation": "This clause merely disapplies the nitrogen limit for derogation holders; it says nothing about what data must be provided when applying."
+  },
+  {
+    "id": "m-8a15af8d",
+    "guidance_proposition_id": "susan-41dbc58cc6ea1113-16",
+    "law_proposition_id": null,
+    "relationship": "NO_MATCH",
+    "confidence": null,
+    "cosine_score": null,
+    "bert_score_f1": null,
+    "explanation": null
+  },
+  {
+    "id": "m-01b3dd28",
+    "guidance_proposition_id": "susan-41dbc58cc6ea1113-17",
+    "law_proposition_id": null,
+    "relationship": "NO_MATCH",
+    "confidence": null,
+    "cosine_score": null,
+    "bert_score_f1": null,
+    "explanation": null
   },
   {
     "id": "m-ae30c821",
@@ -1200,6 +1250,16 @@
     "explanation": "Neighbouring propositions explicitly cover both omissions: 'other crops' is addressed in the fertilisation account proposition, and the number and category of livestock requirement is covered by the fertilisation plan proposition about livestock numbers and categories."
   },
   {
+    "id": "m-5df1d013",
+    "guidance_proposition_id": "susan-41dbc58cc6ea1113-61",
+    "law_proposition_id": null,
+    "relationship": "NO_MATCH",
+    "confidence": null,
+    "cosine_score": null,
+    "bert_score_f1": null,
+    "explanation": null
+  },
+  {
     "id": "m-3c12294f",
     "guidance_proposition_id": "susan-41dbc58cc6ea1113-62",
     "law_proposition_id": "bcand:dbb884c5fab18850",
@@ -1208,6 +1268,16 @@
     "cosine_score": 0.7445,
     "bert_score_f1": null,
     "explanation": "This clause concerns sketch plans and the nature of fertilizer per field — entirely different content from livestock numbers, nitrogen, and phosphate amounts."
+  },
+  {
+    "id": "m-63de4935",
+    "guidance_proposition_id": "susan-41dbc58cc6ea1113-63",
+    "law_proposition_id": null,
+    "relationship": "NO_MATCH",
+    "confidence": null,
+    "cosine_score": null,
+    "bert_score_f1": null,
+    "explanation": null
   },
   {
     "id": "m-851dccdc",
@@ -1378,6 +1448,16 @@
     "cosine_score": 0.7727,
     "bert_score_f1": null,
     "explanation": "The law states the 250kg/ha limit for organic manure nitrogen in any 12-month period, which the guidance accurately reflects. However, the guidance adds the explicit exclusion of nitrogen from livestock manures deposited by grazing animals, which is not stated in this clause (it may appear elsewhere in the regulation). This makes the guidance slightly broader/more specific than what this clause alone says, but does not contradict it."
+  },
+  {
+    "id": "m-9453d519",
+    "guidance_proposition_id": "susan-b5cccee08ec65fb7-16",
+    "law_proposition_id": null,
+    "relationship": "NO_MATCH",
+    "confidence": null,
+    "cosine_score": null,
+    "bert_score_f1": null,
+    "explanation": null
   },
   {
     "id": "m-0e717b54",

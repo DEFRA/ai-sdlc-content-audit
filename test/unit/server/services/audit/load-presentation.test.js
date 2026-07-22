@@ -210,4 +210,50 @@ describe('load-presentation', () => {
       rmSync(dataDir, { recursive: true, force: true })
     }
   })
+
+  test('derives category for flat-dir NO_MATCH rows via guidance → page', () => {
+    const dataDir = mkdtempSync(join(tmpdir(), 'esther-flat-nomatch-'))
+
+    try {
+      const write = (name, data) =>
+        writeFileSync(join(dataDir, name), JSON.stringify(data))
+
+      write('categories.json', [{ id: 'slurry', title: 'Slurry' }])
+      write('legislation.json', [])
+      write('legislation-propositions.json', [])
+      write('pages.json', [
+        {
+          content_id: 'cid-a',
+          category: 'slurry',
+          url: 'https://www.gov.uk/a',
+          title: 'Page A'
+        }
+      ])
+      write('guidance-propositions.json', [
+        {
+          id: 'susan-1',
+          content_id: 'cid-a',
+          proposition_text: 'Do X.'
+        }
+      ])
+      write('proposition-matches.json', [
+        {
+          id: 'm-nomatch',
+          guidance_proposition_id: 'susan-1',
+          law_proposition_id: null,
+          relationship: 'NO_MATCH'
+        }
+      ])
+      write('page-analytics.json', [])
+      write('subject-summary.json', [])
+      write('page-relevance.json', [])
+      write('pages-reading-age.json', [])
+
+      const { merged } = loadPresentationFromFlatDir(dataDir)
+
+      expect(merged.proposition_matches[0].category).toBe('slurry')
+    } finally {
+      rmSync(dataDir, { recursive: true, force: true })
+    }
+  })
 })

@@ -32,11 +32,13 @@
       {% endif %}
     </nav>
 
-    <h2 class="govuk-heading-s govuk-!-margin-top-6">Laws with no guidance</h2>
-    <p class="govuk-body">
-      Some laws about this subject have no guidance written about them at all. These do not appear in the list of pages below.
-      <a class="govuk-link" href="{{ missingGuidanceHref }}">See which laws are missing guidance</a>.
-    </p>
+    {% if not activeOption %}
+      <h2 class="govuk-heading-s govuk-!-margin-top-6">Laws with no guidance</h2>
+      <p class="govuk-body">
+        Some laws about this subject have no guidance written about them at all. These do not appear in the list of pages below.
+        <a class="govuk-link" href="{{ missingGuidanceHref }}">See which laws are missing guidance</a>.
+      </p>
+    {% endif %}
 
     {% if activeOption %}
       <p class="audit-filter-bar__selected govuk-body govuk-!-margin-top-6 govuk-!-margin-bottom-2">

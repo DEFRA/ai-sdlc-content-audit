@@ -22,8 +22,16 @@ export const STATUS_META = {
     tone: 'yellow',
     cta: 'View pages with partial coverage'
   },
-  UNGROUNDED: {
+  NO_MATCH: {
     severity: 4,
+    label: 'No law candidate',
+    meaning:
+      'We did not find a law proposition close enough to compare with this guidance.',
+    tone: 'grey',
+    cta: 'View unmatched guidance'
+  },
+  UNGROUNDED: {
+    severity: 5,
     label: 'No law found',
     meaning:
       'This guidance does not seem to be based on any law we could find.',
@@ -31,14 +39,14 @@ export const STATUS_META = {
     cta: 'View pages not based on law'
   },
   GUIDANCE_BROADER: {
-    severity: 5,
+    severity: 6,
     label: 'Goes beyond the law',
     meaning: 'The guidance matches the law and also adds extra advice.',
     tone: 'blue',
     cta: 'View pages with extra advice'
   },
   GROUNDED: {
-    severity: 6,
+    severity: 7,
     label: 'Matches the law',
     meaning: 'The guidance correctly matches the law.',
     tone: 'green',
@@ -50,6 +58,7 @@ export const STATUS_ORDER = [
   'CONFLICTS',
   'GUIDANCE_MISSING',
   'GUIDANCE_INCOMPLETE',
+  'NO_MATCH',
   'UNGROUNDED',
   'GUIDANCE_BROADER',
   'GROUNDED'

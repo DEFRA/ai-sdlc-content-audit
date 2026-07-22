@@ -15,5 +15,6 @@ export const FEEDBACK_CHOICE_ORDER = [
 export const DISPLAYED_STATUSES = [
   'CONFLICTS',
   'GUIDANCE_INCOMPLETE',
+  'NO_MATCH',
   'GROUNDED'
 ]

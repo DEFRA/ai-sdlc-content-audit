@@ -100,12 +100,34 @@ function deriveFlatDirCategories(presentation) {
     }
   }
 
+  const contentIdByGuidanceId = new Map()
+  for (const gp of presentation.guidance_propositions) {
+    if (gp.id != null && gp.content_id != null) {
+      contentIdByGuidanceId.set(gp.id, gp.content_id)
+    }
+  }
+
+  const categoryByContentId = new Map()
+  for (const page of presentation.pages) {
+    if (page.content_id != null && page.category != null) {
+      categoryByContentId.set(page.content_id, page.category)
+    }
+  }
+
   presentation.proposition_matches = presentation.proposition_matches.map(
     (row) => {
       if (row.category != null) return row
-      if (row.law_proposition_id == null) return row
-      const category = categoryByLawPropositionId.get(row.law_proposition_id)
-      return category != null ? { ...row, category } : row
+      if (row.law_proposition_id != null) {
+        const category = categoryByLawPropositionId.get(row.law_proposition_id)
+        return category != null ? { ...row, category } : row
+      }
+      if (row.guidance_proposition_id != null) {
+        const contentId = contentIdByGuidanceId.get(row.guidance_proposition_id)
+        const category =
+          contentId != null ? categoryByContentId.get(contentId) : undefined
+        return category != null ? { ...row, category } : row
+      }
+      return row
     }
   )
 }
