@@ -14,6 +14,7 @@ import { baseGuidanceComparisonPresentation } from '../services/audit/fixtures/g
 const getCategory = vi.fn()
 const getSubjectOverview = vi.fn()
 const getRelevantPages = vi.fn()
+const getLawToGuidancePages = vi.fn()
 const getPageDetail = vi.fn()
 const getDashboardPages = vi.fn()
 const findByMatchIds = vi.fn()
@@ -23,6 +24,7 @@ vi.mock('../../../../src/server/services/audit/service.js', () => ({
     getCategory: (...args) => getCategory(...args),
     getSubjectOverview: (...args) => getSubjectOverview(...args),
     getRelevantPages: (...args) => getRelevantPages(...args),
+    getLawToGuidancePages: (...args) => getLawToGuidancePages(...args),
     getPageDetail: (...args) => getPageDetail(...args),
     getDashboardPages: (...args) => getDashboardPages(...args)
   }
@@ -40,6 +42,8 @@ const { auditPagesListViewModel } =
   await import('../../../../src/server/features/audit-pages-list/view-model.js')
 const { auditPageDetailViewModel } =
   await import('../../../../src/server/features/audit-page-detail/view-model.js')
+const { auditSubjectOverviewViewModel } =
+  await import('../../../../src/server/features/audit-subject-overview/view-model.js')
 
 function presentationWithSummary(overrides = {}) {
   const presentation = baseGuidanceComparisonPresentation(overrides)

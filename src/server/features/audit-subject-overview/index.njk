@@ -74,8 +74,38 @@
 
   {% if hasPagesInCategory %}
     <div class="app-full-bleed">
-      <h2 class="govuk-heading-l govuk-!-margin-top-6">Content improvement dashboard</h2>
-      {% include "partials/improvement-dashboard.njk" %}
+      {# Server-driven tabs: full navigation so filter query state stays reliable. #}
+      <div class="govuk-tabs">
+        <h2 class="govuk-tabs__title">Review views</h2>
+        <ul class="govuk-tabs__list" role="tablist">
+          <li class="govuk-tabs__list-item{% if activeView == 'content-review' %} govuk-tabs__list-item--selected{% endif %}" role="presentation">
+            <a class="govuk-tabs__tab" href="{{ contentReviewViewHref }}" role="tab" {% if activeView == 'content-review' %}aria-selected="true"{% else %}aria-selected="false"{% endif %}>
+              Content Review
+            </a>
+          </li>
+          <li class="govuk-tabs__list-item{% if activeView == 'law-to-guidance' %} govuk-tabs__list-item--selected{% endif %}" role="presentation">
+            <a class="govuk-tabs__tab" href="{{ lawToGuidanceViewHref }}" role="tab" {% if activeView == 'law-to-guidance' %}aria-selected="true"{% else %}aria-selected="false"{% endif %}>
+              Law to Guidance
+            </a>
+          </li>
+        </ul>
+
+        {% if activeView == 'content-review' %}
+          <div class="govuk-tabs__panel" id="content-review" role="tabpanel">
+            <h2 class="govuk-heading-l">Content improvement dashboard</h2>
+            {% include "partials/improvement-dashboard.njk" %}
+          </div>
+        {% else %}
+          <div class="govuk-tabs__panel" id="law-to-guidance" role="tabpanel">
+            <h2 class="govuk-heading-l">Law to Guidance</h2>
+            <p class="govuk-body">
+              Page-level summary of how guidance propositions compare with law.
+              Use this view to prioritise pages that need legal review.
+            </p>
+            {% include "partials/law-to-guidance-dashboard.njk" %}
+          </div>
+        {% endif %}
+      </div>
 
       <p class="govuk-body govuk-!-margin-top-6">
         <a class="govuk-link govuk-link--no-visited-state" href="{{ propositionsHref }}">View all propositions for {{ category.title }}</a>

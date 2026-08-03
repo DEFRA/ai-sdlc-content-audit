@@ -1,0 +1,71 @@
+{% if not lawToGuidanceDashboard.available %}
+  <p class="govuk-body">{{ lawToGuidanceDashboard.emptyMessage }}</p>
+{% else %}
+  <nav class="audit-filter-bar" aria-label="Filter pages by comparison category">
+    <p class="govuk-body govuk-!-margin-bottom-2">Filter by category</p>
+    <ul class="audit-filter-bar__list">
+      {% for option in lawToGuidanceDashboard.filterOptions %}
+        <li class="audit-filter-bar__item">
+          <a class="audit-filter-bar__link" href="{{ option.href }}">
+            <strong class="govuk-tag {% if option.tone %}govuk-tag--{{ option.tone }}{% endif %} audit-filter-bar__tag">{{ option.label }}</strong>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+    {% if lawToGuidanceDashboard.activeOption %}
+      <p class="govuk-body govuk-!-margin-top-3 govuk-!-margin-bottom-0">
+        <a class="govuk-link" href="{{ lawToGuidanceDashboard.clearFilterHref }}">Clear filter</a>
+      </p>
+    {% endif %}
+  </nav>
+
+  {% if lawToGuidanceDashboard.activeOption %}
+    <p class="audit-filter-bar__selected govuk-body govuk-!-margin-top-6 govuk-!-margin-bottom-2">
+      Selected:
+      <strong class="govuk-tag {% if lawToGuidanceDashboard.activeOption.tone %}govuk-tag--{{ lawToGuidanceDashboard.activeOption.tone }}{% endif %} audit-filter-bar__tag" aria-current="page">{{ lawToGuidanceDashboard.activeOption.label }}</strong>
+    </p>
+  {% endif %}
+
+  {% if lawToGuidanceDashboard.hasResults %}
+    <p class="govuk-hint govuk-!-margin-top-6">
+      Pair-relationship columns count distinct guidance propositions with at least one matching comparison.
+      A proposition can appear in more than one relationship column. Select a column heading to sort.
+    </p>
+    <div class="app-table-shadow-scroll" aria-hidden="true"><div class="app-table-shadow-scroll__inner"></div></div>
+    <div class="app-table-scroll" tabindex="0" role="region" aria-label="Law to Guidance page summary">
+      <table class="govuk-table app-sortable-table" data-module="app-sortable-table">
+        <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header app-sortable-table__header--wrap" data-sortable data-sort-type="string" aria-sort="none">Page</th>
+            {% for column in lawToGuidanceDashboard.columns %}
+              <th scope="col" class="govuk-table__header govuk-table__header--numeric app-sortable-table__header--wrap" data-sortable data-sort-type="number" aria-sort="none">{{ column.label }}</th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+          {% for row in lawToGuidanceDashboard.tableRows %}
+            <tr class="govuk-table__row">
+              <td class="govuk-table__cell app-sortable-table__cell--wrap" data-sort-value="{{ row.title }}">
+                <a class="govuk-link" href="{{ row.detailHref }}">{{ row.title }}</a>
+                <br>
+                <span class="govuk-body-s" style="color:#505a5f;">{{ row.url }}</span>
+              </td>
+              {% for column in lawToGuidanceDashboard.columns %}
+                {% set cell = row.counts[column.key] %}
+                <td class="govuk-table__cell govuk-table__cell--numeric" data-sort-value="{{ cell.value }}">
+                  {% if cell.countHref %}
+                    <a class="govuk-link" href="{{ cell.countHref }}">{{ cell.value }}</a>
+                  {% else %}
+                    {{ cell.value }}
+                  {% endif %}
+                </td>
+              {% endfor %}
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p class="govuk-body govuk-!-margin-top-6">{{ lawToGuidanceDashboard.emptyMessage }}</p>
+  {% endif %}
+{% endif %}
