@@ -1,7 +1,5 @@
 {% extends "layouts/page.njk" %}
 
-{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
-
 {% block beforeContent %}
   {{ govukBreadcrumbs({
     items: [
@@ -20,7 +18,7 @@
   ONLY_UNGROUNDED_CANDIDATES ≠ NO_CANDIDATES_FOUND.
   Synthetic law-side GUIDANCE_MISSING is not rendered here.
 #}
-{% macro statementCard(s, isCompleted) %}
+{% macro statementCard(s) %}
   {% set borderColour = "#b1b4b6" %}
   {% if s.statusTone == "red" %}{% set borderColour = "#d4351c" %}{% endif %}
   {% if s.statusTone == "yellow" %}{% set borderColour = "#ffdd00" %}{% endif %}
@@ -28,10 +26,9 @@
   {% if s.statusTone == "blue" %}{% set borderColour = "#1d70b8" %}{% endif %}
   {% if s.statusTone == "orange" %}{% set borderColour = "#f47738" %}{% endif %}
 
-  {% set anchor = ("completed-feedback-" if isCompleted else "pending-feedback-") + s.id %}
   {% set headingText = s.accessibleName if s.accessibleName else s.statusLabel %}
 
-  <div id="{{ anchor }}" class="govuk-summary-card govuk-!-margin-bottom-4" style="border-top:6px solid {{ borderColour }};">
+  <div id="statement-{{ s.id }}" class="govuk-summary-card govuk-!-margin-bottom-4" style="border-top:6px solid {{ borderColour }};">
     <div class="govuk-summary-card__title-wrapper">
       <h3 class="govuk-summary-card__title govuk-heading-s govuk-!-margin-bottom-0">
         <span class="govuk-visually-hidden">{{ headingText }}</span>
@@ -64,12 +61,6 @@
           </div>
         {% endif %}
       </dl>
-      {% if s.feedbackEnabled %}
-        {% set matchId = s.id %}
-        {% set feedback = s.feedback %}
-        {% set widget = feedbackWidget %}
-        {% include "features/proposition-feedback/index.njk" %}
-      {% endif %}
     </div>
   </div>
 {% endmacro %}
@@ -82,13 +73,6 @@
         <p class="govuk-body">
           <a class="govuk-link" href="{{ page.url }}" rel="noopener noreferrer" target="_blank">View the live page (opens in new tab)</a>
         </p>
-
-        {% if savedMatchId %}
-          {{ govukNotificationBanner({
-            type: "success",
-            text: "Your feedback has been saved."
-          }) }}
-        {% endif %}
 
         <nav class="audit-filter-bar" aria-label="Filter statements by group">
           <p class="govuk-body govuk-!-margin-bottom-2">Filter by group</p>
@@ -119,40 +103,16 @@
           </p>
         {% endif %}
 
-        <nav aria-label="Jump to section" class="govuk-!-margin-bottom-6 govuk-!-margin-top-6">
-          <ul class="govuk-list">
-            <li>
-              <a class="govuk-link" href="#pending-feedback">Pending feedback ({{ pending | length }})</a>
-            </li>
-            <li>
-              <a class="govuk-link" href="#completed-feedback">Completed feedback ({{ completed | length }})</a>
-            </li>
-          </ul>
-        </nav>
-
-        <section id="pending-feedback" aria-labelledby="pending-feedback-heading">
-          <h2 id="pending-feedback-heading" class="govuk-heading-l govuk-!-margin-top-6">Pending feedback</h2>
-          {% if hasPending %}
-            {% for s in pending %}
-              {{ statementCard(s, false) }}
+        <section id="statements" aria-labelledby="statements-heading" class="govuk-!-margin-top-6">
+          <h2 id="statements-heading" class="govuk-heading-l">Statements</h2>
+          {% if hasStatements %}
+            {% for s in statements %}
+              {{ statementCard(s) }}
             {% endfor %}
           {% elif activeOption %}
             <p class="govuk-body">No statements in this group on this page.</p>
           {% else %}
-            <p class="govuk-body">No statements are waiting for feedback on this page.</p>
-          {% endif %}
-        </section>
-
-        <section id="completed-feedback" aria-labelledby="completed-feedback-heading">
-          <h2 id="completed-feedback-heading" class="govuk-heading-l govuk-!-margin-top-8">Completed feedback</h2>
-          {% if hasCompleted %}
-            {% for s in completed %}
-              {{ statementCard(s, true) }}
-            {% endfor %}
-          {% elif activeOption %}
-            <p class="govuk-body">No statements in this group on this page.</p>
-          {% else %}
-            <p class="govuk-body">You have not submitted feedback on any statements on this page yet.</p>
+            <p class="govuk-body">No statements on this page.</p>
           {% endif %}
         </section>
       </div>

@@ -51,10 +51,10 @@ export const propositionFeedbackController = {
         comment: typeof comment === 'string' ? comment.trim() : ''
       })
 
-      const statusQuery = status ? `&status=${encodeURIComponent(status)}` : ''
+      const statusQuery = status ? `?status=${encodeURIComponent(status)}` : ''
       return h
         .redirect(
-          `/audit/subjects/${categoryId}/pages/${pageId}?feedback=saved&matchId=${propositionMatchId}${statusQuery}#completed-feedback-${propositionMatchId}`
+          `/audit/subjects/${categoryId}/pages/${pageId}${statusQuery}#statement-${propositionMatchId}`
         )
         .code(303)
     } catch (error) {

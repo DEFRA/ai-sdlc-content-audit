@@ -29,7 +29,7 @@ export const adminFeedbackViewModel = {
       comment: entry.comment,
       pageHref:
         `/audit/subjects/${entry.categoryId}/pages/${entry.pageId}` +
-        `#completed-feedback-${entry.propositionMatchId}`
+        `#statement-${entry.propositionMatchId}`
     }))
 
     return {

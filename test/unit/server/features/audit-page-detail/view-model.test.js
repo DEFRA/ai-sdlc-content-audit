@@ -2,18 +2,11 @@ import { beforeEach, describe, expect, test, vi } from 'vitest'
 
 const getPageDetail = vi.fn()
 const getCategory = vi.fn()
-const findByMatchIds = vi.fn()
 
 vi.mock('../../../../../src/server/services/audit/service.js', () => ({
   auditService: {
     getCategory: (...args) => getCategory(...args),
     getPageDetail: (...args) => getPageDetail(...args)
-  }
-}))
-
-vi.mock('../../../../../src/server/services/feedback/service.js', () => ({
-  feedbackService: {
-    findByMatchIds: (...args) => findByMatchIds(...args)
   }
 }))
 
@@ -24,12 +17,10 @@ describe('auditPageDetailViewModel', () => {
   beforeEach(() => {
     getCategory.mockReset()
     getPageDetail.mockReset()
-    findByMatchIds.mockReset()
     getCategory.mockReturnValue({ id: 'slurry', title: 'Slurry' })
-    findByMatchIds.mockResolvedValue(new Map())
   })
 
-  test('keeps multi-hit comparison order and skips feedback lookup for fallbacks', async () => {
+  test('keeps multi-hit comparison order including fallbacks', async () => {
     getPageDetail.mockReturnValue({
       page: {
         content_id: 'cid-a',
@@ -43,7 +34,6 @@ describe('auditPageDetailViewModel', () => {
           statusLabel: 'Matches the law',
           statusTone: 'green',
           guidanceText: 'Do multi.',
-          feedbackEnabled: true,
           order: 0
         },
         {
@@ -52,7 +42,6 @@ describe('auditPageDetailViewModel', () => {
           statusLabel: 'Goes against the law',
           statusTone: 'red',
           guidanceText: 'Do multi.',
-          feedbackEnabled: true,
           order: 1
         },
         {
@@ -61,7 +50,6 @@ describe('auditPageDetailViewModel', () => {
           statusLabel: 'No law candidate found',
           statusTone: 'grey',
           guidanceText: 'Do empty.',
-          feedbackEnabled: false,
           order: 2
         }
       ],
@@ -70,8 +58,7 @@ describe('auditPageDetailViewModel', () => {
 
     const vm = await auditPageDetailViewModel.get('slurry', 'cid-a')
 
-    expect(findByMatchIds).toHaveBeenCalledWith(['m-1', 'm-2'])
-    expect(vm.pending.map((s) => s.id)).toEqual([
+    expect(vm.statements.map((s) => s.id)).toEqual([
       'm-1',
       'm-2',
       'fb-g-empty-NO_CANDIDATES_FOUND'
@@ -98,7 +85,6 @@ describe('auditPageDetailViewModel', () => {
           statusLabel: 'Goes beyond the law',
           statusTone: 'blue',
           guidanceText: 'Extra.',
-          feedbackEnabled: true,
           order: 0
         }
       ],

@@ -30,7 +30,7 @@ describe('proposition feedback endpoints', () => {
   })
 
   describe('POST /audit/.../propositions/{id}/feedback', () => {
-    test('forwards a save to the backend and 303-redirects to the completed-feedback anchor', async () => {
+    test('forwards a save to the backend and 303-redirects to the statement anchor', async () => {
       fetchMock.mockResponseOnce(JSON.stringify({}), { status: 201 })
 
       const { statusCode, headers } = await server.inject({
@@ -42,7 +42,7 @@ describe('proposition feedback endpoints', () => {
 
       expect(statusCode).toBe(303)
       expect(headers.location).toBe(
-        `${pageDetailUrl(`?feedback=saved&matchId=${MATCH_ID}`)}#completed-feedback-${MATCH_ID}`
+        `${pageDetailUrl()}#statement-${MATCH_ID}`
       )
 
       expect(fetchMock).toHaveBeenCalledOnce()
@@ -113,53 +113,19 @@ describe('proposition feedback endpoints', () => {
   })
 
   describe('GET audit page detail', () => {
-    test('renders pending and completed sections with the three choices and a save banner', async () => {
-      fetchMock.mockResponseOnce(JSON.stringify([]))
-
-      const { statusCode, payload } = await server.inject({
-        method: 'GET',
-        url: pageDetailUrl(`?feedback=saved&matchId=${MATCH_ID}`)
-      })
-
-      expect(statusCode).toBe(200)
-      expect(payload).toContain('Pending feedback')
-      expect(payload).toContain('Completed feedback')
-      expect(payload).toContain('I am interested in this')
-      expect(payload).toContain('I am not interested in this')
-      expect(payload).toContain('This is a mistake in the AI')
-      expect(payload).toContain('Your feedback has been saved.')
-      expect(payload).toContain('href="#pending-feedback"')
-      expect(payload).toContain('href="#completed-feedback"')
-    })
-
-    test('moves a statement into the completed section once feedback exists for it', async () => {
-      // The view-model fetches all entries from the backend, then filters by
-      // match id. Return one entry whose id matches a displayed statement on
-      // the page so it lands in the completed section.
-      fetchMock.mockResponseOnce(
-        JSON.stringify([
-          {
-            propositionMatchId: MATCH_ID,
-            categoryId: CATEGORY_ID,
-            pageId: PAGE_ID,
-            currentStatus: 'GROUNDED',
-            choice: 'AI_MISTAKE',
-            comment: 'entry',
-            submittedAt: 1700000000,
-            updatedAt: 1700000500
-          }
-        ])
-      )
-
+    test('renders statements without the feedback widget', async () => {
       const { statusCode, payload } = await server.inject({
         method: 'GET',
         url: pageDetailUrl()
       })
 
       expect(statusCode).toBe(200)
-      expect(payload).toContain(`id="completed-feedback-${MATCH_ID}"`)
-      expect(payload).toContain('Update your feedback')
-      expect(payload).toContain('Save changes')
+      expect(payload).toContain('Statements')
+      expect(payload).toContain(`id="statement-${MATCH_ID}"`)
+      expect(payload).not.toContain('Pending feedback')
+      expect(payload).not.toContain('Completed feedback')
+      expect(payload).not.toContain('Your feedback')
+      expect(payload).not.toContain('Submit feedback')
     })
   })
 
@@ -190,7 +156,7 @@ describe('proposition feedback endpoints', () => {
       expect(payload).toContain('model hallucinated')
       expect(payload).toContain('This is a mistake in the AI')
       expect(payload).toContain(
-        `/audit/subjects/${CATEGORY_ID}/pages/${PAGE_ID}#completed-feedback-${MATCH_ID}`
+        `/audit/subjects/${CATEGORY_ID}/pages/${PAGE_ID}#statement-${MATCH_ID}`
       )
     })
 
