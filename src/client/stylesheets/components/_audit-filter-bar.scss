@@ -30,10 +30,16 @@
 }
 
 .audit-filter-bar__tag {
+  // GOV.UK tags default to ~160px max-width (for break-word). Filter labels
+  // are longer phrases, so lift the cap and keep each chip on one line.
   display: inline-block;
+  max-width: none;
+  overflow: visible;
+  overflow-wrap: normal;
   white-space: nowrap;
   padding: 6px 12px 5px;
   letter-spacing: 0.05em;
+  line-height: 1.25;
 }
 
 .audit-filter-bar__selected {
