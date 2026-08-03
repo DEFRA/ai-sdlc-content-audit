@@ -2,7 +2,7 @@ import { format } from 'date-fns'
 
 import {
   PAGE_FILTER_STATUSES,
-  STATUS_META
+  STATEMENT_STATUS_META
 } from '../../services/audit/constants.js'
 import { auditService } from '../../services/audit/service.js'
 import {
@@ -31,8 +31,8 @@ function decorateFeedback(entry) {
   }
 }
 
-function sortByStatus(a, b) {
-  return STATUS_RANK.get(a.status) - STATUS_RANK.get(b.status)
+function sortByEmissionOrder(a, b) {
+  return (a.order ?? 0) - (b.order ?? 0)
 }
 
 export const auditPageDetailViewModel = {
@@ -43,6 +43,8 @@ export const auditPageDetailViewModel = {
     const detail = auditService.getPageDetail(categoryId, pageId)
     if (!detail) return null
 
+    // Statements already come from guidance comparisons when the assembler
+    // contract is present (see create-audit-service getPageDetail).
     const allDisplayed = detail.statements.filter((s) =>
       STATUS_RANK.has(s.status)
     )
@@ -79,8 +81,8 @@ export const auditPageDetailViewModel = {
       ...DISPLAYED_STATUSES.filter((status) => statusCounts[status] > 0).map(
         (status) => ({
           key: status,
-          label: STATUS_META[status].label,
-          tone: STATUS_META[status].tone,
+          label: STATEMENT_STATUS_META[status].label,
+          tone: STATEMENT_STATUS_META[status].tone,
           count: statusCounts[status],
           href: `${pageBaseHref}?status=${status}`,
           active: statusFilter === status
@@ -98,9 +100,10 @@ export const auditPageDetailViewModel = {
 
     let feedbackByMatchId = new Map()
     try {
-      feedbackByMatchId = await feedbackService.findByMatchIds(
-        displayed.map((s) => s.id)
-      )
+      const feedbackIds = displayed
+        .filter((s) => s.feedbackEnabled !== false)
+        .map((s) => s.id)
+      feedbackByMatchId = await feedbackService.findByMatchIds(feedbackIds)
     } catch {
       // Feedback backend unavailable — render audit content with all statements pending.
     }
@@ -108,7 +111,10 @@ export const auditPageDetailViewModel = {
     const pending = []
     const completed = []
     for (const statement of displayed) {
-      const feedback = decorateFeedback(feedbackByMatchId.get(statement.id))
+      const feedback =
+        statement.feedbackEnabled === false
+          ? null
+          : decorateFeedback(feedbackByMatchId.get(statement.id))
       const row = { ...statement, feedback }
       if (feedback) {
         completed.push(row)
@@ -117,8 +123,10 @@ export const auditPageDetailViewModel = {
       }
     }
 
-    pending.sort(sortByStatus)
-    completed.sort(sortByStatus)
+    // Preserve guidance-proposition / backend comparison order (do not
+    // re-sort multi-hit pairs by status severity).
+    pending.sort(sortByEmissionOrder)
+    completed.sort(sortByEmissionOrder)
 
     const savedMatchId =
       query.feedback === 'saved' && query.matchId != null ? query.matchId : null

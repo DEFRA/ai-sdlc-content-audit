@@ -13,18 +13,29 @@
   }) }}
 {% endblock %}
 
+{#
+  Pair rows: pair-level legal comparison outcomes (relationship + law text).
+  Fallback rows: proposition-level assessment / processing state (fallbackKind).
+  NOT_CHECKED / PARTIAL / FAILED / INCONSISTENT_DATA are not legal conclusions.
+  ONLY_UNGROUNDED_CANDIDATES ≠ NO_CANDIDATES_FOUND.
+  Synthetic law-side GUIDANCE_MISSING is not rendered here.
+#}
 {% macro statementCard(s, isCompleted) %}
   {% set borderColour = "#b1b4b6" %}
   {% if s.statusTone == "red" %}{% set borderColour = "#d4351c" %}{% endif %}
   {% if s.statusTone == "yellow" %}{% set borderColour = "#ffdd00" %}{% endif %}
   {% if s.statusTone == "green" %}{% set borderColour = "#00703c" %}{% endif %}
+  {% if s.statusTone == "blue" %}{% set borderColour = "#1d70b8" %}{% endif %}
+  {% if s.statusTone == "orange" %}{% set borderColour = "#f47738" %}{% endif %}
 
   {% set anchor = ("completed-feedback-" if isCompleted else "pending-feedback-") + s.id %}
+  {% set headingText = s.accessibleName if s.accessibleName else s.statusLabel %}
 
   <div id="{{ anchor }}" class="govuk-summary-card govuk-!-margin-bottom-4" style="border-top:6px solid {{ borderColour }};">
     <div class="govuk-summary-card__title-wrapper">
       <h3 class="govuk-summary-card__title govuk-heading-s govuk-!-margin-bottom-0">
-        {{ s.statusLabel }}
+        <span class="govuk-visually-hidden">{{ headingText }}</span>
+        <span aria-hidden="true">{{ s.statusLabel }}</span>
       </h3>
       <strong class="govuk-tag govuk-tag--{{ s.statusTone }}">{{ s.statusLabel }}</strong>
     </div>
@@ -53,10 +64,12 @@
           </div>
         {% endif %}
       </dl>
-      {% set matchId = s.id %}
-      {% set feedback = s.feedback %}
-      {% set widget = feedbackWidget %}
-      {% include "features/proposition-feedback/index.njk" %}
+      {% if s.feedbackEnabled %}
+        {% set matchId = s.id %}
+        {% set feedback = s.feedback %}
+        {% set widget = feedbackWidget %}
+        {% include "features/proposition-feedback/index.njk" %}
+      {% endif %}
     </div>
   </div>
 {% endmacro %}

@@ -1,4 +1,12 @@
-import { STATUS_META, STATUS_ORDER } from './constants.js'
+import { buildGuidanceOverviewModel } from './build-guidance-overview-model.js'
+import { buildStatementsFromGuidanceComparisons } from './build-page-detail-statements.js'
+import {
+  LEGACY_OVERVIEW_STATUS_ORDER,
+  OVERVIEW_STATUS_ORDER,
+  STATUS_META,
+  STATUS_ORDER
+} from './constants.js'
+import { buildGuidanceComparisonViewModels } from './create-guidance-comparison-view-model.js'
 
 function categoryKey(categoryId, id) {
   return `${categoryId}:${id}`
@@ -37,6 +45,10 @@ export function createAuditService(presentation, loadedRunIds = []) {
     pageReadingAge.map((r) => [r.content_id, r])
   )
 
+  const guidancePropositionById = new Map(
+    guidancePropositions.map((gp) => [gp.id, gp])
+  )
+
   const guidancePropositionsByCategoryPage = new Map()
   for (const gp of guidancePropositions) {
     const key = `${gp.category}:${gp.content_id}`
@@ -56,9 +68,15 @@ export function createAuditService(presentation, loadedRunIds = []) {
     )
   }
 
+  // Legacy page-detail path: all GUIDANCE_MISSING rows in proposition-matches
+  // (includes synthetic law-side gaps). Do not feed guidance-side top matches
+  // from this file into the new guidance comparison view-model.
   const missingMatches = propositionMatches.filter(
     (m) => m.relationship === 'GUIDANCE_MISSING'
   )
+
+  const guidanceComparisonBundle =
+    buildGuidanceComparisonViewModels(presentation)
 
   function pageIdsForCategory(categoryId) {
     return pageIdsByCategory.get(categoryId) ?? []
@@ -93,7 +111,43 @@ export function createAuditService(presentation, loadedRunIds = []) {
     )
   }
 
+  /**
+   * New guidance-comparison contract is evaluated per category.
+   * A rebuilt run with summaries must not force legacy sibling categories
+   * (no summaries) onto the new path — that would mark every legacy GP
+   * INCONSISTENT_DATA when runs are merged.
+   */
+  function hasGuidanceComparisonContract(categoryId) {
+    const summaries = presentation.guidance_proposition_match_summaries ?? []
+    if (summaries.length === 0) return false
+    if (categoryId == null) return true
+    for (const summary of summaries) {
+      if (summary.category === categoryId) return true
+      const gp = guidancePropositionById.get(summary.guidance_proposition_id)
+      if (gp?.category === categoryId) return true
+    }
+    return false
+  }
+
+  function overviewModelForCategory(categoryId) {
+    return buildGuidanceOverviewModel({
+      categoryId,
+      guidanceComparisons: guidanceComparisonBundle.guidanceComparisons,
+      pageIds: pageIdsForCategory(categoryId),
+      lawSideMissingGuidance: guidanceComparisonBundle.lawSideMissingGuidance,
+      legislationPropositionForCategory,
+      overviewStatusKeys: OVERVIEW_STATUS_ORDER
+    })
+  }
+
   function conflictsCountForPage(categoryId, pageId) {
+    // Unit: distinct guidance propositions on the page with a CONFLICTS pair.
+    if (hasGuidanceComparisonContract(categoryId)) {
+      return (
+        overviewModelForCategory(categoryId).conflictsCountByPage.get(pageId) ??
+        0
+      )
+    }
     const gps = guidanceForCategoryPage(categoryId, pageId)
     let n = 0
     for (const gp of gps) {
@@ -104,6 +158,13 @@ export function createAuditService(presentation, loadedRunIds = []) {
   }
 
   function statusForPage(categoryId, pageId) {
+    if (hasGuidanceComparisonContract(categoryId)) {
+      return (
+        overviewModelForCategory(categoryId).pageStatusSets.get(pageId) ??
+        new Set()
+      )
+    }
+    // Legacy: Map-of-one top-match relationships only.
     const gps = guidanceForCategoryPage(categoryId, pageId)
     const set = new Set()
     for (const gp of gps) {
@@ -180,8 +241,31 @@ export function createAuditService(presentation, loadedRunIds = []) {
     if (!summary) return null
 
     const pageIds = pageIdsForCategory(categoryId)
+
+    if (hasGuidanceComparisonContract(categoryId)) {
+      const model = overviewModelForCategory(categoryId)
+      return {
+        category,
+        lawsFound: summary.laws_found,
+        totalPagesAudited: summary.total_pages_audited,
+        pagesInCategory: pageIds.length,
+        // Distinct guidance propositions per status (GUIDANCE_MISSING = law-side rows).
+        statusCounts: model.statusCounts,
+        // Distinct pages per guidance-side status.
+        pagesByStatus: model.pagesByStatus,
+        // Distinct law instruments with synthetic missing-guidance rows.
+        lawsMissingGuidance: model.lawsMissingGuidance,
+        totalGuidancePropositions: model.totalGuidancePropositions,
+        overviewStatusOrder: OVERVIEW_STATUS_ORDER,
+        usesGuidanceComparisonContract: true
+      }
+    }
+
+    // Legacy path: assembler subject_summary + Map-of-one page membership.
     const pagesByStatus = {}
-    for (const status of STATUS_ORDER) pagesByStatus[status] = 0
+    for (const status of LEGACY_OVERVIEW_STATUS_ORDER) {
+      pagesByStatus[status] = 0
+    }
     for (const pid of pageIds) {
       for (const s of statusForPage(categoryId, pid)) {
         if (pagesByStatus[s] != null) pagesByStatus[s] += 1
@@ -207,7 +291,9 @@ export function createAuditService(presentation, loadedRunIds = []) {
       pagesInCategory: pageIds.length,
       statusCounts: summary.proposition_status_counts,
       pagesByStatus,
-      lawsMissingGuidance: missingLawIds.size
+      lawsMissingGuidance: missingLawIds.size,
+      overviewStatusOrder: LEGACY_OVERVIEW_STATUS_ORDER,
+      usesGuidanceComparisonContract: false
     }
   }
 
@@ -273,24 +359,51 @@ export function createAuditService(presentation, loadedRunIds = []) {
   }
 
   function getMatchStatus(propositionMatchId) {
-    const match = propositionMatches.find((m) => m.id === propositionMatchId)
-    return match ? match.relationship : null
+    const legacy = propositionMatches.find((m) => m.id === propositionMatchId)
+    if (legacy) return legacy.relationship
+
+    // Multi-hit reportable pairs live in the full-comparisons file; IDs are
+    // pair-specific (m-{sha8(gp,law)}) so feedback can target each hit.
+    const comparisons = presentation.guidance_proposition_law_comparisons ?? []
+    const comparison = comparisons.find((m) => m.id === propositionMatchId)
+    return comparison ? comparison.relationship : null
+  }
+
+  function buildLegacyStatements(categoryId, pageId) {
+    const gps = guidanceForCategoryPage(categoryId, pageId)
+    return gps
+      .map((gp) => {
+        const match = matchForGuidance(categoryId, gp.id)
+        if (!match) return null
+        const statement = buildStatement(categoryId, gp, match)
+        return {
+          ...statement,
+          feedbackEnabled: true,
+          rowKind: 'comparison',
+          accessibleName: `${statement.statusLabel}: ${statement.guidanceText}`,
+          order: 0
+        }
+      })
+      .filter(Boolean)
+      .sort((a, b) => a.severity - b.severity)
+      .map((statement, index) => ({ ...statement, order: index }))
   }
 
   function getPageDetail(categoryId, pageId) {
     const page = pageById.get(pageId)
     if (!page) return null
     if (!pageIdsForCategory(categoryId).includes(pageId)) return null
-    const gps = guidanceForCategoryPage(categoryId, pageId)
 
-    const statements = gps
-      .map((gp) => {
-        const match = matchForGuidance(categoryId, gp.id)
-        if (!match) return null
-        return buildStatement(categoryId, gp, match)
-      })
-      .filter(Boolean)
-      .sort((a, b) => a.severity - b.severity)
+    // Prefer guidance-comparison contract when this category has summaries.
+    // Sibling legacy categories (no summaries) keep the top-match projection.
+    const statements = hasGuidanceComparisonContract(categoryId)
+      ? buildStatementsFromGuidanceComparisons({
+          categoryId,
+          pageId,
+          guidanceComparisons: guidanceComparisonBundle.guidanceComparisons,
+          legislationForCategory
+        })
+      : buildLegacyStatements(categoryId, pageId)
 
     const missingLaws = missingMatches
       .map((m) => {
@@ -347,6 +460,24 @@ export function createAuditService(presentation, loadedRunIds = []) {
     return rows
   }
 
+  /**
+   * Guidance-side comparison view-models for the later UI increment.
+   * Built from match-summaries + law-comparisons only — not from
+   * proposition-matches top-match rows.
+   */
+  function getGuidanceComparisons() {
+    return guidanceComparisonBundle.guidanceComparisons
+  }
+
+  /** Synthetic law-side GUIDANCE_MISSING rows (legacy compatibility path). */
+  function getLawSideMissingGuidance() {
+    return guidanceComparisonBundle.lawSideMissingGuidance
+  }
+
+  function getGuidanceComparisonDiagnostics() {
+    return guidanceComparisonBundle.diagnostics
+  }
+
   return {
     STATUS_META,
     STATUS_ORDER,
@@ -358,6 +489,9 @@ export function createAuditService(presentation, loadedRunIds = []) {
     getPageDetail,
     getDashboardPages,
     getLawsForSubject,
-    getMatchStatus
+    getMatchStatus,
+    getGuidanceComparisons,
+    getLawSideMissingGuidance,
+    getGuidanceComparisonDiagnostics
   }
 }

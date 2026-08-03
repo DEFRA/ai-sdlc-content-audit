@@ -1,7 +1,7 @@
 import { auditService } from '../../services/audit/service.js'
 import {
   PAGE_FILTER_STATUSES,
-  STATUS_META
+  STATEMENT_STATUS_META
 } from '../../services/audit/constants.js'
 
 export const auditPagesListViewModel = {
@@ -16,6 +16,7 @@ export const auditPagesListViewModel = {
       detailHref: statusFilter
         ? `/audit/subjects/${categoryId}/pages/${r.id}?status=${statusFilter}`
         : `/audit/subjects/${categoryId}/pages/${r.id}`,
+      // Unit: distinct guidance propositions on the page with CONFLICTS.
       conflicts: r.conflictsCount
     }))
 
@@ -31,8 +32,8 @@ export const auditPagesListViewModel = {
       },
       ...PAGE_FILTER_STATUSES.map((status) => ({
         key: status,
-        label: STATUS_META[status].label,
-        tone: STATUS_META[status].tone,
+        label: STATEMENT_STATUS_META[status].label,
+        tone: STATEMENT_STATUS_META[status].tone,
         href: `${baseHref}?status=${status}`,
         active: statusFilter === status
       }))

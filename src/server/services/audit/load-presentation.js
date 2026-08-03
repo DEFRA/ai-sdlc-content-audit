@@ -1,7 +1,12 @@
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { join } from 'node:path'
 
-export const PRESENTATION_KEYS = [
+/**
+ * Required presentation arrays (always present in Esther / flat data).
+ * Optional keys are listed separately — older runs omit the guidance-comparison
+ * files until Audit Assembler is re-run.
+ */
+export const REQUIRED_PRESENTATION_KEYS = [
   'categories',
   'legislation',
   'legislation_propositions',
@@ -14,6 +19,19 @@ export const PRESENTATION_KEYS = [
   'pages_reading_age'
 ]
 
+/** New guidance-comparison contract (optional until all runs are rebuilt). */
+export const OPTIONAL_PRESENTATION_KEYS = [
+  'guidance_proposition_match_summaries',
+  'guidance_proposition_law_comparisons'
+]
+
+export const PRESENTATION_KEYS = [
+  ...REQUIRED_PRESENTATION_KEYS,
+  ...OPTIONAL_PRESENTATION_KEYS
+]
+
+const OPTIONAL_PRESENTATION_KEY_SET = new Set(OPTIONAL_PRESENTATION_KEYS)
+
 const FLAT_FILES = {
   categories: 'categories.json',
   legislation: 'legislation.json',
@@ -24,7 +42,11 @@ const FLAT_FILES = {
   page_analytics: 'page-analytics.json',
   subject_summary: 'subject-summary.json',
   page_relevance: 'page-relevance.json',
-  pages_reading_age: 'pages-reading-age.json'
+  pages_reading_age: 'pages-reading-age.json',
+  guidance_proposition_match_summaries:
+    'guidance-proposition-match-summaries.json',
+  guidance_proposition_law_comparisons:
+    'guidance-proposition-law-comparisons.json'
 }
 
 const ENVELOPE_STAMP_KEYS = [
@@ -34,7 +56,9 @@ const ENVELOPE_STAMP_KEYS = [
   'guidance_propositions',
   'proposition_matches',
   'page_relevance',
-  'subject_summary'
+  'subject_summary',
+  'guidance_proposition_match_summaries',
+  'guidance_proposition_law_comparisons'
 ]
 
 function emptyPresentation() {
@@ -45,6 +69,9 @@ function mergePresentation(target, source) {
   for (const key of PRESENTATION_KEYS) {
     const rows = source[key]
     if (rows == null) {
+      if (OPTIONAL_PRESENTATION_KEY_SET.has(key)) {
+        continue
+      }
       throw new Error(`Presentation bundle missing key: ${key}`)
     }
     target[key].push(...rows)
@@ -76,6 +103,21 @@ function stampEnvelopeCategory(presentation, category) {
   for (const key of ENVELOPE_STAMP_KEYS) {
     presentation[key] = stampCategory(presentation[key] ?? [], category)
   }
+}
+
+function stampRowsViaGuidanceProposition(
+  rows,
+  contentIdByGuidanceId,
+  categoryByContentId
+) {
+  return rows.map((row) => {
+    if (row.category != null) return row
+    if (row.guidance_proposition_id == null) return row
+    const contentId = contentIdByGuidanceId.get(row.guidance_proposition_id)
+    const category =
+      contentId != null ? categoryByContentId.get(contentId) : undefined
+    return category != null ? { ...row, category } : row
+  })
 }
 
 function deriveFlatDirCategories(presentation) {
@@ -130,6 +172,20 @@ function deriveFlatDirCategories(presentation) {
       return row
     }
   )
+
+  presentation.guidance_proposition_match_summaries =
+    stampRowsViaGuidanceProposition(
+      presentation.guidance_proposition_match_summaries,
+      contentIdByGuidanceId,
+      categoryByContentId
+    )
+
+  presentation.guidance_proposition_law_comparisons =
+    stampRowsViaGuidanceProposition(
+      presentation.guidance_proposition_law_comparisons,
+      contentIdByGuidanceId,
+      categoryByContentId
+    )
 }
 
 function loadRunEnvelope(outputPath) {
@@ -163,7 +219,15 @@ export function loadPresentationFromFlatDir(dataDir) {
   const merged = emptyPresentation()
 
   for (const key of PRESENTATION_KEYS) {
-    merged[key] = loadJson(join(dataDir, FLAT_FILES[key]))
+    const filePath = join(dataDir, FLAT_FILES[key])
+    if (!existsSync(filePath)) {
+      if (OPTIONAL_PRESENTATION_KEY_SET.has(key)) {
+        merged[key] = []
+        continue
+      }
+      throw new Error(`Missing presentation file: ${filePath}`)
+    }
+    merged[key] = loadJson(filePath)
   }
 
   deriveFlatDirCategories(merged)

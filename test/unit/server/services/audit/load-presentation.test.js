@@ -20,7 +20,9 @@ const emptyPresentationKeys = {
   page_analytics: [],
   subject_summary: [],
   page_relevance: [],
-  pages_reading_age: []
+  pages_reading_age: [],
+  guidance_proposition_match_summaries: [],
+  guidance_proposition_law_comparisons: []
 }
 
 describe('load-presentation', () => {
@@ -254,6 +256,102 @@ describe('load-presentation', () => {
       expect(merged.proposition_matches[0].category).toBe('slurry')
     } finally {
       rmSync(dataDir, { recursive: true, force: true })
+    }
+  })
+
+  test('loads optional guidance-comparison files when present and defaults when absent', () => {
+    const dataDir = mkdtempSync(join(tmpdir(), 'esther-flat-gc-'))
+
+    try {
+      const write = (name, data) =>
+        writeFileSync(join(dataDir, name), JSON.stringify(data))
+
+      write('categories.json', [{ id: 'slurry', title: 'Slurry' }])
+      write('legislation.json', [
+        { source_record_id: 'lex-1', category: 'slurry', name: 'Law A' }
+      ])
+      write('legislation-propositions.json', [
+        { id: 'prop:1', source_record_id: 'lex-1' }
+      ])
+      write('pages.json', [
+        {
+          content_id: 'cid-a',
+          category: 'slurry',
+          url: 'https://www.gov.uk/a',
+          title: 'Page A'
+        }
+      ])
+      write('guidance-propositions.json', [
+        { id: 'susan-1', content_id: 'cid-a', proposition_text: 'Do X.' }
+      ])
+      write('proposition-matches.json', [])
+      write('page-analytics.json', [])
+      write('subject-summary.json', [])
+      write('page-relevance.json', [])
+      write('pages-reading-age.json', [])
+
+      const withoutOptional = loadPresentationFromFlatDir(dataDir)
+      expect(
+        withoutOptional.merged.guidance_proposition_match_summaries
+      ).toEqual([])
+      expect(
+        withoutOptional.merged.guidance_proposition_law_comparisons
+      ).toEqual([])
+
+      write('guidance-proposition-match-summaries.json', [
+        {
+          guidance_proposition_id: 'susan-1',
+          assessment_status: 'COMPLETE',
+          coverage_result: 'NO_CANDIDATES_FOUND',
+          candidate_count: 0,
+          reportable_comparison_count: 0,
+          ungrounded_candidate_count: 0
+        }
+      ])
+      write('guidance-proposition-law-comparisons.json', [])
+
+      const withOptional = loadPresentationFromFlatDir(dataDir)
+      expect(
+        withOptional.merged.guidance_proposition_match_summaries
+      ).toHaveLength(1)
+      expect(
+        withOptional.merged.guidance_proposition_match_summaries[0].category
+      ).toBe('slurry')
+    } finally {
+      rmSync(dataDir, { recursive: true, force: true })
+    }
+  })
+
+  test('allows Esther envelopes to omit optional guidance-comparison keys', () => {
+    const runsDir = mkdtempSync(join(tmpdir(), 'esther-runs-optional-'))
+
+    try {
+      const runDir = join(runsDir, 'legacy-run')
+      mkdirSync(runDir, { recursive: true })
+      writeFileSync(
+        join(runDir, 'output.json'),
+        JSON.stringify({
+          category: 'slurry',
+          presentation: {
+            categories: [{ id: 'slurry' }],
+            legislation: [],
+            legislation_propositions: [],
+            pages: [],
+            guidance_propositions: [],
+            proposition_matches: [],
+            page_analytics: [],
+            subject_summary: [],
+            page_relevance: [],
+            pages_reading_age: []
+          }
+        })
+      )
+
+      const { merged } = loadPresentationFromRuns(runsDir)
+      expect(merged.guidance_proposition_match_summaries).toEqual([])
+      expect(merged.guidance_proposition_law_comparisons).toEqual([])
+    } finally {
+      rmSync(runsDir, { recursive: true, force: true })
     }
   })
 })

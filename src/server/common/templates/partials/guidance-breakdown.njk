@@ -1,6 +1,7 @@
 <p class="govuk-body">
   We broke each page down into individual statements (called <em>propositions</em>) and checked each one against the law.
   The numbers below show the total number of statements we found in each group.
+  A statement with several law hits still counts once in each matching group.
 </p>
 
 <ul class="audit-status-grid">
@@ -8,7 +9,7 @@
     <li>
       <div class="audit-status-tile{% if not box.href %} audit-status-tile--empty{% endif %}">
         <strong class="govuk-tag govuk-tag--{{ box.tone }} audit-status-tile__tag">{{ box.title }}</strong>
-        <p class="audit-status-tile__count">{{ box.count }}</p>
+        <p class="audit-status-tile__count" aria-label="{{ box.accessibleLabel }}">{{ box.count }}</p>
         <p class="audit-status-tile__spread">{{ box.spread }}</p>
         <p class="audit-status-tile__meaning">{{ box.meaning }}</p>
         {% if box.href %}

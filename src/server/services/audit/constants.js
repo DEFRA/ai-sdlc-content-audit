@@ -1,3 +1,5 @@
+import { FALLBACK_STATUS_META } from './guidance-comparison-constants.js'
+
 export const STATUS_META = {
   CONFLICTS: {
     severity: 1,
@@ -54,7 +56,40 @@ export const STATUS_META = {
   }
 }
 
-export const STATUS_ORDER = [
+/**
+ * Shared label/tone metadata for pair relationships + proposition-level
+ * fallback / processing states (overview, pages-list, page-detail).
+ */
+export const STATEMENT_STATUS_META = Object.freeze({
+  ...STATUS_META,
+  ...FALLBACK_STATUS_META
+})
+
+/**
+ * Overview tile order for new guidance-comparison runs.
+ * Units: guidance-proposition counts (except GUIDANCE_MISSING = law-side).
+ * UNGROUNDED is omitted (rejected candidates → ONLY_UNGROUNDED_CANDIDATES).
+ * NO_MATCH is omitted on the new path (→ NO_CANDIDATES_FOUND).
+ */
+export const OVERVIEW_STATUS_ORDER = [
+  'CONFLICTS',
+  'GUIDANCE_MISSING',
+  'GUIDANCE_INCOMPLETE',
+  'GUIDANCE_BROADER',
+  'NO_CANDIDATES_FOUND',
+  'ONLY_UNGROUNDED_CANDIDATES',
+  'NOT_CHECKED',
+  'PARTIAL',
+  'FAILED',
+  'INCONSISTENT_DATA',
+  'GROUNDED'
+]
+
+/**
+ * Legacy overview tile order (runs without match-summaries).
+ * Includes NO_MATCH / UNGROUNDED from the old top-match projection.
+ */
+export const LEGACY_OVERVIEW_STATUS_ORDER = [
   'CONFLICTS',
   'GUIDANCE_MISSING',
   'GUIDANCE_INCOMPLETE',
@@ -64,8 +99,24 @@ export const STATUS_ORDER = [
   'GROUNDED'
 ]
 
-// Statuses the pages-list filter bar can select (and that detail/feedback
-// may preserve in the URL). Excludes GUIDANCE_MISSING — those have no pages.
-export const PAGE_FILTER_STATUSES = STATUS_ORDER.filter(
-  (status) => status !== 'GUIDANCE_MISSING'
-)
+/** @deprecated Prefer OVERVIEW_STATUS_ORDER or LEGACY_OVERVIEW_STATUS_ORDER. */
+export const STATUS_ORDER = LEGACY_OVERVIEW_STATUS_ORDER
+
+/**
+ * Pages-list / page-detail URL status filters.
+ * Excludes synthetic law-side GUIDANCE_MISSING (no pages) and UNGROUNDED.
+ * Includes new fallback keys and legacy NO_MATCH for old runs.
+ */
+export const PAGE_FILTER_STATUSES = [
+  'CONFLICTS',
+  'GUIDANCE_INCOMPLETE',
+  'GUIDANCE_BROADER',
+  'NO_CANDIDATES_FOUND',
+  'ONLY_UNGROUNDED_CANDIDATES',
+  'NOT_CHECKED',
+  'PARTIAL',
+  'FAILED',
+  'INCONSISTENT_DATA',
+  'NO_MATCH',
+  'GROUNDED'
+]

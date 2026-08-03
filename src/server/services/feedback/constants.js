@@ -10,11 +10,22 @@ export const FEEDBACK_CHOICE_ORDER = [
   'AI_MISTAKE'
 ]
 
-// Statuses surfaced on the audit page detail. The array order is also the
-// display order for both the Pending and Completed sections.
+// Statuses surfaced on the audit page detail filter bar and statement list.
+// Order is the preferred sort key when statements are ordered by status.
+// Includes reportable pair relationships + proposition-level fallback kinds.
+// UNGROUNDED is intentionally absent (rejected candidates are not pair rows).
+// Synthetic law-side GUIDANCE_MISSING is not a guidance-side statement status.
 export const DISPLAYED_STATUSES = [
   'CONFLICTS',
   'GUIDANCE_INCOMPLETE',
+  'GUIDANCE_BROADER',
+  'GUIDANCE_MISSING',
+  'NO_CANDIDATES_FOUND',
+  'ONLY_UNGROUNDED_CANDIDATES',
   'NO_MATCH',
+  'NOT_CHECKED',
+  'PARTIAL',
+  'FAILED',
+  'INCONSISTENT_DATA',
   'GROUNDED'
 ]
