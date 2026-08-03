@@ -120,3 +120,59 @@ export const PAGE_FILTER_STATUSES = [
   'NO_MATCH',
   'GROUNDED'
 ]
+
+/**
+ * Law to Guidance page-summary filters (new contract only).
+ * Excludes law-side GUIDANCE_MISSING, UNGROUNDED, and legacy NO_MATCH.
+ */
+export const LAW_TO_GUIDANCE_FILTER_STATUSES = [
+  'CONFLICTS',
+  'GUIDANCE_BROADER',
+  'GUIDANCE_INCOMPLETE',
+  'GROUNDED',
+  'ONLY_UNGROUNDED_CANDIDATES',
+  'NO_CANDIDATES_FOUND',
+  'NOT_CHECKED',
+  'PARTIAL',
+  'FAILED',
+  'INCONSISTENT_DATA'
+]
+
+/**
+ * Display columns for the Law to Guidance page-summary table.
+ * Pair-relationship columns count distinct GPs with ≥1 matching pair.
+ * Fallback columns use canonical proposition-level summary outcomes.
+ */
+export const LAW_TO_GUIDANCE_COLUMNS = Object.freeze([
+  {
+    key: 'totalGuidancePropositions',
+    label: 'Total guidance propositions',
+    kind: 'total'
+  },
+  { key: 'GROUNDED', label: 'Matches the law', kind: 'relationship' },
+  {
+    key: 'GUIDANCE_BROADER',
+    label: 'Goes beyond the law',
+    kind: 'relationship'
+  },
+  {
+    key: 'GUIDANCE_INCOMPLETE',
+    label: 'Covers only part of the law',
+    kind: 'relationship'
+  },
+  { key: 'CONFLICTS', label: 'Goes against the law', kind: 'relationship' },
+  {
+    key: 'ONLY_UNGROUNDED_CANDIDATES',
+    label: 'No comparable law found',
+    kind: 'fallback'
+  },
+  {
+    key: 'NO_CANDIDATES_FOUND',
+    label: 'No law candidate found',
+    kind: 'fallback'
+  },
+  { key: 'NOT_CHECKED', label: 'Not yet compared', kind: 'fallback' },
+  { key: 'PARTIAL', label: 'Comparison incomplete', kind: 'fallback' },
+  { key: 'FAILED', label: 'Comparison failed', kind: 'fallback' },
+  { key: 'INCONSISTENT_DATA', label: 'Data issue', kind: 'fallback' }
+])

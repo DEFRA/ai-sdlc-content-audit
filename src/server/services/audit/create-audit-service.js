@@ -323,6 +323,58 @@ export function createAuditService(presentation, loadedRunIds = []) {
     return rows
   }
 
+  /**
+   * Page-level Law to Guidance comparison summaries (new contract only).
+   * Pair columns = distinct GPs with ≥1 reportable pair of that relationship.
+   * Fallback columns = mutually exclusive proposition-level outcomes.
+   * Law-side GUIDANCE_MISSING is excluded.
+   *
+   * @param {string} categoryId
+   * @param {string|null} [statusFilter]
+   * @returns {Array<object>|null} null when category lacks the new contract
+   */
+  function getLawToGuidancePages(categoryId, statusFilter = null) {
+    if (!hasGuidanceComparisonContract(categoryId)) return null
+
+    const model = overviewModelForCategory(categoryId)
+    const pageIds = pageIdsForCategory(categoryId)
+    let rows = pageIds
+      .map((pageId) => {
+        const page = pageById.get(pageId)
+        if (!page) return null
+        const summary = model.pageComparisonSummaries.get(pageId) ?? {
+          pageId,
+          totalGuidancePropositions: 0,
+          hasReportableComparisons: 0,
+          GROUNDED: 0,
+          GUIDANCE_BROADER: 0,
+          GUIDANCE_INCOMPLETE: 0,
+          CONFLICTS: 0,
+          ONLY_UNGROUNDED_CANDIDATES: 0,
+          NO_CANDIDATES_FOUND: 0,
+          NOT_CHECKED: 0,
+          PARTIAL: 0,
+          FAILED: 0,
+          INCONSISTENT_DATA: 0
+        }
+        return {
+          id: page.content_id,
+          title: page.title,
+          url: page.url,
+          ...summary
+        }
+      })
+      .filter(Boolean)
+
+    if (statusFilter) {
+      rows = rows.filter((row) =>
+        statusForPage(categoryId, row.id).has(statusFilter)
+      )
+    }
+
+    return rows
+  }
+
   function buildStatement(categoryId, guidanceProp, match) {
     const meta = STATUS_META[match.relationship]
     let lawName = null
@@ -486,6 +538,7 @@ export function createAuditService(presentation, loadedRunIds = []) {
     getAllCategories,
     getSubjectOverview,
     getRelevantPages,
+    getLawToGuidancePages,
     getPageDetail,
     getDashboardPages,
     getLawsForSubject,

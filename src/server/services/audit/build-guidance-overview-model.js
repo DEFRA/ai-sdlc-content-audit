@@ -6,6 +6,7 @@
  * - pagesByStatus[status] — distinct pages with ≥1 matching proposition
  * - totalGuidancePropositions — distinct guidance proposition IDs
  * - lawsMissingGuidance — distinct law instruments (synthetic law-side gaps)
+ * - pageComparisonSummaries — per-page distinct-GP counts (Law to Guidance)
  * - comparison-pair counts are NOT produced here (page-detail owns those)
  *
  * Multi-relationship: a proposition with GROUNDED + CONFLICTS belongs once to
@@ -29,6 +30,55 @@ const RELATIONSHIP_FILTER_STATUSES = new Set([
   'CONFLICTS'
 ])
 
+/** Proposition-level fallback keys counted on the Law to Guidance page table. */
+const PAGE_FALLBACK_COUNT_KEYS = Object.freeze([
+  FALLBACK_KIND.ONLY_UNGROUNDED_CANDIDATES,
+  FALLBACK_KIND.NO_CANDIDATES_FOUND,
+  FALLBACK_KIND.NOT_CHECKED,
+  FALLBACK_KIND.PARTIAL,
+  FALLBACK_KIND.FAILED,
+  FALLBACK_KIND.INCONSISTENT_DATA
+])
+
+/**
+ * @typedef {object} PageComparisonSummary
+ * @property {string} pageId
+ * @property {number} totalGuidancePropositions
+ * @property {number} hasReportableComparisons — internal; reconciles with fallbacks
+ * @property {number} GROUNDED
+ * @property {number} GUIDANCE_BROADER
+ * @property {number} GUIDANCE_INCOMPLETE
+ * @property {number} CONFLICTS
+ * @property {number} ONLY_UNGROUNDED_CANDIDATES
+ * @property {number} NO_CANDIDATES_FOUND
+ * @property {number} NOT_CHECKED
+ * @property {number} PARTIAL
+ * @property {number} FAILED
+ * @property {number} INCONSISTENT_DATA
+ */
+
+/**
+ * @param {string} pageId
+ * @returns {PageComparisonSummary}
+ */
+function emptyPageComparisonSummary(pageId) {
+  return {
+    pageId,
+    totalGuidancePropositions: 0,
+    hasReportableComparisons: 0,
+    GROUNDED: 0,
+    GUIDANCE_BROADER: 0,
+    GUIDANCE_INCOMPLETE: 0,
+    CONFLICTS: 0,
+    ONLY_UNGROUNDED_CANDIDATES: 0,
+    NO_CANDIDATES_FOUND: 0,
+    NOT_CHECKED: 0,
+    PARTIAL: 0,
+    FAILED: 0,
+    INCONSISTENT_DATA: 0
+  }
+}
+
 /**
  * @param {object} params
  * @param {string} params.categoryId
@@ -43,7 +93,8 @@ const RELATIONSHIP_FILTER_STATUSES = new Set([
  *   totalGuidancePropositions: number,
  *   lawsMissingGuidance: number,
  *   pageStatusSets: Map<string, Set<string>>,
- *   conflictsCountByPage: Map<string, number>
+ *   conflictsCountByPage: Map<string, number>,
+ *   pageComparisonSummaries: Map<string, PageComparisonSummary>
  * }}
  */
 export function buildGuidanceOverviewModel({
@@ -62,8 +113,11 @@ export function buildGuidanceOverviewModel({
   )
   /** @type {Map<string, Set<string>>} */
   const pageStatusSets = new Map()
+  /** @type {Map<string, PageComparisonSummary>} */
+  const pageComparisonSummaries = new Map()
   for (const pageId of pageIds) {
     pageStatusSets.set(pageId, new Set())
+    pageComparisonSummaries.set(pageId, emptyPageComparisonSummary(pageId))
   }
 
   /** @type {Map<string, number>} distinct GPs with CONFLICTS per page */
@@ -87,6 +141,18 @@ export function buildGuidanceOverviewModel({
     if (seenGpIds.has(gp.id)) continue
     seenGpIds.add(gp.id)
 
+    const pageSummary = pageComparisonSummaries.get(gp.content_id)
+    if (pageSummary) {
+      pageSummary.totalGuidancePropositions += 1
+      if (vm.fallbackKind === FALLBACK_KIND.NONE) {
+        pageSummary.hasReportableComparisons += 1
+      } else if (PAGE_FALLBACK_COUNT_KEYS.includes(vm.fallbackKind)) {
+        pageSummary[vm.fallbackKind] += 1
+      } else {
+        pageSummary.INCONSISTENT_DATA += 1
+      }
+    }
+
     const memberships = membershipStatuses(vm)
     for (const status of memberships) {
       if (statusCounts[status] != null) {
@@ -94,6 +160,9 @@ export function buildGuidanceOverviewModel({
       }
       const pageSet = pageStatusSets.get(gp.content_id)
       if (pageSet) pageSet.add(status)
+      if (pageSummary && RELATIONSHIP_FILTER_STATUSES.has(status)) {
+        pageSummary[status] += 1
+      }
     }
 
     if (
@@ -142,7 +211,8 @@ export function buildGuidanceOverviewModel({
     totalGuidancePropositions: seenGpIds.size,
     lawsMissingGuidance: missingLawIds.size,
     pageStatusSets,
-    conflictsCountByPage
+    conflictsCountByPage,
+    pageComparisonSummaries
   }
 }
 
