@@ -1,0 +1,80 @@
+{% extends "layouts/page.njk" %}
+{% from "features/audit-page-detail/_statement-card.njk" import statementCard %}
+
+{% block beforeContent %}
+  {{ govukBreadcrumbs({
+    items: [
+      { text: "Choose a category", href: "/" },
+      { text: category.title, href: "/audit/subjects/" + category.id },
+      { text: "Pages", href: backHref },
+      { text: page.title, href: aggregatedHref },
+      { text: "By match" }
+    ]
+  }) }}
+{% endblock %}
+
+{#
+  Pair rows: pair-level legal comparison outcomes (relationship + law text).
+  Fallback rows: proposition-level assessment / processing state (fallbackKind).
+  NOT_CHECKED / PARTIAL / FAILED / INCONSISTENT_DATA are not legal conclusions.
+  ONLY_UNGROUNDED_CANDIDATES ≠ NO_CANDIDATES_FOUND.
+  Synthetic law-side GUIDANCE_MISSING is not rendered here.
+#}
+
+{% block content %}
+  <div class="govuk-width-container">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-three-quarters">
+        <h1 class="govuk-heading-xl">{{ page.title }}</h1>
+        <p class="govuk-body">
+          <a class="govuk-link" href="{{ page.url }}" rel="noopener noreferrer" target="_blank">View the live page (opens in new tab)</a>
+        </p>
+        <p class="govuk-body">
+          <a class="govuk-link" href="{{ aggregatedHref }}">View by guidance proposition</a>
+        </p>
+
+        <nav class="audit-filter-bar" aria-label="Filter statements by group">
+          <p class="govuk-body govuk-!-margin-bottom-2">Filter by group</p>
+          <ul class="audit-filter-bar__list">
+            {% for option in filterOptions %}
+              <li class="audit-filter-bar__item">
+                <a class="audit-filter-bar__link" href="{{ option.href }}">
+                  <strong class="govuk-tag {% if option.tone %}govuk-tag--{{ option.tone }}{% endif %} audit-filter-bar__tag">
+                    {% if option.count != null %}{{ option.label }} ({{ option.count }}){% else %}{{ option.label }}{% endif %}
+                  </strong>
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+          {% if activeOption %}
+            <p class="govuk-body govuk-!-margin-top-3 govuk-!-margin-bottom-0">
+              <a class="govuk-link" href="{{ clearFilterHref }}">Clear filter</a>
+            </p>
+          {% endif %}
+        </nav>
+
+        {% if activeOption %}
+          <p class="audit-filter-bar__selected govuk-body govuk-!-margin-top-6 govuk-!-margin-bottom-2">
+            Selected:
+            <strong class="govuk-tag {% if activeOption.tone %}govuk-tag--{{ activeOption.tone }}{% endif %} audit-filter-bar__tag" aria-current="page">
+              {{ activeOption.label }} ({{ activeOption.count }})
+            </strong>
+          </p>
+        {% endif %}
+
+        <section id="statements" aria-labelledby="statements-heading" class="govuk-!-margin-top-6">
+          <h2 id="statements-heading" class="govuk-heading-l">Matches</h2>
+          {% if hasStatements %}
+            {% for s in statements %}
+              {{ statementCard(s) }}
+            {% endfor %}
+          {% elif activeOption %}
+            <p class="govuk-body">No matches in this group on this page.</p>
+          {% else %}
+            <p class="govuk-body">No matches on this page.</p>
+          {% endif %}
+        </section>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -41,9 +41,7 @@ describe('proposition feedback endpoints', () => {
       })
 
       expect(statusCode).toBe(303)
-      expect(headers.location).toBe(
-        `${pageDetailUrl()}#statement-${MATCH_ID}`
-      )
+      expect(headers.location).toBe(`${pageDetailUrl()}#statement-${MATCH_ID}`)
 
       expect(fetchMock).toHaveBeenCalledOnce()
       const [url, init] = fetchMock.mock.calls[0]
@@ -120,7 +118,6 @@ describe('proposition feedback endpoints', () => {
       })
 
       expect(statusCode).toBe(200)
-      expect(payload).toContain('Statements')
       expect(payload).toContain(`id="statement-${MATCH_ID}"`)
       expect(payload).not.toContain('Pending feedback')
       expect(payload).not.toContain('Completed feedback')

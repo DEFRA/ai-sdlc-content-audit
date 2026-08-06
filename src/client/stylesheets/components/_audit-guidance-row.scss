@@ -1,0 +1,21 @@
+.audit-status-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.audit-statement-card--dimmed {
+  opacity: 0.55;
+
+  .govuk-summary-card__title-wrapper {
+    background-color: #f3f2f1;
+  }
+}
+
+.audit-guidance-row {
+  .govuk-details {
+    margin-bottom: 0;
+  }
+}

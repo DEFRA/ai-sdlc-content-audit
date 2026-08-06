@@ -6,6 +6,7 @@ import { auditSubjectOverview } from './features/audit-subject-overview/index.js
 import { auditPagesList } from './features/audit-pages-list/index.js'
 import { auditLawsList } from './features/audit-laws-list/index.js'
 import { auditPageDetail } from './features/audit-page-detail/index.js'
+import { auditPageDetailPairs } from './features/audit-page-detail-pairs/index.js'
 import { auditPropositionsOverview } from './features/audit-propositions-overview/index.js'
 import { propositionFeedback } from './features/proposition-feedback/index.js'
 import { adminFeedback } from './features/admin-feedback/index.js'
@@ -26,6 +27,7 @@ export const router = {
       await server.register([auditPagesList])
       await server.register([auditLawsList])
       await server.register([auditPageDetail])
+      await server.register([auditPageDetailPairs])
       await server.register([auditPropositionsOverview])
 
       // Proposition feedback widget + admin review screen

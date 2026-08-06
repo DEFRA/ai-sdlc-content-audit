@@ -1,4 +1,5 @@
 {% extends "layouts/page.njk" %}
+{% from "features/audit-page-detail/_statement-card.njk" import statementCard %}
 
 {% block beforeContent %}
   {{ govukBreadcrumbs({
@@ -11,60 +12,6 @@
   }) }}
 {% endblock %}
 
-{#
-  Pair rows: pair-level legal comparison outcomes (relationship + law text).
-  Fallback rows: proposition-level assessment / processing state (fallbackKind).
-  NOT_CHECKED / PARTIAL / FAILED / INCONSISTENT_DATA are not legal conclusions.
-  ONLY_UNGROUNDED_CANDIDATES ≠ NO_CANDIDATES_FOUND.
-  Synthetic law-side GUIDANCE_MISSING is not rendered here.
-#}
-{% macro statementCard(s) %}
-  {% set borderColour = "#b1b4b6" %}
-  {% if s.statusTone == "red" %}{% set borderColour = "#d4351c" %}{% endif %}
-  {% if s.statusTone == "yellow" %}{% set borderColour = "#ffdd00" %}{% endif %}
-  {% if s.statusTone == "green" %}{% set borderColour = "#00703c" %}{% endif %}
-  {% if s.statusTone == "blue" %}{% set borderColour = "#1d70b8" %}{% endif %}
-  {% if s.statusTone == "orange" %}{% set borderColour = "#f47738" %}{% endif %}
-
-  {% set headingText = s.accessibleName if s.accessibleName else s.statusLabel %}
-
-  <div id="statement-{{ s.id }}" class="govuk-summary-card govuk-!-margin-bottom-4" style="border-top:6px solid {{ borderColour }};">
-    <div class="govuk-summary-card__title-wrapper">
-      <h3 class="govuk-summary-card__title govuk-heading-s govuk-!-margin-bottom-0">
-        <span class="govuk-visually-hidden">{{ headingText }}</span>
-        <span aria-hidden="true">{{ s.statusLabel }}</span>
-      </h3>
-      <strong class="govuk-tag govuk-tag--{{ s.statusTone }}">{{ s.statusLabel }}</strong>
-    </div>
-    <div class="govuk-summary-card__content">
-      <dl class="govuk-summary-list">
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key" style="width:25%;">This guidance says</dt>
-          <dd class="govuk-summary-list__value">{{ s.guidanceText }}</dd>
-        </div>
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">Our finding</dt>
-          <dd class="govuk-summary-list__value">{{ s.explanation if s.explanation else s.statusMeaning }}</dd>
-        </div>
-        {% if s.lawName %}
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">Related law</dt>
-            <dd class="govuk-summary-list__value">
-              <a class="govuk-link" href="{{ s.lawUrl }}" rel="noopener noreferrer" target="_blank">{{ s.lawName }}</a>
-            </dd>
-          </div>
-        {% endif %}
-        {% if s.lawText %}
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">What the law says</dt>
-            <dd class="govuk-summary-list__value">{{ s.lawText }}</dd>
-          </div>
-        {% endif %}
-      </dl>
-    </div>
-  </div>
-{% endmacro %}
-
 {% block content %}
   <div class="govuk-width-container">
     <div class="govuk-grid-row">
@@ -73,8 +20,11 @@
         <p class="govuk-body">
           <a class="govuk-link" href="{{ page.url }}" rel="noopener noreferrer" target="_blank">View the live page (opens in new tab)</a>
         </p>
+        <p class="govuk-body">
+          <a class="govuk-link" href="{{ pairsHref }}">View by match</a>
+        </p>
 
-        <nav class="audit-filter-bar" aria-label="Filter statements by group">
+        <nav class="audit-filter-bar" aria-label="Filter guidance by group">
           <p class="govuk-body govuk-!-margin-bottom-2">Filter by group</p>
           <ul class="audit-filter-bar__list">
             {% for option in filterOptions %}
@@ -104,15 +54,56 @@
         {% endif %}
 
         <section id="statements" aria-labelledby="statements-heading" class="govuk-!-margin-top-6">
-          <h2 id="statements-heading" class="govuk-heading-l">Statements</h2>
-          {% if hasStatements %}
-            {% for s in statements %}
-              {{ statementCard(s) }}
+          <h2 id="statements-heading" class="govuk-heading-l">Guidance statements</h2>
+          {% if hasGuidanceRows %}
+            {% for row in guidanceRows %}
+              <div id="guidance-{{ row.id }}" class="govuk-summary-card govuk-!-margin-bottom-6 audit-guidance-row" style="border-top:6px solid {{ row.primaryBorderColour }};">
+                <div class="govuk-summary-card__title-wrapper">
+                  <h3 class="govuk-summary-card__title govuk-heading-s govuk-!-margin-bottom-0">
+                    <span class="govuk-visually-hidden">{{ row.primaryLabel }}: {{ row.guidanceText }}</span>
+                    <span aria-hidden="true">{{ row.primaryLabel }}</span>
+                  </h3>
+                  <div class="audit-status-chips" aria-label="Status summary">
+                    <strong class="govuk-tag govuk-tag--{{ row.primaryTone }}">
+                      {{ row.primaryLabel }}{% if row.primaryChipCount > 1 %} ({{ row.primaryChipCount }}){% endif %}
+                    </strong>
+                    {% for chip in row.chips %}
+                      {% if chip.status != row.primaryStatus %}
+                        <strong class="govuk-tag govuk-tag--{{ chip.tone }}">
+                          {{ chip.label }}{% if chip.count > 1 %} ({{ chip.count }}){% endif %}
+                        </strong>
+                      {% endif %}
+                    {% endfor %}
+                  </div>
+                </div>
+                <div class="govuk-summary-card__content">
+                  <p class="govuk-body govuk-!-margin-bottom-4">{{ row.guidanceText }}</p>
+
+                  {% if row.rowKind == 'fallback' %}
+                    <p class="govuk-body">{{ row.primaryMeaning }}</p>
+                  {% elif row.pairCount == 1 %}
+                    {{ statementCard(row.comparisons[0]) }}
+                  {% else %}
+                    <details class="govuk-details" data-module="govuk-details">
+                      <summary class="govuk-details__summary">
+                        <span class="govuk-details__summary-text">
+                          Show {{ row.pairCount }} law matches
+                        </span>
+                      </summary>
+                      <div class="govuk-details__text">
+                        {% for s in row.comparisons %}
+                          {{ statementCard(s) }}
+                        {% endfor %}
+                      </div>
+                    </details>
+                  {% endif %}
+                </div>
+              </div>
             {% endfor %}
           {% elif activeOption %}
-            <p class="govuk-body">No statements in this group on this page.</p>
+            <p class="govuk-body">No guidance in this group on this page.</p>
           {% else %}
-            <p class="govuk-body">No statements on this page.</p>
+            <p class="govuk-body">No guidance statements on this page.</p>
           {% endif %}
         </section>
       </div>

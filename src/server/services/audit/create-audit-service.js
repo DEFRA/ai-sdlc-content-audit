@@ -1,6 +1,10 @@
 import { buildGuidanceOverviewModel } from './build-guidance-overview-model.js'
 import { buildStatementsFromGuidanceComparisons } from './build-page-detail-statements.js'
 import {
+  buildPageDetailGuidanceRows,
+  wrapLegacyStatementsAsGuidanceRows
+} from './build-page-detail-guidance-rows.js'
+import {
   LEGACY_OVERVIEW_STATUS_ORDER,
   OVERVIEW_STATUS_ORDER,
   STATUS_META,
@@ -482,6 +486,33 @@ export function createAuditService(presentation, loadedRunIds = []) {
     }
   }
 
+  /**
+   * Aggregated guidance-proposition rows for the default page-detail view.
+   * @param {string} categoryId
+   * @param {string} pageId
+   * @param {string|null} [statusFilter]
+   */
+  function getPageGuidanceRows(categoryId, pageId, statusFilter = null) {
+    const page = pageById.get(pageId)
+    if (!page) return null
+    if (!pageIdsForCategory(categoryId).includes(pageId)) return null
+
+    if (hasGuidanceComparisonContract(categoryId)) {
+      return buildPageDetailGuidanceRows({
+        categoryId,
+        pageId,
+        guidanceComparisons: guidanceComparisonBundle.guidanceComparisons,
+        legislationForCategory,
+        statusFilter
+      })
+    }
+
+    return wrapLegacyStatementsAsGuidanceRows(
+      buildLegacyStatements(categoryId, pageId),
+      statusFilter
+    )
+  }
+
   function getDashboardPages(categoryId = null) {
     const relevanceRows = categoryId
       ? pageRelevance.filter((row) => row.category === categoryId)
@@ -540,6 +571,7 @@ export function createAuditService(presentation, loadedRunIds = []) {
     getRelevantPages,
     getLawToGuidancePages,
     getPageDetail,
+    getPageGuidanceRows,
     getDashboardPages,
     getLawsForSubject,
     getMatchStatus,

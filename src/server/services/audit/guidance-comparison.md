@@ -53,16 +53,36 @@ than fabricating a legally meaningful fallback. The page still loads.
 
 ## Page detail
 
-`getPageDetail()` / overview choose the new contract **per category**: when
-that category has at least one match-summary row, guidance-side statement rows
-come from `getGuidanceComparisons()`. Sibling categories without summaries keep
-the legacy top-match projection so merged run envelopes do not mark older runs
-`INCONSISTENT_DATA`.
+`getPageDetail()` / `getPageGuidanceRows()` / overview choose the new contract
+**per category**: when that category has at least one match-summary row,
+guidance-side rows come from `getGuidanceComparisons()`. Sibling categories
+without summaries keep the legacy top-match projection so merged run envelopes
+do not mark older runs `INCONSISTENT_DATA`.
 
-- Pair rows repeat guidance text per hit (smallest change to the existing card).
+### Default: aggregated by guidance proposition
+
+`GET /audit/subjects/{categoryId}/pages/{pageId}` lists **one row per guidance
+proposition** (`getPageGuidanceRows()` / `buildPageDetailGuidanceRows()`):
+
+- Primary status = worst pair severity, or the proposition-level `fallbackKind`.
+- Multi-pair rows show relationship chips and nest pair cards in `govuk-details`.
+- Single-pair rows show the pair card open (no details).
+- Fallback rows show the processing / coverage meaning only.
+- Filter bar counts are **distinct guidance propositions** (same unit as
+  overview). A multi-relationship GP belongs once to each matching filter.
+- Under a status filter, all pairs remain visible; non-matching pairs are
+  dimmed (`Not in this filter`).
+
+### Forensic: flat by match
+
+`GET /audit/subjects/{categoryId}/pages/{pageId}/pairs` keeps the previous flat
+list (one card per reportable pair or fallback).
+
+- Pair rows repeat guidance text per hit.
 - Fallback rows use `FALLBACK_STATUS_META` labels; feedback is disabled on them.
 - Feedback on pair rows uses the comparison `id` (`m-…`); `getMatchStatus`
-  resolves both legacy top-match and full-comparison IDs.
+  resolves both legacy top-match and full-comparison IDs. Deep links to
+  `#statement-{id}` on the aggregated page open the ancestor details element.
 - Law-side synthetic `GUIDANCE_MISSING` remains on `missingLaws` only.
 
 `GUIDANCE_BROADER` keeps the existing STATUS_META label **Goes beyond the law**
@@ -77,7 +97,8 @@ without summaries keep `proposition_matches` / `NO_MATCH` / Map-of-one.
 
 | Surface                                | Unit                                                             |
 | -------------------------------------- | ---------------------------------------------------------------- |
-| Page-detail visible hits               | Comparison-pair rows (+ one fallback row per incomplete GP)      |
+| Page-detail (default)                  | Distinct guidance propositions (nested pair cards)               |
+| Page-detail `/pairs`                   | Comparison-pair rows (+ one fallback row per incomplete GP)      |
 | Overview relationship / fallback tiles | Distinct guidance propositions                                   |
 | Overview “across N pages”              | Distinct pages                                                   |
 | Total guidance propositions            | Distinct guidance proposition IDs (do not sum overlapping tiles) |

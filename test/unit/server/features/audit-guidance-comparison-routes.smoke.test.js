@@ -16,6 +16,7 @@ const getSubjectOverview = vi.fn()
 const getRelevantPages = vi.fn()
 const getLawToGuidancePages = vi.fn()
 const getPageDetail = vi.fn()
+const getPageGuidanceRows = vi.fn()
 const getDashboardPages = vi.fn()
 const findByMatchIds = vi.fn()
 
@@ -26,6 +27,7 @@ vi.mock('../../../../src/server/services/audit/service.js', () => ({
     getRelevantPages: (...args) => getRelevantPages(...args),
     getLawToGuidancePages: (...args) => getLawToGuidancePages(...args),
     getPageDetail: (...args) => getPageDetail(...args),
+    getPageGuidanceRows: (...args) => getPageGuidanceRows(...args),
     getDashboardPages: (...args) => getDashboardPages(...args)
   }
 }))
@@ -42,8 +44,6 @@ const { auditPagesListViewModel } =
   await import('../../../../src/server/features/audit-pages-list/view-model.js')
 const { auditPageDetailViewModel } =
   await import('../../../../src/server/features/audit-page-detail/view-model.js')
-const { auditSubjectOverviewViewModel } =
-  await import('../../../../src/server/features/audit-subject-overview/view-model.js')
 
 function presentationWithSummary(overrides = {}) {
   const presentation = baseGuidanceComparisonPresentation(overrides)
@@ -72,6 +72,9 @@ function wireService(presentation, runIds = ['fixture-new']) {
   getPageDetail.mockImplementation((categoryId, pageId) =>
     service.getPageDetail(categoryId, pageId)
   )
+  getPageGuidanceRows.mockImplementation((categoryId, pageId, statusFilter) =>
+    service.getPageGuidanceRows(categoryId, pageId, statusFilter)
+  )
   getDashboardPages.mockImplementation((id) => service.getDashboardPages(id))
   return service
 }
@@ -82,6 +85,7 @@ describe('guidance comparison route smoke', () => {
     getSubjectOverview.mockReset()
     getRelevantPages.mockReset()
     getPageDetail.mockReset()
+    getPageGuidanceRows.mockReset()
     getDashboardPages.mockReset()
     findByMatchIds.mockReset()
     findByMatchIds.mockResolvedValue(new Map())
@@ -165,17 +169,22 @@ describe('guidance comparison route smoke', () => {
     wireService(presentationWithSummary())
     const detail = await auditPageDetailViewModel.get('slurry', 'cid-a', {})
 
-    const multiRows = detail.pending.filter((s) =>
-      ['m-gm-l1', 'm-gm-l2', 'm-gm-l3'].includes(s.id)
+    const multi = detail.guidanceRows.find(
+      (r) => r.guidanceText === 'Do multi.'
     )
-    expect(multiRows).toHaveLength(3)
-    expect(multiRows.map((s) => s.status)).toEqual([
-      'GROUNDED',
+    // Nested pairs are ordered by severity (worst first), not emission order.
+    expect(multi.comparisons.map((s) => s.id)).toEqual([
+      'm-gm-l2',
+      'm-gm-l3',
+      'm-gm-l1'
+    ])
+    expect(multi.comparisons.map((s) => s.status)).toEqual([
       'CONFLICTS',
-      'GUIDANCE_INCOMPLETE'
+      'GUIDANCE_INCOMPLETE',
+      'GROUNDED'
     ])
     // Legacy top match id must not duplicate the first full-comparison row.
-    expect(detail.pending.filter((s) => s.id === 'm-top-multi')).toHaveLength(0)
+    expect(multi.comparisons.some((s) => s.id === 'm-top-multi')).toBe(false)
   })
 
   test('legacy run continues to render without new-contract tiles', () => {
@@ -366,10 +375,14 @@ describe('guidance comparison route smoke', () => {
       'cid-legacy',
       {}
     )
-    expect(legacyDetail.pending.map((s) => s.id)).toContain('m-legacy')
-    expect(legacyDetail.pending.map((s) => s.status)).toContain('GROUNDED')
-    expect(legacyDetail.pending.map((s) => s.status)).not.toContain(
-      'INCONSISTENT_DATA'
+    const comparisonIds = legacyDetail.guidanceRows.flatMap((row) =>
+      row.comparisons.map((s) => s.id)
     )
+    const comparisonStatuses = legacyDetail.guidanceRows.flatMap((row) =>
+      row.comparisons.map((s) => s.status)
+    )
+    expect(comparisonIds).toContain('m-legacy')
+    expect(comparisonStatuses).toContain('GROUNDED')
+    expect(comparisonStatuses).not.toContain('INCONSISTENT_DATA')
   })
 })

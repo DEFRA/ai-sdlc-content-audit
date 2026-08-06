@@ -9,6 +9,7 @@ import {
   SkipLink
 } from 'govuk-frontend'
 
+import { initOpenStatementDetails } from './open-statement-details.js'
 import { initSortableTables } from './sortable-table.js'
 import { initStickyTableScrolls } from './sticky-table-scroll.js'
 
@@ -21,3 +22,4 @@ createAll(Radios)
 createAll(SkipLink)
 initSortableTables()
 initStickyTableScrolls()
+initOpenStatementDetails()
