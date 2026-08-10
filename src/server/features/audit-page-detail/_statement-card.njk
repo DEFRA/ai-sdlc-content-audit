@@ -1,57 +1,71 @@
 {#
-  Pair statement card shared by aggregated and pairs page-detail views.
-  Pass dimmed=true to grey out pairs that do not match the active filter.
+  Pair / fallback statement card shared by aggregated and pairs page-detail views.
+  Presentation fields come from presentComparisonCard() where available.
+  Pass showGuidanceText: false on the aggregated view to avoid repeating the
+  parent guidance proposition. Defaults to true for focused pair-review pages.
 #}
 {% macro statementCard(s) %}
-  {% set borderColour = "#b1b4b6" %}
-  {% if not s.dimmed %}
-    {% if s.statusTone == "red" %}{% set borderColour = "#d4351c" %}{% endif %}
-    {% if s.statusTone == "yellow" %}{% set borderColour = "#ffdd00" %}{% endif %}
-    {% if s.statusTone == "green" %}{% set borderColour = "#00703c" %}{% endif %}
-    {% if s.statusTone == "blue" %}{% set borderColour = "#1d70b8" %}{% endif %}
-    {% if s.statusTone == "orange" %}{% set borderColour = "#f47738" %}{% endif %}
-  {% endif %}
-
-  {% set headingText = s.accessibleName if s.accessibleName else s.statusLabel %}
-  {% set cardClass = "govuk-summary-card govuk-!-margin-bottom-4" %}
+  {% set showGuidance = true if s.showGuidanceText is not defined else s.showGuidanceText %}
+  {% set statusLabel = s.pairStatusLabel if s.pairStatusLabel else s.statusLabel %}
+  {% set tagClass = s.pairGovukTagClass if s.pairGovukTagClass else ("govuk-tag--" + s.statusTone) %}
+  {% set accessibleOutcome = s.pairAccessibleLabel if s.pairAccessibleLabel else ("Law comparison outcome: " + statusLabel) %}
+  {% set heading = s.heading if s.heading else statusLabel %}
+  {% set headingId = s.headingId if s.headingId else ("comparison-heading-" + s.id) %}
+  {% set headingLevel = s.headingLevel if s.headingLevel else 3 %}
+  {% set assessmentHeading = s.assessmentHeading if s.assessmentHeading else "Assessment" %}
+  {% set assessmentText = s.assessmentText if s.assessmentText else (s.explanation if s.explanation else "No assessment explanation is available for this comparison.") %}
+  {% set lawContentLabel = s.lawContentLabel if s.lawContentLabel else none %}
+  {% set lawContent = s.lawContent if s.lawContent is defined else s.lawText %}
+  {% set sourceTitle = s.sourceTitle if s.sourceTitle is defined else s.lawName %}
+  {% set sourceLocator = s.sourceLocator if s.sourceLocator else none %}
+  {% set sourceUrl = s.sourceUrl if s.sourceUrl is defined else s.lawUrl %}
+  {% set sourceLinkText = s.sourceLinkText if s.sourceLinkText else none %}
+  {% set cardClass = "govuk-summary-card govuk-!-margin-bottom-4 audit-statement-card" %}
   {% if s.dimmed %}{% set cardClass = cardClass + " audit-statement-card--dimmed" %}{% endif %}
 
-  <div id="statement-{{ s.id }}" class="{{ cardClass }}" style="border-top:6px solid {{ borderColour }};">
+  <div id="statement-{{ s.id }}" class="{{ cardClass }}">
     <div class="govuk-summary-card__title-wrapper">
-      <h3 class="govuk-summary-card__title govuk-heading-s govuk-!-margin-bottom-0">
-        <span class="govuk-visually-hidden">{{ headingText }}</span>
-        <span aria-hidden="true">{{ s.statusLabel }}</span>
+      <h{{ headingLevel }} id="{{ headingId }}" class="govuk-summary-card__title govuk-heading-s govuk-!-margin-bottom-0">
+        {{ heading }}
         {% if s.dimmed %}
           <span class="govuk-!-font-size-16 govuk-!-font-weight-regular govuk-!-margin-left-2">Not in this filter</span>
         {% endif %}
-      </h3>
-      <strong class="govuk-tag govuk-tag--{{ s.statusTone }}">{{ s.statusLabel }}</strong>
+      </h{{ headingLevel }}>
+      <strong class="govuk-tag {{ tagClass }}">
+        <span class="govuk-visually-hidden">{{ accessibleOutcome }}</span>
+        <span aria-hidden="true">{{ statusLabel }}</span>
+      </strong>
     </div>
     <div class="govuk-summary-card__content">
-      <dl class="govuk-summary-list">
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key" style="width:25%;">This guidance says</dt>
-          <dd class="govuk-summary-list__value">{{ s.guidanceText }}</dd>
+      {% if showGuidance and s.guidanceText %}
+        <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1">This guidance says</p>
+        <p class="govuk-body govuk-!-margin-bottom-4">{{ s.guidanceText }}</p>
+      {% endif %}
+
+      {% if sourceTitle or sourceLocator %}
+        <div class="audit-statement-card__source govuk-!-margin-bottom-4">
+          {% if sourceTitle %}
+            <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1">{{ sourceTitle }}</p>
+          {% endif %}
+          {% if sourceLocator %}
+            <p class="govuk-body-s govuk-!-margin-bottom-0 audit-statement-card__locator">{{ sourceLocator }}</p>
+          {% endif %}
         </div>
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">Our finding</dt>
-          <dd class="govuk-summary-list__value">{{ s.explanation if s.explanation else s.statusMeaning }}</dd>
-        </div>
-        {% if s.lawName %}
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">Related law</dt>
-            <dd class="govuk-summary-list__value">
-              <a class="govuk-link" href="{{ s.lawUrl }}" rel="noopener noreferrer" target="_blank">{{ s.lawName }}</a>
-            </dd>
-          </div>
-        {% endif %}
-        {% if s.lawText %}
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">What the law says</dt>
-            <dd class="govuk-summary-list__value">{{ s.lawText }}</dd>
-          </div>
-        {% endif %}
-      </dl>
+      {% endif %}
+
+      {% if lawContent %}
+        <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1">{{ lawContentLabel if lawContentLabel else "Legal proposition" }}</p>
+        <p class="govuk-body govuk-!-margin-bottom-4">{{ lawContent }}</p>
+      {% endif %}
+
+      <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1">{{ assessmentHeading }}</p>
+      <p class="govuk-body{% if sourceUrl and sourceLinkText %} govuk-!-margin-bottom-4{% else %} govuk-!-margin-bottom-0{% endif %}">{{ assessmentText }}</p>
+
+      {% if sourceUrl and sourceLinkText %}
+        <p class="govuk-body govuk-!-margin-bottom-0">
+          <a class="govuk-link" href="{{ sourceUrl }}" rel="noopener noreferrer" target="_blank">{{ sourceLinkText }}</a>
+        </p>
+      {% endif %}
     </div>
   </div>
 {% endmacro %}

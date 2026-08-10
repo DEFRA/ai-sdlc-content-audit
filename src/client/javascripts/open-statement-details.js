@@ -7,20 +7,50 @@ export function initOpenStatementDetails() {
   window.addEventListener('hashchange', openDetailsForHash)
 }
 
-function openDetailsForHash() {
-  const hash = window.location.hash
-  if (!hash || !hash.startsWith('#statement-')) return
+/**
+ * @param {string} [hash]
+ * @param {ParentNode} [root]
+ * @returns {Element|null} the matched statement target, if any
+ */
+export function openDetailsForHash(
+  hash = typeof window !== 'undefined' ? window.location.hash : '',
+  root = typeof document !== 'undefined' ? document : null
+) {
+  if (!hash || !hash.startsWith('#statement-') || root == null) return null
 
-  const target = document.querySelector(hash)
-  if (!target) return
+  let target
+  try {
+    target = root.querySelector(hash)
+  } catch {
+    // Invalid selector / ID — fail safely.
+    return null
+  }
+  if (!target) return null
 
-  let node = target.parentElement
+  for (const details of findAncestorDetails(target)) {
+    details.open = true
+  }
+
+  if (typeof target.scrollIntoView === 'function') {
+    target.scrollIntoView({ block: 'nearest' })
+  }
+
+  return target
+}
+
+/**
+ * @param {Element} element
+ * @returns {HTMLDetailsElement[]}
+ */
+export function findAncestorDetails(element) {
+  /** @type {HTMLDetailsElement[]} */
+  const ancestors = []
+  let node = element.parentElement
   while (node) {
     if (node.tagName === 'DETAILS') {
-      node.open = true
+      ancestors.push(/** @type {HTMLDetailsElement} */ (node))
     }
     node = node.parentElement
   }
-
-  target.scrollIntoView({ block: 'nearest' })
+  return ancestors
 }

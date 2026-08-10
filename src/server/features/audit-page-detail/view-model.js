@@ -1,24 +1,21 @@
-import {
-  PAGE_FILTER_STATUSES,
-  STATEMENT_STATUS_META
-} from '../../services/audit/constants.js'
-import {
-  countGuidanceRowsByStatus,
-  guidanceRowMatchesStatus
-} from '../../services/audit/build-page-detail-guidance-rows.js'
+import { PAGE_FILTER_STATUSES } from '../../services/audit/constants.js'
 import { auditService } from '../../services/audit/service.js'
-import { DISPLAYED_STATUSES } from '../../services/feedback/constants.js'
+import { presentGuidanceRow } from './present-guidance-row.js'
+import {
+  buildGuidanceCountText,
+  guidanceRowMatchesAggregateOutcomes,
+  parseAggregateOutcomeFilters,
+  presentPageSummaryAndFilters
+} from './present-page-summary.js'
+
+export { presentGuidanceAggregateOutcome } from './present-guidance-row.js'
+export {
+  countGuidanceRowsByAggregateOutcome,
+  parseAggregateOutcomeFilters,
+  guidanceRowMatchesAggregateOutcomes
+} from './present-page-summary.js'
 
 const PAGE_FILTER_STATUS_SET = new Set(PAGE_FILTER_STATUSES)
-
-function toneBorderColour(tone) {
-  if (tone === 'red') return '#d4351c'
-  if (tone === 'yellow') return '#ffdd00'
-  if (tone === 'green') return '#00703c'
-  if (tone === 'blue') return '#1d70b8'
-  if (tone === 'orange') return '#f47738'
-  return '#b1b4b6'
-}
 
 export const auditPageDetailViewModel = {
   async get(categoryId, pageId, query = {}) {
@@ -28,66 +25,41 @@ export const auditPageDetailViewModel = {
     const detail = auditService.getPageDetail(categoryId, pageId)
     if (!detail) return null
 
+    // Preserved only for pages-list / pairs navigation context. Aggregate
+    // filtering uses `outcome=` and does not apply pair-relationship filters.
     const listStatusFilter =
       typeof query.status === 'string' &&
       PAGE_FILTER_STATUS_SET.has(query.status)
         ? query.status
         : null
-    const statusFilter = DISPLAYED_STATUSES.includes(listStatusFilter)
-      ? listStatusFilter
-      : null
 
-    const allRows = auditService.getPageGuidanceRows(
-      categoryId,
-      pageId,
-      statusFilter
-    )
+    const allRows = auditService.getPageGuidanceRows(categoryId, pageId, null)
     if (!allRows) return null
 
-    const statusCounts = countGuidanceRowsByStatus(allRows, DISPLAYED_STATUSES)
-
+    const selectedOutcomes = parseAggregateOutcomeFilters(query)
     const pageBaseHref = `/audit/subjects/${categoryId}/pages/${pageId}`
-    const pairsHref = statusFilter
-      ? `${pageBaseHref}/pairs?status=${statusFilter}`
-      : `${pageBaseHref}/pairs`
 
-    const filterOptions = [
-      {
-        key: null,
-        label: 'All guidance',
-        tone: null,
-        count: null,
-        href: pageBaseHref,
-        active: !statusFilter
-      },
-      ...DISPLAYED_STATUSES.filter((status) => statusCounts[status] > 0).map(
-        (status) => ({
-          key: status,
-          label: STATEMENT_STATUS_META[status].label,
-          tone: STATEMENT_STATUS_META[status].tone,
-          count: statusCounts[status],
-          href: `${pageBaseHref}?status=${status}`,
-          active: statusFilter === status
-        })
-      )
-    ]
-
-    const activeOption = statusFilter
-      ? filterOptions.find((o) => o.key === statusFilter)
-      : null
-
-    const guidanceRows = (
-      statusFilter
-        ? allRows.filter((row) => guidanceRowMatchesStatus(row, statusFilter))
-        : allRows
-    ).map((row) => {
-      const primaryChip = row.chips.find((c) => c.status === row.primaryStatus)
-      return {
-        ...row,
-        primaryBorderColour: toneBorderColour(row.primaryTone),
-        primaryChipCount: primaryChip?.count ?? 1
-      }
+    const { summary, filters } = presentPageSummaryAndFilters({
+      allRows,
+      selectedOutcomes,
+      pageBaseHref
     })
+
+    const visibleRows = allRows.filter((row) =>
+      guidanceRowMatchesAggregateOutcomes(row, selectedOutcomes)
+    )
+
+    const guidanceRows = visibleRows.map((row, index) =>
+      presentGuidanceRow(row, { statementNumber: index + 1 })
+    )
+
+    const totalGuidanceCount = summary.totalGuidanceCount
+    const visibleGuidanceCount = guidanceRows.length
+    const hasActiveFilters = filters.active
+
+    const pairsHref = listStatusFilter
+      ? `${pageBaseHref}/pairs?status=${listStatusFilter}`
+      : `${pageBaseHref}/pairs`
 
     const pagesListHref = listStatusFilter
       ? `/audit/subjects/${categoryId}/pages?status=${listStatusFilter}`
@@ -101,11 +73,19 @@ export const auditPageDetailViewModel = {
       pageId,
       guidanceRows,
       hasGuidanceRows: guidanceRows.length > 0,
+      hasGuidanceData: totalGuidanceCount > 0,
+      hasFilteredResults: guidanceRows.length > 0,
       backHref: pagesListHref,
-      clearFilterHref: pageBaseHref,
       pairsHref,
-      filterOptions,
-      activeOption,
+      summary,
+      filters,
+      totalGuidanceCount,
+      visibleGuidanceCount,
+      visibleCountText: buildGuidanceCountText(
+        totalGuidanceCount,
+        visibleGuidanceCount,
+        hasActiveFilters
+      ),
       statusFilter: listStatusFilter
     }
   }

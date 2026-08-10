@@ -111,3 +111,59 @@ relationship filter. Fallback states are mutually exclusive and only when
 `UNGROUNDED` is not an overview category; completed all-rejected appears as
 **No comparable law found**. Re-run Audit Assembler to populate the new files
 on historic runs.
+
+## Aggregated page — release QA notes
+
+There is no screenshot / Storybook / Playwright visual suite in this repo.
+Use the live page (or template unit fixtures) for visual capture.
+
+### Representative local URLs
+
+Replace `{pageId}` with a page that has mixed aggregates (e.g. ssafo-nitrates
+“Using nitrogen fertilisers…”):
+
+| State                       | URL                                                                                                          |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| Unfiltered mixed aggregates | `/audit/subjects/{categoryId}/pages/{pageId}`                                                                |
+| Conflict only               | `?outcome=conflict_found`                                                                                    |
+| Supporting only             | `?outcome=supporting_law_found`                                                                              |
+| No confirmed support        | `?outcome=no_confirmed_support`                                                                              |
+| Not assessed                | `?outcome=not_assessed`                                                                                      |
+| Multiple filters            | `?outcome=conflict_found&outcome=not_assessed`                                                               |
+| Filtered empty              | use filters that yield zero matches on a smaller fixture page, or assert via `page-summary.template.test.js` |
+| Deep link into a comparison | `#statement-{matchId}` on a filtered or unfiltered URL                                                       |
+
+Template-level fixtures covering mixed conflict/supporting/incomplete,
+missing assessment rationale, missing source URL, and not-assessed processing
+copy live under `test/unit/server/features/audit-page-detail/`.
+
+### Manual screen-reader script (not yet executed)
+
+Run with VoiceOver (Safari/Chrome) or NVDA (Firefox) on the aggregated page:
+
+1. Navigate by headings — confirm `h1` page title, then summary / filters /
+   statements `h2`, guidance `h3`, comparison `h4` (no noisy repeated
+   “Legal proposition” / “Assessment” headings).
+2. Land on the filter region — form or section named from
+   “Filter guidance statements”.
+3. Hear each outcome checkbox with count context
+   (e.g. “Conflict found, 3 guidance statements”).
+4. On a guidance article, hear aggregate outcome as
+   “Overall guidance outcome: …”, then composition and explanation.
+5. Operate a “Review N law comparison(s)” disclosure — expanded state from
+   the native control; label text must not change to “Hide…”.
+6. Inside a comparison, hear “Law comparison outcome: …”.
+7. Tab to a source link — descriptive text including “(opens in new tab)”.
+8. Apply filters that empty the list — hear the filtered-empty copy and a
+   working “Clear filters” action.
+
+Record the platform/browser combination when this script is completed.
+Do not treat markup unit tests as a substitute for this check.
+
+### Remaining manual pre-release checks
+
+- **400% browser zoom** at a desktop viewport (not only a 320px width probe)
+- The screen-reader script above
+- No-CSS sanity: one “Review N…” summary string per disclosure; no “Hide…”
+- JavaScript disabled: GET filters, checkbox restore, clear filters, native
+  details, source links

@@ -1,0 +1,54 @@
+{#
+  Aggregated guidance-proposition overview row.
+  Expects presentation fields from presentGuidanceRow() — no enum mapping here.
+#}
+{% from "features/audit-page-detail/_statement-card.njk" import statementCard %}
+
+{% macro guidanceRow(row) %}
+  <article
+    id="guidance-{{ row.id }}"
+    class="audit-guidance-row govuk-!-margin-bottom-6"
+    aria-labelledby="{{ row.headingId }}"
+  >
+    <h3 id="{{ row.headingId }}" class="govuk-heading-m govuk-!-margin-bottom-2">
+      {{ row.heading }}
+    </h3>
+
+    <p class="govuk-body govuk-!-margin-bottom-3">{{ row.guidanceText }}</p>
+
+    <div class="audit-guidance-row__status govuk-!-margin-bottom-2">
+      <strong class="govuk-tag {{ row.aggregateGovukTagClass }}">
+        <span class="govuk-visually-hidden">{{ row.aggregateAccessibleLabel }}</span>
+        <span aria-hidden="true">{{ row.aggregateLabel }}</span>
+      </strong>
+    </div>
+
+    {% if row.compositionText %}
+      <p class="govuk-body-s govuk-!-margin-bottom-2 audit-guidance-row__composition">
+        {{ row.compositionText }}
+      </p>
+    {% endif %}
+
+    {% if row.aggregateExplanation %}
+      <p class="govuk-body govuk-!-margin-bottom-2 audit-guidance-row__explanation">
+        {{ row.aggregateExplanation }}
+      </p>
+    {% endif %}
+
+    {% if row.comparisonCount > 0 %}
+      <details class="govuk-details govuk-!-margin-bottom-0" data-module="govuk-details">
+        <summary class="govuk-details__summary">
+          <span class="govuk-details__summary-text">{{ row.comparisonControlText }}</span>
+        </summary>
+        <div
+          id="{{ row.comparisonContainerId }}"
+          class="govuk-details__text audit-guidance-row__comparisons"
+        >
+          {% for s in row.comparisons %}
+            {{ statementCard(s) }}
+          {% endfor %}
+        </div>
+      </details>
+    {% endif %}
+  </article>
+{% endmacro %}

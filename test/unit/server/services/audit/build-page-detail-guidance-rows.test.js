@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'vitest'
 
+import { AGGREGATE_OUTCOME } from '../../../../../src/server/services/audit/aggregate-guidance-outcome.js'
 import {
   buildPageDetailGuidanceRows,
   countGuidanceRowsByStatus,
@@ -34,15 +35,24 @@ function rowsFromFixture(overrides = {}, statusFilter = null) {
 }
 
 describe('buildPageDetailGuidanceRows', () => {
-  test('rolls multi-hit GP to worst primary with severity-ordered chips', () => {
+  test('rolls multi-hit GP to conflict_found with severity-ordered pair chips', () => {
     const row = rowsFromFixture().find((r) => r.guidanceText === 'Do multi.')
     expect(row).toMatchObject({
       id: 'g-multi',
-      primaryStatus: 'CONFLICTS',
-      primaryLabel: 'Goes against the law',
+      aggregateOutcome: AGGREGATE_OUTCOME.CONFLICT_FOUND,
+      primaryStatus: AGGREGATE_OUTCOME.CONFLICT_FOUND,
+      primaryLabel: 'Conflict found',
+      primaryTone: 'red',
       pairCount: 3,
-      rowKind: 'comparison'
+      rowKind: 'comparison',
+      unassessedCount: 0
     })
+    // Pair-level statuses stay on comparisons/chips — separate from aggregate.
+    expect(row.comparisons.map((c) => c.status).sort()).toEqual([
+      'CONFLICTS',
+      'GROUNDED',
+      'GUIDANCE_INCOMPLETE'
+    ])
     expect(row.chips.map((c) => c.status)).toEqual([
       'CONFLICTS',
       'GUIDANCE_INCOMPLETE',
@@ -56,16 +66,72 @@ describe('buildPageDetailGuidanceRows', () => {
     ])
   })
 
+  test('green pair overrides yellow when rolling up aggregate', () => {
+    const rows = rowsFromFixture({
+      guidance_propositions: [
+        {
+          id: 'g-gy',
+          content_id: 'cid-a',
+          category: 'slurry',
+          proposition_text: 'Green and yellow.'
+        }
+      ],
+      guidance_proposition_match_summaries: [
+        {
+          guidance_proposition_id: 'g-gy',
+          assessment_status: 'COMPLETE',
+          coverage_result: 'HAS_REPORTABLE_COMPARISON',
+          candidate_count: 2,
+          reportable_comparison_count: 2,
+          ungrounded_candidate_count: 0
+        }
+      ],
+      guidance_proposition_law_comparisons: [
+        {
+          id: 'm-gy-g',
+          category: 'slurry',
+          guidance_proposition_id: 'g-gy',
+          law_proposition_id: 'prop:law1',
+          relationship: 'GROUNDED',
+          confidence: 'high',
+          bert_score_f1: null,
+          cosine_score: 0.9,
+          explanation: 'green'
+        },
+        {
+          id: 'm-gy-y',
+          category: 'slurry',
+          guidance_proposition_id: 'g-gy',
+          law_proposition_id: 'prop:law2',
+          relationship: 'GUIDANCE_INCOMPLETE',
+          confidence: 'high',
+          bert_score_f1: null,
+          cosine_score: 0.8,
+          explanation: 'yellow'
+        }
+      ]
+    })
+    expect(rows).toHaveLength(1)
+    expect(rows[0]).toMatchObject({
+      aggregateOutcome: AGGREGATE_OUTCOME.SUPPORTING_LAW_FOUND,
+      primaryStatus: AGGREGATE_OUTCOME.SUPPORTING_LAW_FOUND,
+      primaryLabel: 'Supporting law found',
+      primaryTone: 'green'
+    })
+  })
+
   test('omits chips for single-pair GPs', () => {
     const row = rowsFromFixture().find((r) => r.guidanceText === 'Do grounded.')
     expect(row.pairCount).toBe(1)
     expect(row.chips).toEqual([])
-    expect(row.primaryStatus).toBe('GROUNDED')
+    expect(row.aggregateOutcome).toBe(AGGREGATE_OUTCOME.SUPPORTING_LAW_FOUND)
+    expect(row.primaryStatus).toBe(AGGREGATE_OUTCOME.SUPPORTING_LAW_FOUND)
   })
 
-  test('renders fallback rows with no chips or nested comparisons', () => {
+  test('renders fallback rows with processing primary and not_assessed aggregate', () => {
     const row = rowsFromFixture().find((r) => r.guidanceText === 'Do empty.')
     expect(row).toMatchObject({
+      aggregateOutcome: AGGREGATE_OUTCOME.NOT_ASSESSED,
       primaryStatus: FALLBACK_KIND.NO_CANDIDATES_FOUND,
       pairCount: 0,
       rowKind: 'fallback',
@@ -96,14 +162,15 @@ describe('buildPageDetailGuidanceRows', () => {
       )
       .map((r) => r.guidanceText)
 
-    // CONFLICTS (multi) before GUIDANCE_BROADER (mixed) before
-    // NO_CANDIDATES_FOUND (empty, severity 4) before GROUNDED (grounded, 7).
-    // empty severity 4, grounded 7 — empty before grounded.
-    expect(texts[0]).toBe('Do multi.')
-    expect(texts).toContain('Do mixed.')
-    expect(texts.indexOf('Do empty.')).toBeLessThan(
-      texts.indexOf('Do grounded.')
-    )
+    // CONFLICT_FOUND (multi, 1) before NO_CONFIRMED_SUPPORT (mixed/broader, 3)
+    // before NO_CANDIDATES_FOUND (empty fallback, 4) before SUPPORTING_LAW_FOUND
+    // (grounded, 7).
+    expect(texts).toEqual([
+      'Do multi.',
+      'Do mixed.',
+      'Do empty.',
+      'Do grounded.'
+    ])
   })
 
   test('scopes rows to the selected page and category', () => {
@@ -185,7 +252,8 @@ describe('wrapLegacyStatementsAsGuidanceRows', () => {
     expect(rows).toHaveLength(1)
     expect(rows[0]).toMatchObject({
       id: 'legacy-m-top',
-      primaryStatus: 'GROUNDED',
+      aggregateOutcome: AGGREGATE_OUTCOME.SUPPORTING_LAW_FOUND,
+      primaryStatus: AGGREGATE_OUTCOME.SUPPORTING_LAW_FOUND,
       pairCount: 1,
       chips: [],
       comparisons: [expect.objectContaining({ id: 'm-top', dimmed: false })]
@@ -198,7 +266,8 @@ describe('getPageGuidanceRows', () => {
     const service = createAuditService(baseGuidanceComparisonPresentation())
     const rows = service.getPageGuidanceRows('slurry', 'cid-a')
     const multi = rows.find((r) => r.guidanceText === 'Do multi.')
-    expect(multi.primaryStatus).toBe('CONFLICTS')
+    expect(multi.aggregateOutcome).toBe(AGGREGATE_OUTCOME.CONFLICT_FOUND)
+    expect(multi.primaryStatus).toBe(AGGREGATE_OUTCOME.CONFLICT_FOUND)
     expect(multi.pairCount).toBe(3)
   })
 
@@ -213,7 +282,8 @@ describe('getPageGuidanceRows', () => {
     const multi = rows.find((r) => r.guidanceText === 'Do multi.')
     expect(multi).toMatchObject({
       pairCount: 1,
-      primaryStatus: 'GROUNDED',
+      aggregateOutcome: AGGREGATE_OUTCOME.SUPPORTING_LAW_FOUND,
+      primaryStatus: AGGREGATE_OUTCOME.SUPPORTING_LAW_FOUND,
       comparisons: [expect.objectContaining({ id: 'm-top-multi' })]
     })
   })

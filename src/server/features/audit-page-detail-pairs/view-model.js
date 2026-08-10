@@ -4,6 +4,7 @@ import {
 } from '../../services/audit/constants.js'
 import { auditService } from '../../services/audit/service.js'
 import { DISPLAYED_STATUSES } from '../../services/feedback/constants.js'
+import { presentComparisonCard } from '../audit-page-detail/present-comparison-card.js'
 
 const STATUS_RANK = new Map(
   DISPLAYED_STATUSES.map((status, index) => [status, index])
@@ -76,11 +77,20 @@ export const auditPageDetailPairsViewModel = {
         : allDisplayed
     )
       .slice()
-      .map((s) => ({
-        ...s,
-        dimmed: false
-      }))
-    statements.sort(sortByEmissionOrder)
+      .sort(sortByEmissionOrder)
+      .map((s, index) =>
+        presentComparisonCard(
+          {
+            ...s,
+            dimmed: false
+          },
+          {
+            displayNumber: index + 1,
+            showGuidanceText: true,
+            headingLevel: 3
+          }
+        )
+      )
 
     const pagesListHref = listStatusFilter
       ? `/audit/subjects/${categoryId}/pages?status=${listStatusFilter}`

@@ -1,17 +1,23 @@
 /**
  * Page-detail guidance-proposition rows (aggregated view).
  *
- * One row per guidance proposition. Primary status = worst severity among
- * reportable pairs, or the proposition-level fallbackKind. Multi-pair rows
- * carry relationship chips; nested pair cards reuse the flat statement shape.
+ * One row per guidance proposition. Aggregate outcome is derived from
+ * reportable pair relationships via `aggregateGuidanceOutcome` (not worst
+ * severity). Fallback rows keep proposition-level processing status on
+ * primary* and set aggregateOutcome to NOT_ASSESSED. Multi-pair rows carry
+ * relationship chips; nested pair cards reuse the flat statement shape.
  */
 
+import {
+  AGGREGATE_OUTCOME,
+  aggregateGuidanceOutcome,
+  presentAggregateOutcome
+} from './aggregate-guidance-outcome.js'
 import { FALLBACK_KIND } from './guidance-comparison-constants.js'
 import {
   buildComparisonStatement,
   buildFallbackStatement,
-  scopeGuidanceComparisonsToPage,
-  STATEMENT_META
+  scopeGuidanceComparisonsToPage
 } from './page-detail-statement-builders.js'
 
 /**
@@ -68,20 +74,22 @@ export function wrapLegacyStatementsAsGuidanceRows(
   statusFilter = null
 ) {
   const rows = statements.map((statement, index) => {
-    const meta = STATEMENT_META[statement.status]
     const comparison = {
       ...statement,
       dimmed: Boolean(statusFilter && statement.status !== statusFilter)
     }
+    const aggregate = presentAggregateFromOutcomes([statement.status])
     return {
       id: `legacy-${statement.id}`,
       guidancePropositionId: null,
       guidanceText: statement.guidanceText,
-      primaryStatus: statement.status,
-      primaryLabel: statement.statusLabel ?? meta?.label ?? statement.status,
-      primaryMeaning: statement.statusMeaning ?? meta?.meaning ?? '',
-      primaryTone: statement.statusTone ?? meta?.tone ?? 'grey',
-      primarySeverity: statement.severity ?? meta?.severity ?? 99,
+      aggregateOutcome: aggregate.status,
+      unassessedCount: aggregate.unassessedCount,
+      primaryStatus: aggregate.status,
+      primaryLabel: aggregate.label,
+      primaryMeaning: '',
+      primaryTone: aggregate.tone,
+      primarySeverity: aggregate.severity,
       chips: [],
       pairCount: 1,
       rowKind: 'comparison',
@@ -155,10 +163,14 @@ function buildGuidanceRow({
       fallbackKind: vm.fallbackKind,
       order
     })
+    // No assessed pair outcomes — aggregate is not_assessed; primary* keeps
+    // the proposition-level processing / coverage status for filters & copy.
     return {
       id: gp.id,
       guidancePropositionId: gp.id,
       guidanceText: gp.proposition_text,
+      aggregateOutcome: AGGREGATE_OUTCOME.NOT_ASSESSED,
+      unassessedCount: 0,
       primaryStatus: fallback.status,
       primaryLabel: fallback.statusLabel,
       primaryMeaning: fallback.statusMeaning,
@@ -187,18 +199,22 @@ function buildGuidanceRow({
   })
 
   const sortedComparisons = sortComparisonsForDisplay(comparisons)
-  const primary = pickPrimaryComparison(sortedComparisons)
+  const aggregate = presentAggregateFromOutcomes(
+    sortedComparisons.map((c) => c.status)
+  )
   const chips = buildStatusChips(sortedComparisons)
 
   return {
     id: gp.id,
     guidancePropositionId: gp.id,
     guidanceText: gp.proposition_text,
-    primaryStatus: primary.status,
-    primaryLabel: primary.statusLabel,
-    primaryMeaning: primary.statusMeaning,
-    primaryTone: primary.statusTone,
-    primarySeverity: primary.severity,
+    aggregateOutcome: aggregate.status,
+    unassessedCount: aggregate.unassessedCount,
+    primaryStatus: aggregate.status,
+    primaryLabel: aggregate.label,
+    primaryMeaning: '',
+    primaryTone: aggregate.tone,
+    primarySeverity: aggregate.severity,
     chips,
     pairCount: sortedComparisons.length,
     rowKind: 'comparison',
@@ -207,12 +223,12 @@ function buildGuidanceRow({
   }
 }
 
-function pickPrimaryComparison(comparisons) {
-  let best = comparisons[0]
-  for (const comparison of comparisons) {
-    if (comparison.severity < best.severity) best = comparison
-  }
-  return best
+/**
+ * @param {readonly (string|null|undefined)[]} outcomes
+ */
+function presentAggregateFromOutcomes(outcomes) {
+  const { outcome, unassessedCount } = aggregateGuidanceOutcome(outcomes)
+  return { ...presentAggregateOutcome(outcome), unassessedCount }
 }
 
 /**

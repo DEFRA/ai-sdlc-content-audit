@@ -1,5 +1,7 @@
 {% extends "layouts/page.njk" %}
-{% from "features/audit-page-detail/_statement-card.njk" import statementCard %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "features/audit-page-detail/_guidance-row.njk" import guidanceRow %}
 
 {% block beforeContent %}
   {{ govukBreadcrumbs({
@@ -24,86 +26,80 @@
           <a class="govuk-link" href="{{ pairsHref }}">View by match</a>
         </p>
 
-        <nav class="audit-filter-bar" aria-label="Filter guidance by group">
-          <p class="govuk-body govuk-!-margin-bottom-2">Filter by group</p>
-          <ul class="audit-filter-bar__list">
-            {% for option in filterOptions %}
-              <li class="audit-filter-bar__item">
-                <a class="audit-filter-bar__link" href="{{ option.href }}">
-                  <strong class="govuk-tag {% if option.tone %}govuk-tag--{{ option.tone }}{% endif %} audit-filter-bar__tag">
-                    {% if option.count != null %}{{ option.label }} ({{ option.count }}){% else %}{{ option.label }}{% endif %}
-                  </strong>
-                </a>
-              </li>
+        <section class="audit-page-summary govuk-!-margin-top-6" aria-labelledby="guidance-summary-heading">
+          <h2 id="guidance-summary-heading" class="govuk-heading-m">Guidance review summary</h2>
+          <p class="govuk-body govuk-!-margin-bottom-2">{{ summary.totalCountText }}</p>
+          <ul class="govuk-list govuk-!-margin-bottom-0">
+            {% for item in summary.outcomeItems %}
+              <li>{{ item.summaryText }}</li>
             {% endfor %}
           </ul>
-          {% if activeOption %}
-            <p class="govuk-body govuk-!-margin-top-3 govuk-!-margin-bottom-0">
-              <a class="govuk-link" href="{{ clearFilterHref }}">Clear filter</a>
-            </p>
-          {% endif %}
-        </nav>
+        </section>
 
-        {% if activeOption %}
-          <p class="audit-filter-bar__selected govuk-body govuk-!-margin-top-6 govuk-!-margin-bottom-2">
-            Selected:
-            <strong class="govuk-tag {% if activeOption.tone %}govuk-tag--{{ activeOption.tone }}{% endif %} audit-filter-bar__tag" aria-current="page">
-              {{ activeOption.label }} ({{ activeOption.count }})
-            </strong>
-          </p>
+        <section class="audit-page-filters govuk-!-margin-top-6" aria-labelledby="guidance-filters-heading">
+          <h2 id="guidance-filters-heading" class="govuk-heading-m">Filter guidance statements</h2>
+
+          <form
+            method="get"
+            action="{{ filters.formAction }}"
+            class="govuk-!-margin-bottom-0"
+            aria-labelledby="guidance-filters-heading"
+          >
+            {{ govukCheckboxes({
+              name: "outcome",
+              fieldset: {
+                legend: {
+                  text: "Overall guidance outcome",
+                  classes: "govuk-fieldset__legend--s"
+                }
+              },
+              items: filters.checkboxItems
+            }) }}
+
+            {{ govukButton({
+              text: "Apply filters",
+              classes: "govuk-!-margin-bottom-0"
+            }) }}
+          </form>
+        </section>
+
+        {% if filters.active %}
+          <section class="audit-active-filters govuk-!-margin-top-6" aria-labelledby="active-filters-heading">
+            <h2 id="active-filters-heading" class="govuk-heading-s">Active filters</h2>
+            <p class="govuk-body govuk-!-margin-bottom-1">Overall guidance outcome:</p>
+            <ul class="govuk-list">
+              {% for item in filters.activeItems %}
+                <li>
+                  {{ item.label }}
+                  <a class="govuk-link govuk-!-margin-left-1" href="{{ item.removeHref }}">
+                    <span class="govuk-visually-hidden">{{ item.removeAccessibleName }}</span>
+                    <span aria-hidden="true">Remove</span>
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+            <p class="govuk-body govuk-!-margin-bottom-0">
+              <a class="govuk-link" href="{{ filters.clearHref }}">Clear filters</a>
+            </p>
+          </section>
         {% endif %}
 
         <section id="statements" aria-labelledby="statements-heading" class="govuk-!-margin-top-6">
-          <h2 id="statements-heading" class="govuk-heading-l">Guidance statements</h2>
+          <h2 id="statements-heading" class="govuk-heading-m">Guidance statements</h2>
+          <p class="govuk-body">{{ visibleCountText }}</p>
+
           {% if hasGuidanceRows %}
             {% for row in guidanceRows %}
-              <div id="guidance-{{ row.id }}" class="govuk-summary-card govuk-!-margin-bottom-6 audit-guidance-row" style="border-top:6px solid {{ row.primaryBorderColour }};">
-                <div class="govuk-summary-card__title-wrapper">
-                  <h3 class="govuk-summary-card__title govuk-heading-s govuk-!-margin-bottom-0">
-                    <span class="govuk-visually-hidden">{{ row.primaryLabel }}: {{ row.guidanceText }}</span>
-                    <span aria-hidden="true">{{ row.primaryLabel }}</span>
-                  </h3>
-                  <div class="audit-status-chips" aria-label="Status summary">
-                    <strong class="govuk-tag govuk-tag--{{ row.primaryTone }}">
-                      {{ row.primaryLabel }}{% if row.primaryChipCount > 1 %} ({{ row.primaryChipCount }}){% endif %}
-                    </strong>
-                    {% for chip in row.chips %}
-                      {% if chip.status != row.primaryStatus %}
-                        <strong class="govuk-tag govuk-tag--{{ chip.tone }}">
-                          {{ chip.label }}{% if chip.count > 1 %} ({{ chip.count }}){% endif %}
-                        </strong>
-                      {% endif %}
-                    {% endfor %}
-                  </div>
-                </div>
-                <div class="govuk-summary-card__content">
-                  <p class="govuk-body govuk-!-margin-bottom-4">{{ row.guidanceText }}</p>
-
-                  {% if row.rowKind == 'fallback' %}
-                    <p class="govuk-body">{{ row.primaryMeaning }}</p>
-                  {% elif row.pairCount == 1 %}
-                    {{ statementCard(row.comparisons[0]) }}
-                  {% else %}
-                    <details class="govuk-details" data-module="govuk-details">
-                      <summary class="govuk-details__summary">
-                        <span class="govuk-details__summary-text">
-                          Show {{ row.pairCount }} law matches
-                        </span>
-                      </summary>
-                      <div class="govuk-details__text">
-                        {% for s in row.comparisons %}
-                          {{ statementCard(s) }}
-                        {% endfor %}
-                      </div>
-                    </details>
-                  {% endif %}
-                </div>
-              </div>
+              {{ guidanceRow(row) }}
             {% endfor %}
-          {% elif activeOption %}
-            <p class="govuk-body">No guidance in this group on this page.</p>
+          {% elif hasGuidanceData and filters.active %}
+            <p class="govuk-body">No guidance statements match these filters.</p>
+            <p class="govuk-body">Try removing one or more filters.</p>
+            <p class="govuk-body">
+              <a class="govuk-link" href="{{ filters.clearHref }}">Clear filters</a>
+            </p>
           {% else %}
-            <p class="govuk-body">No guidance statements on this page.</p>
+            <p class="govuk-body">No guidance statements are available.</p>
           {% endif %}
         </section>
       </div>

@@ -1,21 +1,79 @@
-.audit-status-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  align-items: center;
-  justify-content: flex-end;
+@use 'govuk-frontend' as *;
+
+.audit-guidance-row {
+  border-bottom: 1px solid govuk-colour('mid-grey');
+  padding-bottom: govuk-spacing(6);
+
+  &:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .govuk-details {
+    margin-bottom: 0;
+  }
+
+  .govuk-body,
+  .govuk-body-s {
+    overflow-wrap: anywhere;
+  }
+
+  .govuk-details__summary-text {
+    overflow-wrap: anywhere;
+  }
+}
+
+.audit-guidance-row__status {
+  display: block;
+}
+
+.audit-guidance-row__composition {
+  color: govuk-colour('dark-grey');
+  overflow-wrap: anywhere;
+}
+
+.audit-guidance-row__comparisons {
+  // Keep nested comparison cards full-width; avoid progressive indent.
+  padding-left: 0;
+  padding-right: 0;
+  border-left: 0;
+}
+
+.audit-statement-card {
+  // Pair cards keep summary-card chrome; drop the coloured top border that
+  // duplicated the status tag.
+  border-top: 0;
+
+  // GOV.UK defaults to nowrap on desktop; allow heading + tag to stack at
+  // narrow widths and high zoom without horizontal scroll.
+  .govuk-summary-card__title-wrapper {
+    flex-wrap: wrap;
+    align-items: flex-start;
+    row-gap: govuk-spacing(2);
+    column-gap: govuk-spacing(2);
+  }
+
+  .govuk-summary-card__title,
+  .govuk-body,
+  .govuk-body-s {
+    overflow-wrap: anywhere;
+  }
+}
+
+.audit-statement-card__source {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+.audit-statement-card__locator {
+  color: govuk-colour('dark-grey');
+  overflow-wrap: anywhere;
 }
 
 .audit-statement-card--dimmed {
   opacity: 0.55;
 
   .govuk-summary-card__title-wrapper {
-    background-color: #f3f2f1;
-  }
-}
-
-.audit-guidance-row {
-  .govuk-details {
-    margin-bottom: 0;
+    background-color: govuk-colour('light-grey');
   }
 }

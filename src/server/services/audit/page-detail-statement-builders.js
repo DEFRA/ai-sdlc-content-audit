@@ -35,6 +35,11 @@ export function buildComparisonStatement({
   let lawName = null
   let lawUrl = null
   const lawText = lawProposition?.proposition_text ?? null
+  const sourceLocator =
+    lawProposition?.fragment_locator ||
+    lawProposition?.label ||
+    lawProposition?.short_name ||
+    null
 
   if (lawProposition?.source_record_id != null) {
     const law = legislationForCategory(
@@ -60,6 +65,7 @@ export function buildComparisonStatement({
     lawName,
     lawUrl,
     lawText,
+    sourceLocator,
     explanation: comparison.explanation ?? null,
     confidence: comparison.confidence ?? null,
     feedbackEnabled: true,
