@@ -38,8 +38,43 @@ describe('buildStatementsFromGuidanceComparisons', () => {
       statusLabel: 'Matches the law',
       lawText: 'Law one.',
       lawName: 'Act 1',
+      lawUrl: 'https://leg/1',
       feedbackEnabled: true,
       rowKind: 'comparison'
+    })
+  })
+
+  test('prefers law proposition provision_url over instrument url', () => {
+    const rows = statementsFromFixture({
+      legislation_propositions: [
+        {
+          id: 'prop:law1',
+          category: 'slurry',
+          source_record_id: 'lex-1',
+          proposition_text: 'Law one.',
+          fragment_locator: 'regulation:4:paragraph:1',
+          provision_url:
+            'https://www.legislation.gov.uk/uksi/2015/668/regulation/4/1'
+        },
+        {
+          id: 'prop:law2',
+          category: 'slurry',
+          source_record_id: 'lex-1',
+          proposition_text: 'Law two.'
+        },
+        {
+          id: 'prop:law3',
+          category: 'slurry',
+          source_record_id: 'lex-1',
+          proposition_text: 'Law three.'
+        }
+      ]
+    }).filter((s) => s.guidanceText === 'Do grounded.')
+
+    expect(rows).toHaveLength(1)
+    expect(rows[0]).toMatchObject({
+      lawUrl: 'https://www.legislation.gov.uk/uksi/2015/668/regulation/4/1',
+      sourceLocator: 'regulation:4:paragraph:1'
     })
   })
 

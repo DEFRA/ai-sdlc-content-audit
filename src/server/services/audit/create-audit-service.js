@@ -393,7 +393,7 @@ export function createAuditService(presentation, loadedRunIds = []) {
       if (lp) {
         const law = legislationForCategory(categoryId, lp.source_record_id)
         lawName = law?.name ?? null
-        lawUrl = law?.url ?? null
+        lawUrl = lp.provision_url ?? law?.url ?? null
         lawText = lp.proposition_text
       }
     }
@@ -473,7 +473,7 @@ export function createAuditService(presentation, loadedRunIds = []) {
         const law = legislationForCategory(categoryId, lp.source_record_id)
         return {
           lawName: law?.name ?? null,
-          lawUrl: law?.url ?? null,
+          lawUrl: lp.provision_url ?? law?.url ?? null,
           lawText: lp.proposition_text
         }
       })

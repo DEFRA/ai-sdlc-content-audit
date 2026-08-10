@@ -47,7 +47,7 @@ export function buildComparisonStatement({
       lawProposition.source_record_id
     )
     lawName = law?.name ?? null
-    lawUrl = law?.url ?? null
+    lawUrl = lawProposition.provision_url ?? law?.url ?? null
   }
 
   const accessibleName = lawText

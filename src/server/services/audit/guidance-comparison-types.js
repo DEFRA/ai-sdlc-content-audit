@@ -46,6 +46,7 @@
  * @property {string|null|undefined} [short_name]
  * @property {string|null|undefined} [label]
  * @property {string|null|undefined} [fragment_locator]
+ * @property {string|null|undefined} [provision_url]
  * @property {string|undefined} [category]
  */
 
