@@ -10,8 +10,11 @@
     class="audit-guidance-row govuk-!-margin-bottom-6"
     aria-labelledby="{{ row.headingId }}"
   >
-    <h3 id="{{ row.headingId }}" class="govuk-heading-m govuk-!-margin-bottom-2">
+    <h3 id="{{ row.headingId }}" class="govuk-heading-m govuk-!-margin-bottom-2 audit-guidance-row__heading">
       {{ row.heading }}
+      {% if row.propositionId %}
+        <span class="govuk-!-font-size-16 govuk-!-font-weight-regular audit-proposition-id">{{ row.propositionId }}</span>
+      {% endif %}
     </h3>
 
     <p class="govuk-body govuk-!-margin-bottom-3">{{ row.guidanceText }}</p>

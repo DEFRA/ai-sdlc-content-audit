@@ -244,6 +244,7 @@ export function presentGuidanceRow(row, options = {}) {
     statementNumber,
     heading: `Guidance statement ${statementNumber}`,
     headingId: `guidance-heading-${rowId}`,
+    propositionId: row.guidancePropositionId ?? null,
     aggregateLabel: aggregate.label,
     aggregateTone: aggregate.tone,
     aggregateGovukTagClass: aggregate.govukTagClass,

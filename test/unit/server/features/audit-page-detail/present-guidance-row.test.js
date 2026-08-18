@@ -188,6 +188,7 @@ describe('presentGuidanceRow', () => {
     const presented = presentGuidanceRow(
       {
         id: 'g-multi',
+        guidancePropositionId: 'susan-41dbc58cc6ea1113-42',
         guidanceText: 'Do multi.',
         aggregateOutcome: AGGREGATE_OUTCOME.CONFLICT_FOUND,
         primaryStatus: AGGREGATE_OUTCOME.CONFLICT_FOUND,
@@ -203,6 +204,7 @@ describe('presentGuidanceRow', () => {
             statusLabel: 'Goes against the law',
             statusTone: 'red',
             lawText: 'Law conflict.',
+            lawPropositionId: 'bcand:1a3b4db1707f8376',
             explanation: 'Conflicts.',
             rowKind: 'comparison'
           },
@@ -223,6 +225,7 @@ describe('presentGuidanceRow', () => {
 
     expect(presented.heading).toBe('Guidance statement 12')
     expect(presented.headingId).toBe('guidance-heading-g-multi')
+    expect(presented.propositionId).toBe('susan-41dbc58cc6ea1113-42')
     expect(presented.aggregateLabel).toBe('Conflict found')
     expect(presented.compositionText).toBe('1 conflict · 1 grounded')
     expect(presented.aggregateExplanation).toBe(
@@ -235,7 +238,8 @@ describe('presentGuidanceRow', () => {
     expect(presented.comparisons[0]).toMatchObject({
       heading: 'Law comparison 1',
       showGuidanceText: false,
-      headingLevel: 4
+      headingLevel: 4,
+      propositionId: 'bcand:1a3b4db1707f8376'
     })
     expect(presented.comparisons[1].heading).toBe('Law comparison 2')
   })
@@ -257,6 +261,7 @@ describe('presentGuidanceRow', () => {
       chips: []
     })
 
+    expect(presented.propositionId).toBeNull()
     expect(presented.aggregateLabel).toBe('Not assessed')
     expect(presented.aggregateTone).toBe('grey')
     expect(presented.aggregateGovukTagClass).toBe('govuk-tag--grey')

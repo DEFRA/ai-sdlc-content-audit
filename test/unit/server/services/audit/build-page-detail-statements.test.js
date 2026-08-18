@@ -39,6 +39,7 @@ describe('buildStatementsFromGuidanceComparisons', () => {
       lawText: 'Law one.',
       lawName: 'Act 1',
       lawUrl: 'https://leg/1',
+      lawPropositionId: 'prop:law1',
       feedbackEnabled: true,
       rowKind: 'comparison'
     })

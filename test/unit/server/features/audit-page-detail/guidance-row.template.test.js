@@ -25,6 +25,9 @@ const nunjucksEnv = nunjucks.configure(
 
 const DISTINCTIVE_GUIDANCE =
   'UNIQUE-GUIDANCE-TEXT-do-not-spread-on-frozen-ground-XYZ'
+const GUIDANCE_PROPOSITION_ID = 'susan-41dbc58cc6ea1113-42'
+const LAW_PROPOSITION_ID_CONFLICT = 'bcand:1a3b4db1707f8376'
+const LAW_PROPOSITION_ID_GROUNDED = 'bcand:297badcb25473d76'
 
 function renderGuidanceRow(row, options = {}) {
   const presented = presentGuidanceRow(row, options)
@@ -49,6 +52,7 @@ describe('guidanceRow template', () => {
     const { $ } = renderGuidanceRow(
       {
         id: 'g-multi',
+        guidancePropositionId: GUIDANCE_PROPOSITION_ID,
         guidanceText: DISTINCTIVE_GUIDANCE,
         aggregateOutcome: AGGREGATE_OUTCOME.CONFLICT_FOUND,
         primaryStatus: AGGREGATE_OUTCOME.CONFLICT_FOUND,
@@ -89,7 +93,10 @@ describe('guidanceRow template', () => {
     const heading = $('#guidance-heading-g-multi')
     expect(heading).toHaveLength(1)
     expect(heading.is('h3')).toBe(true)
-    expect(heading.text().trim()).toBe('Guidance statement 12')
+    expect(heading.text()).toContain('Guidance statement 12')
+    expect(heading.find('.audit-proposition-id').text().trim()).toBe(
+      GUIDANCE_PROPOSITION_ID
+    )
     expect($('article#guidance-g-multi').attr('aria-labelledby')).toBe(
       'guidance-heading-g-multi'
     )
@@ -166,6 +173,7 @@ describe('guidanceRow template', () => {
           lawName: 'Nitrate Pollution Prevention Regulations 2015',
           lawUrl: 'https://leg/1',
           lawText: 'Do not spread when frozen.',
+          lawPropositionId: LAW_PROPOSITION_ID_CONFLICT,
           sourceLocator: 'Regulation 18(3)',
           explanation: 'The guidance omits the statutory exception.',
           rowKind: 'comparison'
@@ -179,6 +187,7 @@ describe('guidanceRow template', () => {
           lawName: 'Act 1',
           lawUrl: 'https://leg/1',
           lawText: 'Law grounded text.',
+          lawPropositionId: LAW_PROPOSITION_ID_GROUNDED,
           explanation: null,
           rowKind: 'comparison'
         }
@@ -187,8 +196,14 @@ describe('guidanceRow template', () => {
     })
 
     expect($('#comparison-heading-m-c').is('h4')).toBe(true)
-    expect($('#comparison-heading-m-c').text().trim()).toBe('Law comparison 1')
-    expect($('#comparison-heading-m-g').text().trim()).toBe('Law comparison 2')
+    expect($('#comparison-heading-m-c').text()).toContain('Law comparison 1')
+    expect(
+      $('#comparison-heading-m-c').find('.audit-proposition-id').text().trim()
+    ).toBe(LAW_PROPOSITION_ID_CONFLICT)
+    expect($('#comparison-heading-m-g').text()).toContain('Law comparison 2')
+    expect(
+      $('#comparison-heading-m-g').find('.audit-proposition-id').text().trim()
+    ).toBe(LAW_PROPOSITION_ID_GROUNDED)
 
     const conflictCard = $('#statement-m-c')
     expect(conflictCard.find('.govuk-tag .govuk-visually-hidden').text()).toBe(

@@ -23,6 +23,24 @@
   }
 }
 
+.audit-guidance-row__heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: govuk-spacing(2);
+  row-gap: govuk-spacing(1);
+}
+
+.audit-proposition-id {
+  display: inline-block;
+  min-width: 0;
+  padding: 0 govuk-spacing(1);
+  color: govuk-colour('dark-grey');
+  background-color: govuk-colour('light-grey');
+  overflow-wrap: anywhere;
+  border-radius: 0;
+}
+
 .audit-guidance-row__status {
   display: block;
 }
@@ -53,9 +71,17 @@
     column-gap: govuk-spacing(2);
   }
 
-  .govuk-summary-card__title,
   .govuk-body,
   .govuk-body-s {
+    overflow-wrap: anywhere;
+  }
+
+  .govuk-summary-card__title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    column-gap: govuk-spacing(2);
+    row-gap: govuk-spacing(1);
     overflow-wrap: anywhere;
   }
 }

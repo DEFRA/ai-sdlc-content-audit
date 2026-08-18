@@ -27,6 +27,9 @@
     <div class="govuk-summary-card__title-wrapper">
       <h{{ headingLevel }} id="{{ headingId }}" class="govuk-summary-card__title govuk-heading-s govuk-!-margin-bottom-0">
         {{ heading }}
+        {% if s.propositionId %}
+          <span class="govuk-!-font-size-16 govuk-!-font-weight-regular audit-proposition-id">{{ s.propositionId }}</span>
+        {% endif %}
         {% if s.dimmed %}
           <span class="govuk-!-font-size-16 govuk-!-font-weight-regular govuk-!-margin-left-2">Not in this filter</span>
         {% endif %}

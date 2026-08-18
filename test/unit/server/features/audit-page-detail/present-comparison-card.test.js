@@ -27,6 +27,7 @@ describe('presentComparisonCard', () => {
         lawName: 'Nitrate Pollution Prevention Regulations 2015',
         lawUrl: 'https://leg/1',
         lawText: 'Do not spread nitrogen fertiliser when frozen.',
+        lawPropositionId: 'bcand:1a3b4db1707f8376',
         sourceLocator: 'Regulation 18(3)',
         explanation: 'The guidance omits the statutory exception.',
         rowKind: 'comparison',
@@ -48,6 +49,7 @@ describe('presentComparisonCard', () => {
       sourceLocator: 'Regulation 18(3)',
       lawContentLabel: 'Legal proposition',
       lawContent: 'Do not spread nitrogen fertiliser when frozen.',
+      propositionId: 'bcand:1a3b4db1707f8376',
       assessmentHeading: 'Assessment',
       assessmentText: 'The guidance omits the statutory exception.',
       sourceUrl: 'https://leg/1',
@@ -74,6 +76,7 @@ describe('presentComparisonCard', () => {
     expect(presented.assessmentText).toBe(
       'No assessment explanation is available for this comparison.'
     )
+    expect(presented.propositionId).toBeNull()
     expect(presented.sourceLinkText).toBe('View source law (opens in new tab)')
   })
 

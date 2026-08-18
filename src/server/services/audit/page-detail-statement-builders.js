@@ -65,6 +65,7 @@ export function buildComparisonStatement({
     lawName,
     lawUrl,
     lawText,
+    lawPropositionId: lawProposition?.id ?? null,
     sourceLocator,
     explanation: comparison.explanation ?? null,
     confidence: comparison.confidence ?? null,
