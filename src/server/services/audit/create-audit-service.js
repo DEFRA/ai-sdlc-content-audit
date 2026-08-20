@@ -16,7 +16,13 @@ function categoryKey(categoryId, id) {
   return `${categoryId}:${id}`
 }
 
-export function createAuditService(presentation, loadedRunIds = []) {
+const PAIRS_CSV_DOWNLOAD_SUFFIX = '-pairs.csv'
+
+export function createAuditService(
+  presentation,
+  loadedRunIds = [],
+  pairsCsvByCategory = {}
+) {
   const categories = presentation.categories
   const legislation = presentation.legislation
   const legislationPropositions = presentation.legislation_propositions
@@ -561,6 +567,21 @@ export function createAuditService(presentation, loadedRunIds = []) {
     return guidanceComparisonBundle.diagnostics
   }
 
+  /**
+   * Prebuilt pairs CSV for a category, if Audit Assembler wrote one.
+   * @param {string} categoryId
+   * @returns {{ path: string, filename: string } | null}
+   */
+  function getPairsCsv(categoryId) {
+    if (!getCategory(categoryId)) return null
+    const filePath = pairsCsvByCategory[categoryId]
+    if (filePath == null) return null
+    return {
+      path: filePath,
+      filename: `${categoryId}${PAIRS_CSV_DOWNLOAD_SUFFIX}`
+    }
+  }
+
   return {
     STATUS_META,
     STATUS_ORDER,
@@ -577,6 +598,7 @@ export function createAuditService(presentation, loadedRunIds = []) {
     getMatchStatus,
     getGuidanceComparisons,
     getLawSideMissingGuidance,
-    getGuidanceComparisonDiagnostics
+    getGuidanceComparisonDiagnostics,
+    getPairsCsv
   }
 }

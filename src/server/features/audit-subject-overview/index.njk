@@ -1,5 +1,7 @@
 {% extends "layouts/page.njk" %}
 
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
 {% block beforeContent %}
   {{ govukBreadcrumbs({
     items: [
@@ -64,6 +66,16 @@
             <dd class="govuk-summary-list__value"><strong class="govuk-!-font-size-24">{{ pagesInCategory }}</strong></dd>
           </div>
         </dl>
+
+        {% if pairsCsvHref %}
+          <div class="govuk-button-group">
+            {{ govukButton({
+              text: "Download results (CSV)",
+              href: pairsCsvHref,
+              classes: "govuk-button--secondary"
+            }) }}
+          </div>
+        {% endif %}
 
         {% if not hasPagesInCategory %}
           <p class="govuk-body">We could not find any guidance pages about this subject.</p>

@@ -1,4 +1,7 @@
-import { auditSubjectOverviewController } from './controller.js'
+import {
+  auditSubjectOverviewController,
+  auditSubjectPairsCsvController
+} from './controller.js'
 
 export const auditSubjectOverview = {
   plugin: {
@@ -8,6 +11,11 @@ export const auditSubjectOverview = {
         method: 'GET',
         path: '/audit/subjects/{categoryId}',
         ...auditSubjectOverviewController
+      })
+      server.route({
+        method: 'GET',
+        path: '/audit/subjects/{categoryId}/pairs.csv',
+        ...auditSubjectPairsCsvController
       })
     }
   }

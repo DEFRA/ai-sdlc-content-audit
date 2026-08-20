@@ -354,4 +354,83 @@ describe('load-presentation', () => {
       rmSync(runsDir, { recursive: true, force: true })
     }
   })
+
+  test('indexes pairs.csv from a run envelope by category', () => {
+    const runsDir = mkdtempSync(join(tmpdir(), 'esther-pairs-run-'))
+
+    try {
+      const runDir = join(runsDir, 'ssafo-nitrates')
+      mkdirSync(runDir, { recursive: true })
+      writeFileSync(
+        join(runDir, 'output.json'),
+        JSON.stringify({
+          category: 'ssafo-nitrates',
+          presentation: {
+            ...emptyPresentationKeys,
+            categories: [{ id: 'ssafo-nitrates', title: 'Nitrates' }]
+          }
+        })
+      )
+      writeFileSync(join(runDir, 'pairs.csv'), 'category\nssafo-nitrates\n')
+
+      const { pairsCsvByCategory } = loadPresentationFromRuns(runsDir)
+      expect(pairsCsvByCategory).toEqual({
+        'ssafo-nitrates': join(runDir, 'pairs.csv')
+      })
+    } finally {
+      rmSync(runsDir, { recursive: true, force: true })
+    }
+  })
+
+  test('indexes pairs.csv from a single-category flat dest', () => {
+    const dataDir = mkdtempSync(join(tmpdir(), 'esther-pairs-flat-'))
+
+    try {
+      const write = (name, data) =>
+        writeFileSync(join(dataDir, name), JSON.stringify(data))
+
+      write('categories.json', [{ id: 'slurry', title: 'Slurry' }])
+      write('legislation.json', [])
+      write('legislation-propositions.json', [])
+      write('pages.json', [])
+      write('guidance-propositions.json', [])
+      write('proposition-matches.json', [])
+      write('page-analytics.json', [])
+      write('subject-summary.json', [])
+      write('page-relevance.json', [])
+      write('pages-reading-age.json', [])
+      writeFileSync(join(dataDir, 'pairs.csv'), 'category\nslurry\n')
+
+      const { pairsCsvByCategory } = loadPresentationFromFlatDir(dataDir)
+      expect(pairsCsvByCategory).toEqual({
+        slurry: join(dataDir, 'pairs.csv')
+      })
+    } finally {
+      rmSync(dataDir, { recursive: true, force: true })
+    }
+  })
+
+  test('omits pairs.csv index when the file is absent', () => {
+    const runsDir = mkdtempSync(join(tmpdir(), 'esther-pairs-missing-'))
+
+    try {
+      const runDir = join(runsDir, 'legacy-run')
+      mkdirSync(runDir, { recursive: true })
+      writeFileSync(
+        join(runDir, 'output.json'),
+        JSON.stringify({
+          category: 'slurry',
+          presentation: {
+            ...emptyPresentationKeys,
+            categories: [{ id: 'slurry' }]
+          }
+        })
+      )
+
+      const { pairsCsvByCategory } = loadPresentationFromRuns(runsDir)
+      expect(pairsCsvByCategory).toEqual({})
+    } finally {
+      rmSync(runsDir, { recursive: true, force: true })
+    }
+  })
 })

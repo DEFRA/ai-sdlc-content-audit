@@ -178,6 +178,7 @@ export const auditSubjectOverviewViewModel = {
     const lawsHref = `/audit/subjects/${category.id}/laws`
     const statusFilter = query.status ?? null
     const activeView = resolveView(query.view ?? null, statusFilter)
+    const pairsCsv = auditService.getPairsCsv(category.id)
 
     return {
       pageTitle: category.title,
@@ -190,6 +191,9 @@ export const auditSubjectOverviewViewModel = {
       pagesInCategory: formatNumber(overview.pagesInCategory),
       pagesHref: `/audit/subjects/${category.id}/pages`,
       propositionsHref: `/audit/subjects/${category.id}/propositions`,
+      pairsCsvHref: pairsCsv
+        ? `/audit/subjects/${category.id}/pairs.csv`
+        : null,
       hasPagesInCategory: overview.pagesInCategory > 0,
       usesGuidanceComparisonContract:
         overview.usesGuidanceComparisonContract === true,
@@ -202,5 +206,13 @@ export const auditSubjectOverviewViewModel = {
         statusFilter
       )
     }
+  },
+
+  /**
+   * @param {string} categoryId
+   * @returns {{ path: string, filename: string } | null}
+   */
+  getPairsCsv(categoryId) {
+    return auditService.getPairsCsv(categoryId)
   }
 }

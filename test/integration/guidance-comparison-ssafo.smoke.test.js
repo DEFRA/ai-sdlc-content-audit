@@ -98,4 +98,36 @@ describe('ssafo-nitrates guidance comparison smoke', () => {
     expect(statusCode).toBe(200)
     expect(payload).toContain('Matches the law')
   })
+
+  test('subject overview offers a CSV download when pairs.csv is present', async () => {
+    const { statusCode, payload } = await server.inject({
+      method: 'GET',
+      url: '/audit/subjects/ssafo-nitrates'
+    })
+    expect(statusCode).toBe(200)
+    expect(payload).toContain('Download results (CSV)')
+    expect(payload).toContain('/audit/subjects/ssafo-nitrates/pairs.csv')
+  })
+
+  test('GET pairs.csv attaches the prebuilt extract', async () => {
+    const { statusCode, headers, payload } = await server.inject({
+      method: 'GET',
+      url: '/audit/subjects/ssafo-nitrates/pairs.csv'
+    })
+    expect(statusCode).toBe(200)
+    expect(headers['content-type']).toMatch(/text\/csv/)
+    expect(headers['content-disposition']).toBe(
+      'attachment; filename="ssafo-nitrates-pairs.csv"'
+    )
+    expect(payload).toMatch(/^category,/)
+    expect(payload).toContain('ssafo-nitrates')
+  })
+
+  test('GET pairs.csv returns 404 when the category has no CSV', async () => {
+    const { statusCode } = await server.inject({
+      method: 'GET',
+      url: '/audit/subjects/slurry/pairs.csv'
+    })
+    expect(statusCode).toBe(404)
+  })
 })

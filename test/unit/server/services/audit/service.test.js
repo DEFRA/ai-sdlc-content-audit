@@ -266,4 +266,17 @@ describe('createAuditService', () => {
       })
     ])
   })
+
+  test('returns pairs CSV path and download filename for a known category', () => {
+    const service = createAuditService(collidingCategoriesPresentation(), [], {
+      slurry: '/tmp/slurry/pairs.csv'
+    })
+
+    expect(service.getPairsCsv('slurry')).toEqual({
+      path: '/tmp/slurry/pairs.csv',
+      filename: 'slurry-pairs.csv'
+    })
+    expect(service.getPairsCsv('ssafo-nitrates')).toBeNull()
+    expect(service.getPairsCsv('unknown')).toBeNull()
+  })
 })

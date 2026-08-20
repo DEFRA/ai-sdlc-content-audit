@@ -42,7 +42,7 @@ for (const runId of runIds) {
   rmSync(targetRunDir, { recursive: true, force: true })
   mkdirSync(targetRunDir, { recursive: true })
 
-  for (const filename of ['output.json', 'MODEL.md']) {
+  for (const filename of ['output.json', 'MODEL.md', 'pairs.csv']) {
     const sourcePath = join(sourceRunDir, filename)
     if (existsSync(sourcePath)) {
       cpSync(sourcePath, join(targetRunDir, filename))

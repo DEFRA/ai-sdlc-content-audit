@@ -32,6 +32,8 @@ export const PRESENTATION_KEYS = [
 
 const OPTIONAL_PRESENTATION_KEY_SET = new Set(OPTIONAL_PRESENTATION_KEYS)
 
+export const PAIRS_CSV_FILENAME = 'pairs.csv'
+
 const FLAT_FILES = {
   categories: 'categories.json',
   legislation: 'legislation.json',
@@ -200,19 +202,53 @@ function loadRunEnvelope(outputPath) {
     stampEnvelopeCategory(presentation, envelope.category)
   }
 
-  return presentation
+  const category =
+    typeof envelope.category === 'string' && envelope.category
+      ? envelope.category
+      : null
+
+  return { presentation, category }
+}
+
+function isPairsCsvFile(csvPath) {
+  return existsSync(csvPath) && statSync(csvPath).isFile()
+}
+
+function indexPairsCsvForRun(runsDir, runId, category, pairsCsvByCategory) {
+  const csvPath = join(runsDir, runId, PAIRS_CSV_FILENAME)
+  if (!isPairsCsvFile(csvPath) || category == null) return
+  if (pairsCsvByCategory[category] == null) {
+    pairsCsvByCategory[category] = csvPath
+  }
+}
+
+function loadPairsCsvByCategoryFromFlatDir(dataDir) {
+  const csvPath = join(dataDir, PAIRS_CSV_FILENAME)
+  if (!isPairsCsvFile(csvPath)) return {}
+
+  const categoriesPath = join(dataDir, FLAT_FILES.categories)
+  if (!existsSync(categoriesPath)) return {}
+  const categories = loadJson(categoriesPath)
+  if (!Array.isArray(categories) || categories.length !== 1) return {}
+  const categoryId = categories[0]?.id
+  if (typeof categoryId !== 'string' || !categoryId) return {}
+  return { [categoryId]: csvPath }
 }
 
 export function loadPresentationFromRuns(runsDir) {
   const merged = emptyPresentation()
   const runIds = listRunIds(runsDir)
+  const pairsCsvByCategory = {}
 
   for (const runId of runIds) {
-    const presentation = loadRunEnvelope(join(runsDir, runId, 'output.json'))
+    const { presentation, category } = loadRunEnvelope(
+      join(runsDir, runId, 'output.json')
+    )
     mergePresentation(merged, presentation)
+    indexPairsCsvForRun(runsDir, runId, category, pairsCsvByCategory)
   }
 
-  return { merged, runIds }
+  return { merged, runIds, pairsCsvByCategory }
 }
 
 export function loadPresentationFromFlatDir(dataDir) {
@@ -232,7 +268,11 @@ export function loadPresentationFromFlatDir(dataDir) {
 
   deriveFlatDirCategories(merged)
 
-  return { merged, runIds: [] }
+  return {
+    merged,
+    runIds: [],
+    pairsCsvByCategory: loadPairsCsvByCategoryFromFlatDir(dataDir)
+  }
 }
 
 export function loadAuditPresentation({ runsDir, dataDir }) {

@@ -10,9 +10,17 @@ const dataDir = join(auditDir, 'data')
 
 // Pipeline-native shapes (Esther output). Loaded from one envelope per category
 // under runs/<run-id>/output.json (preferred), or the legacy flat data/ dir.
-const { merged: presentation, runIds: loadedRunIds } = loadAuditPresentation({
+const {
+  merged: presentation,
+  runIds: loadedRunIds,
+  pairsCsvByCategory
+} = loadAuditPresentation({
   runsDir,
   dataDir
 })
 
-export const auditService = createAuditService(presentation, loadedRunIds)
+export const auditService = createAuditService(
+  presentation,
+  loadedRunIds,
+  pairsCsvByCategory
+)
